@@ -4,4 +4,10 @@
     <string name="activity_configuration_list_title">Configurations</string>
     <string name="action_refresh">Refresh</string>
     <string name="action_archived">Archived</string>
+
+    <string name="drawer_configurations">Configurations</string>
+    <string name="drawer_brew_pis">BrewPis</string>
+    <string name="drawer_devices">Devices</string>
+    <string name="drawer_settings">Settings</string>
+
 </resources>

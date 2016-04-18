@@ -9,12 +9,19 @@ import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.mikepenz.materialdrawer.AccountHeader;
+import com.mikepenz.materialdrawer.AccountHeaderBuilder;
+import com.mikepenz.materialdrawer.DrawerBuilder;
+import com.mikepenz.materialdrawer.model.DividerDrawerItem;
+import com.mikepenz.materialdrawer.model.PrimaryDrawerItem;
+
 public class ConfigurationListActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_configuration_list);
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle(R.string.activity_configuration_list_title);
@@ -27,6 +34,26 @@ public class ConfigurationListActivity extends AppCompatActivity {
                         .setAction("Action", null).show();
             }
         });
+
+        AccountHeader headerResult = new AccountHeaderBuilder()
+                .withActivity(this)
+                .withHeaderBackground(R.drawable.header)
+                .build();
+
+        new DrawerBuilder()
+                .withActivity(this)
+                .withToolbar(toolbar)
+                .withHasStableIds(true)
+                .withAccountHeader(headerResult)
+                .withSelectedItem(-1)
+                .addDrawerItems(
+                        new PrimaryDrawerItem().withName(R.string.drawer_configurations).withIdentifier(1).withSelectable(false),
+                        new PrimaryDrawerItem().withName(R.string.drawer_brew_pis).withIdentifier(2).withSelectable(false),
+                        new PrimaryDrawerItem().withName(R.string.drawer_devices).withIdentifier(3).withSelectable(false),
+                        new DividerDrawerItem(),
+                        new PrimaryDrawerItem().withName(R.string.drawer_settings).withIdentifier(4).withSelectable(false)
+                )
+                .build();
     }
 
     @Override
