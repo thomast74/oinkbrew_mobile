@@ -1,8 +1,8 @@
 package info.vhowto.oinkbrewmobile;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.support.design.widget.Snackbar;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 
@@ -15,13 +15,16 @@ import com.mikepenz.materialdrawer.model.DividerDrawerItem;
 import com.mikepenz.materialdrawer.model.PrimaryDrawerItem;
 import com.mikepenz.materialdrawer.model.interfaces.IDrawerItem;
 
+import info.vhowto.oinkbrewmobile.activities.ConfigurationListActivity;
+import info.vhowto.oinkbrewmobile.activities.SettingsActivity;
+
 public class DrawerHelper implements Drawer.OnDrawerItemClickListener {
 
-    private AppCompatActivity activity;
+    private Activity activity;
     private AccountHeader header = null;
     private Drawer drawer = null;
 
-    public Drawer createDrawer(AppCompatActivity activity, Toolbar toolbar)
+    public Drawer createDrawer(Activity activity, Toolbar toolbar)
     {
         this.activity = activity;
 
@@ -31,7 +34,7 @@ public class DrawerHelper implements Drawer.OnDrawerItemClickListener {
                 .build();
 
         drawer = new DrawerBuilder()
-                .withActivity(activity)
+                .withActivity(this.activity)
                 .withToolbar(toolbar)
                 .withHasStableIds(true)
                 .withAccountHeader(header)
@@ -66,9 +69,8 @@ public class DrawerHelper implements Drawer.OnDrawerItemClickListener {
                 Snackbar.make(view, "You clicked Devices", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
             }
-            else if (drawerItem.getIdentifier() == DrawerItems.SETTINGS) {
-                Snackbar.make(view, "You clicked Settings", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+            else if (drawerItem.getIdentifier() == DrawerItems.SETTINGS && !(activity instanceof SettingsActivity)) {
+                intent = new Intent(activity, SettingsActivity.class);
             }
 
             if (intent != null) {

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <PreferenceCategory
+        android:key="pref_key_api_server_settings"
+        android:title="@string/pref_key_api_server_settings">
+        <EditTextPreference
+            android:key="pref_api_server_url"
+            android:inputType="textUri"
+            android:title="@string/pref_title_api_server_url"
+            android:defaultValue="" />
+        <EditTextPreference
+            android:key="pref_api_server_username"
+            android:inputType="text"
+            android:title="@string/pref_title_api_server_username"
+            android:defaultValue="" />
+        <EditTextPreference
+            android:key="pref_api_server_password"
+            android:inputType="textPassword"
+            android:title="@string/pref_title_api_server_password"
+            android:defaultValue="" />
+    </PreferenceCategory>
+</PreferenceScreen>
