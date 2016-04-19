@@ -9,13 +9,18 @@ import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.mikepenz.community_material_typeface_library.CommunityMaterial;
+import com.mikepenz.google_material_typeface_library.GoogleMaterial;
 import com.mikepenz.materialdrawer.AccountHeader;
 import com.mikepenz.materialdrawer.AccountHeaderBuilder;
+import com.mikepenz.materialdrawer.Drawer;
 import com.mikepenz.materialdrawer.DrawerBuilder;
 import com.mikepenz.materialdrawer.model.DividerDrawerItem;
 import com.mikepenz.materialdrawer.model.PrimaryDrawerItem;
 
 public class ConfigurationListActivity extends AppCompatActivity {
+
+    private Drawer drawer = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,25 +40,7 @@ public class ConfigurationListActivity extends AppCompatActivity {
             }
         });
 
-        AccountHeader headerResult = new AccountHeaderBuilder()
-                .withActivity(this)
-                .withHeaderBackground(R.drawable.header)
-                .build();
-
-        new DrawerBuilder()
-                .withActivity(this)
-                .withToolbar(toolbar)
-                .withHasStableIds(true)
-                .withAccountHeader(headerResult)
-                .withSelectedItem(-1)
-                .addDrawerItems(
-                        new PrimaryDrawerItem().withName(R.string.drawer_configurations).withIdentifier(1).withSelectable(false),
-                        new PrimaryDrawerItem().withName(R.string.drawer_brew_pis).withIdentifier(2).withSelectable(false),
-                        new PrimaryDrawerItem().withName(R.string.drawer_devices).withIdentifier(3).withSelectable(false),
-                        new DividerDrawerItem(),
-                        new PrimaryDrawerItem().withName(R.string.drawer_settings).withIdentifier(4).withSelectable(false)
-                )
-                .build();
+        drawer = new DrawerHelper().createDrawer(this, toolbar);
     }
 
     @Override
@@ -85,6 +72,15 @@ public class ConfigurationListActivity extends AppCompatActivity {
                 return true;
             default:
                 return false;
+        }
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (drawer != null && drawer.isDrawerOpen()) {
+            drawer.closeDrawer();
+        } else {
+            super.onBackPressed();
         }
     }
 }
