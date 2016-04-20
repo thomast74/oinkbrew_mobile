@@ -3,25 +3,45 @@ package info.vhowto.oinkbrewmobile.activities;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.ListView;
 
 import com.mikepenz.materialdrawer.Drawer;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import info.vhowto.oinkbrewmobile.DrawerHelper;
 import info.vhowto.oinkbrewmobile.R;
+import info.vhowto.oinkbrewmobile.adapters.ConfigurationListAdapter;
+import info.vhowto.oinkbrewmobile.domain.Configuration;
 
-public class ConfigurationListActivity extends AppCompatActivity {
+public class ConfigurationListActivity extends AppCompatActivity implements SwipeRefreshLayout.OnRefreshListener {
 
+    private ListView listView;
+    private ConfigurationListAdapter adapter;
+    private SwipeRefreshLayout swipeRefreshLayout;
     private Drawer drawer = null;
+
+    private List<Configuration> configurations;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_configuration_list);
+
+        configurations = new ArrayList<>();
+
+        listView = (ListView) findViewById(R.id.configuration_list_view);
+        swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.configuration_list_swipe_refresh_layout);
+        adapter = new ConfigurationListAdapter(this, configurations);
+        listView.setAdapter(adapter);
+        swipeRefreshLayout.setOnRefreshListener(this);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -36,6 +56,23 @@ public class ConfigurationListActivity extends AppCompatActivity {
         });
 
         drawer = new DrawerHelper().createDrawer(this, toolbar);
+
+        swipeRefreshLayout.post(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        fetchConfigurations();
+                                    }
+                                }
+        );
+    }
+
+    private void fetchConfigurations() {
+        swipeRefreshLayout.setRefreshing(true);
+
+        // get archive flag
+        // load data from API request
+
+        swipeRefreshLayout.setRefreshing(false);
     }
 
     @Override
@@ -48,17 +85,16 @@ public class ConfigurationListActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
 
-        switch(id)
-        {
+        switch (id) {
             case R.id.action_refresh:
-                //load list
+                fetchConfigurations();
                 return true;
             case R.id.action_archived:
                 if (item.isChecked())
                     item.setChecked(false);
                 else
                     item.setChecked(true);
-                // load list with new value
+                fetchConfigurations();
                 return true;
             default:
                 return false;
@@ -72,5 +108,10 @@ public class ConfigurationListActivity extends AppCompatActivity {
         } else {
             super.onBackPressed();
         }
+    }
+
+    @Override
+    public void onRefresh() {
+        fetchConfigurations();
     }
 }
