@@ -14,6 +14,7 @@ import android.widget.ListView;
 import com.mikepenz.materialdrawer.Drawer;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import info.vhowto.oinkbrewmobile.DrawerHelper;
@@ -35,7 +36,9 @@ public class ConfigurationListActivity extends AppCompatActivity implements Swip
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_configuration_list);
 
-        configurations = new ArrayList<>();
+        configurations = new ArrayList<Configuration>();
+        configurations.add(new Configuration("Barbatos", new Date(2016, 01, 30, 7, 0)));
+        configurations.add(new Configuration("Jasmin IPA", new Date(2016, 02, 18, 8, 0)));
 
         listView = (ListView) findViewById(R.id.configuration_list_view);
         swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.configuration_list_swipe_refresh_layout);
