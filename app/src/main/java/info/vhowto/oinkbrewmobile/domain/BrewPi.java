@@ -2,7 +2,7 @@ package info.vhowto.oinkbrewmobile.domain;
 
 public class BrewPi {
 
-    public String pk;
+    public String device_id;
     public String name;
 
 }

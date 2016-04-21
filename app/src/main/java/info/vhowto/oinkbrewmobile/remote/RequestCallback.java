@@ -8,6 +8,6 @@ import info.vhowto.oinkbrewmobile.domain.Configuration;
 
 public interface RequestCallback {
     void onRequestSuccessful(ArrayList<Configuration> configurations);
-    void onRequestFailure(String errorMessage);
+    void onRequestFailure(int statusCode, String errorMessage);
     Context getApplicationContext();
 }

@@ -94,8 +94,14 @@ public class ConfigurationListActivity extends AppCompatActivity implements Swip
         swipeRefreshLayout.setRefreshing(false);
     }
 
-    public void onRequestFailure(String errorMessage) {
-        Toast.makeText(getApplicationContext(), errorMessage, Toast.LENGTH_LONG).show();
+    public void onRequestFailure(int statusCode, String errorMessage) {
+        switch (statusCode) {
+            case 404:
+                Toast.makeText(getApplicationContext(), getString(R.string.error_configurations_empty), Toast.LENGTH_LONG).show();
+                break;
+            default:
+                Toast.makeText(getApplicationContext(), errorMessage, Toast.LENGTH_LONG).show();
+        }
         swipeRefreshLayout.setRefreshing(false);
     }
 

@@ -15,15 +15,16 @@ import org.json.JSONException;
 import java.util.ArrayList;
 
 import info.vhowto.oinkbrewmobile.OinkbrewApplication;
+import info.vhowto.oinkbrewmobile.R;
 import info.vhowto.oinkbrewmobile.domain.Configuration;
 import info.vhowto.oinkbrewmobile.helpers.HttpsTrustManager;
 
 public class ConfigurationRequest {
 
     private static final String TAG = ConfigurationRequest.class.getSimpleName();
-    private static String configsGeneral = "%s/configs/?archived=%s&all_phases=%s";
-    private static String configsBrewPi = "%s/configs/%s/?archived=%s&all_phases=%s";
-    private static String configsDedicated = "%s/configs/%s/%d/?archived=%s&all_phases=%s";
+    private static final String configsGeneral = "%s/configs/?archived=%s&all_phases=%s";
+    private static final String configsBrewPi = "%s/configs/%s/?archived=%s&all_phases=%s";
+    private static final String configsDedicated = "%s/configs/%s/%d/?archived=%s&all_phases=%s";
 
     public static void GetConfigurations(final RequestCallback callback, Boolean loadArchived) {
 
@@ -37,11 +38,12 @@ public class ConfigurationRequest {
             HttpsTrustManager.allowOnlyValidSSL();
 
         if (apiUrl.isEmpty()) {
-            callback.onRequestFailure("API Url not set");
+            callback.onRequestFailure(0, callback.getApplicationContext()
+                                                 .getString(R.string.error_settings_api_url_missing));
             return;
         }
 
-        String url = String.format(configsGeneral, apiUrl, loadArchived ? "True" : "False", "False");
+        String url = String.format(configsGeneral, apiUrl, loadArchived, false);
 
         JsonArrayRequest req = new JsonArrayRequest(Request.Method.GET, url, null,
 
@@ -72,8 +74,8 @@ public class ConfigurationRequest {
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        Log.e(TAG, "Server Error: " + error.getMessage());
-                        callback.onRequestFailure(error.getMessage());
+                        Log.e(TAG, error.networkResponse.statusCode + "Server Error: " + error.getMessage());
+                        callback.onRequestFailure(error.networkResponse.statusCode, error.getMessage());
                     }
                 });
 
