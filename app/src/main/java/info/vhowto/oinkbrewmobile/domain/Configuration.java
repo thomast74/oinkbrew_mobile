@@ -1,39 +1,41 @@
 package info.vhowto.oinkbrewmobile.domain;
 
+import com.google.gson.Gson;
+
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 public class Configuration {
 
-    private String name;
-    private Date createDate;
-    private ConfigirationType type;
+    public int pk;
+    public String name;
+    public Date create_date;
+    public String type;
+
+    public BrewPi brewpi = new BrewPi();
+
+    public String heat_actuator;
+    public String cool_actuator;
+    public String fan_actuator;
+    public String pump_1_actuator;
+    public String pump_2_actuator;
+    public String temp_sensor;
+
+    Map<String, Integer> function = new HashMap<String, Integer>() {};
+    Phase[] phases = new Phase[] {};
+
+    public Boolean archived;
+
 
     public Configuration() {
     }
 
-    public Configuration(String name, Date createDate, ConfigirationType type) {
-        this.name = name;
-        this.createDate = createDate;
-        this.type = type;
+    public static Configuration fromJson(String json) {
+        return new Gson().fromJson(json, Configuration.class);
     }
 
-    public String getName() {
-        return name;
+    public static String toJson(Configuration configuration) {
+        return new Gson().toJson(configuration);
     }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public Date getCreateDate() {
-        return createDate;
-    }
-
-    public void setCreateDate(Date createDate) {
-        this.createDate = createDate;
-    }
-
-    public ConfigirationType getType() { return this.type; }
-
-    public void setType(ConfigirationType type) { this.type = type; }
 }

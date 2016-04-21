@@ -17,7 +17,7 @@ import java.text.SimpleDateFormat;
 import java.util.List;
 
 import info.vhowto.oinkbrewmobile.R;
-import info.vhowto.oinkbrewmobile.domain.ConfigirationType;
+import info.vhowto.oinkbrewmobile.domain.ConfigurationType;
 import info.vhowto.oinkbrewmobile.domain.Configuration;
 
 public class ConfigurationListAdapter extends BaseAdapter {
@@ -85,9 +85,9 @@ public class ConfigurationListAdapter extends BaseAdapter {
         Configuration configuration = configurations.get(position);
         ViewHolder holder = (ViewHolder) convertView.getTag();
 
-        holder.image.setImageDrawable(configuration.getType() == ConfigirationType.BREW ? beerBrew : beerFermentation);
-        holder.name.setText(String.valueOf(configuration.getName()));
-        holder.date.setText(new SimpleDateFormat("'Created on' EEE dd MMM yyyy 'at' HH:mm").format(configuration.getCreateDate()));
+        holder.image.setImageDrawable(ConfigurationType.BREW.equals(configuration.type) ? beerBrew : beerFermentation);
+        holder.name.setText(String.valueOf(configuration.name));
+        holder.date.setText(new SimpleDateFormat("'Created on' EEE dd MMM yyyy 'at' HH:mm").format(configuration.create_date));
 
         return convertView;
     }

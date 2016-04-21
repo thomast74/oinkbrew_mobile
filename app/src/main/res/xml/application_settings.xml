@@ -18,5 +18,10 @@
             android:inputType="textPassword"
             android:title="@string/pref_title_api_server_password"
             android:defaultValue="" />
+        <CheckBoxPreference
+            android:key="pref_api_allow_all_certs"
+            android:title="Allow all SSL Certs"
+            android:contentDescription="WARNING! This can be a security issue."
+            android:defaultValue="false" />
     </PreferenceCategory>
 </PreferenceScreen>

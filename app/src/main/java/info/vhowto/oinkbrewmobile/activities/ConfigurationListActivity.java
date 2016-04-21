@@ -16,16 +16,16 @@ import android.widget.Toast;
 import com.mikepenz.materialdrawer.Drawer;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import info.vhowto.oinkbrewmobile.DrawerHelper;
 import info.vhowto.oinkbrewmobile.R;
 import info.vhowto.oinkbrewmobile.adapters.ConfigurationListAdapter;
-import info.vhowto.oinkbrewmobile.domain.ConfigirationType;
 import info.vhowto.oinkbrewmobile.domain.Configuration;
+import info.vhowto.oinkbrewmobile.remote.ConfigurationRequest;
+import info.vhowto.oinkbrewmobile.remote.RequestCallback;
 
-public class ConfigurationListActivity extends AppCompatActivity implements SwipeRefreshLayout.OnRefreshListener {
+public class ConfigurationListActivity extends AppCompatActivity implements SwipeRefreshLayout.OnRefreshListener, RequestCallback {
 
     private Menu menu;
     private ListView listView;
@@ -40,9 +40,7 @@ public class ConfigurationListActivity extends AppCompatActivity implements Swip
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_configuration_list);
 
-        configurations = new ArrayList<Configuration>();
-        configurations.add(new Configuration("Barbatos", new Date(116, 01, 30, 7, 0), ConfigirationType.FERMENTATION));
-        configurations.add(new Configuration("Jasmin IPA", new Date(116, 02, 18, 8, 0), ConfigirationType.BREW));
+        configurations = new ArrayList<>();
 
         listView = (ListView) findViewById(R.id.configuration_list_view);
         swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.configuration_list_swipe_refresh_layout);
@@ -84,13 +82,25 @@ public class ConfigurationListActivity extends AppCompatActivity implements Swip
 
         Boolean loadArchived = (menu == null || !menu.findItem(R.id.action_archived).isChecked()) ? false : true;
 
-        // load data from API request
+        configurations.clear();
+        adapter.notifyDataSetChanged();
 
+        ConfigurationRequest.GetConfigurations(this, loadArchived);
+    }
+
+    public void onRequestSuccessful(ArrayList<Configuration> newConfigurations) {
+        this.configurations.addAll(newConfigurations);
+        adapter.notifyDataSetChanged();
+        swipeRefreshLayout.setRefreshing(false);
+    }
+
+    public void onRequestFailure(String errorMessage) {
+        Toast.makeText(getApplicationContext(), errorMessage, Toast.LENGTH_LONG).show();
         swipeRefreshLayout.setRefreshing(false);
     }
 
     private void onListItemClick(Configuration configuration) {
-        Toast.makeText(this, configuration.getName() + " selected", Toast.LENGTH_LONG).show();
+        Toast.makeText(this, configuration.name + " selected", Toast.LENGTH_LONG).show();
     }
 
     @Override
