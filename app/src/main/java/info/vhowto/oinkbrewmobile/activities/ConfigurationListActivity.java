@@ -6,9 +6,9 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.Toast;
@@ -18,10 +18,10 @@ import com.mikepenz.materialdrawer.Drawer;
 import java.util.ArrayList;
 import java.util.List;
 
-import info.vhowto.oinkbrewmobile.DrawerHelper;
 import info.vhowto.oinkbrewmobile.R;
 import info.vhowto.oinkbrewmobile.adapters.ConfigurationListAdapter;
 import info.vhowto.oinkbrewmobile.domain.Configuration;
+import info.vhowto.oinkbrewmobile.fragments.DrawerHelper;
 import info.vhowto.oinkbrewmobile.remote.ConfigurationRequest;
 import info.vhowto.oinkbrewmobile.remote.RequestCallback;
 

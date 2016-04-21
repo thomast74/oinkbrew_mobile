@@ -17,8 +17,8 @@ import java.text.SimpleDateFormat;
 import java.util.List;
 
 import info.vhowto.oinkbrewmobile.R;
-import info.vhowto.oinkbrewmobile.domain.ConfigurationType;
 import info.vhowto.oinkbrewmobile.domain.Configuration;
+import info.vhowto.oinkbrewmobile.domain.ConfigurationType;
 
 public class ConfigurationListAdapter extends BaseAdapter {
 

@@ -54,7 +54,6 @@ public class ConfigurationRequest {
 
                         if (response.length() > 0) {
 
-                            // looping through json and adding to movies list
                             for (int i = 0; i < response.length(); i++) {
                                 try {
 

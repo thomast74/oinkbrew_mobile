@@ -1,4 +1,4 @@
-package info.vhowto.oinkbrewmobile;
+package info.vhowto.oinkbrewmobile.fragments;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -15,6 +15,7 @@ import com.mikepenz.materialdrawer.model.DividerDrawerItem;
 import com.mikepenz.materialdrawer.model.PrimaryDrawerItem;
 import com.mikepenz.materialdrawer.model.interfaces.IDrawerItem;
 
+import info.vhowto.oinkbrewmobile.R;
 import info.vhowto.oinkbrewmobile.activities.ConfigurationListActivity;
 import info.vhowto.oinkbrewmobile.activities.SettingsActivity;
 

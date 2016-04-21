@@ -1,4 +1,4 @@
-package info.vhowto.oinkbrewmobile;
+package info.vhowto.oinkbrewmobile.fragments;
 
 public class DrawerItems {
     public static long CONFIGURATION = 1;
