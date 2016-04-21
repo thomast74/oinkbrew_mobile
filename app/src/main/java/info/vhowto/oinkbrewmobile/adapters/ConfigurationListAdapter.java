@@ -32,6 +32,7 @@ public class ConfigurationListAdapter extends BaseAdapter {
     static class ViewHolder {
         public ImageView image;
         public TextView name;
+        public TextView brewpi;
         public TextView date;
     }
 
@@ -78,6 +79,7 @@ public class ConfigurationListAdapter extends BaseAdapter {
             ViewHolder viewHolder = new ViewHolder();
             viewHolder.image = (ImageView) convertView.findViewById(R.id.configuration_type_icon);
             viewHolder.name = (TextView) convertView.findViewById(R.id.configuration_name);
+            viewHolder.brewpi = (TextView) convertView.findViewById(R.id.configuration_brewpi);
             viewHolder.date = (TextView) convertView.findViewById(R.id.configuration_create_date);
             convertView.setTag(viewHolder);
         }
@@ -87,6 +89,7 @@ public class ConfigurationListAdapter extends BaseAdapter {
 
         holder.image.setImageDrawable(ConfigurationType.BREW.equals(configuration.type) ? beerBrew : beerFermentation);
         holder.name.setText(String.valueOf(configuration.name));
+        holder.brewpi.setText("Running on: " + String.valueOf(configuration.brewpi.name));
         holder.date.setText(new SimpleDateFormat("'Created on' EEE dd MMM yyyy 'at' HH:mm").format(configuration.create_date));
 
         return convertView;

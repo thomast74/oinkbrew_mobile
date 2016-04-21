@@ -9,8 +9,10 @@
         android:id="@+id/configuration_type_icon"
         android:layout_width="32dip"
         android:layout_height="32dip"
-        android:layout_margin="14dip"
-        android:contentDescription="TODO"
+        android:layout_marginLeft="14dip"
+        android:layout_marginRight="14dip"
+        android:layout_centerVertical="true"
+        android:contentDescription="Icon"
         android:src="@android:drawable/ic_dialog_info" />
 
     <TextView
@@ -20,17 +22,27 @@
         android:layout_marginTop="2dip"
         android:layout_marginLeft="10dip"
         android:layout_toRightOf="@id/configuration_type_icon"
-        android:text="Example application"
+        android:text="Name"
         android:textSize="22sp" />
 
     <TextView
-        android:id="@+id/configuration_create_date"
+        android:id="@+id/configuration_brewpi"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/configuration_name"
         android:layout_alignStart="@id/configuration_name"
         android:layout_marginTop="4dip"
-        android:text="Description"
+        android:text="BrewPi"
+        android:textSize="14sp" />
+
+    <TextView
+        android:id="@+id/configuration_create_date"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/configuration_brewpi"
+        android:layout_alignStart="@id/configuration_name"
+        android:layout_marginTop="4dip"
+        android:text="Create Date"
         android:textSize="14sp" />
 
 </RelativeLayout>
