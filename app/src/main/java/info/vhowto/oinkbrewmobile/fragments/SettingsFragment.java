@@ -55,7 +55,13 @@ public class SettingsFragment extends PreferenceFragment implements SharedPrefer
 
         if (pref instanceof EditTextPreference) {
             EditTextPreference etp = (EditTextPreference) pref;
-            if (!etp.getKey().contains("password"))
+
+            if (etp.getKey().equals("pref_api_server_url") && etp.getText().length() > 0 && etp.getText().endsWith("/")) {
+                String url = etp.getText();
+                etp.setText(url.substring(0, url.length()-1));
+            }
+
+            if (!etp.getKey().equals("pref_api_server_password") && !etp.getKey().equals("pref_api_allow_all_certs"))
                 pref.setSummary(etp.getText());
         }
     }

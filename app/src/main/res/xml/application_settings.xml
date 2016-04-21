@@ -21,7 +21,7 @@
         <CheckBoxPreference
             android:key="pref_api_allow_all_certs"
             android:title="Allow all SSL Certs"
-            android:contentDescription="WARNING! This can be a security issue."
+            android:summary="WARNING! Activating this option can be a security issue."
             android:defaultValue="false" />
     </PreferenceCategory>
 </PreferenceScreen>
