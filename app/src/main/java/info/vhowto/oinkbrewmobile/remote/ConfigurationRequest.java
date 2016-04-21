@@ -41,7 +41,7 @@ public class ConfigurationRequest {
             return;
         }
 
-        String url = String.format(configsGeneral, apiUrl, loadArchived.toString(), Boolean.FALSE.toString());
+        String url = String.format(configsGeneral, apiUrl, loadArchived ? "True" : "False", "False");
 
         JsonArrayRequest req = new JsonArrayRequest(Request.Method.GET, url, null,
 
