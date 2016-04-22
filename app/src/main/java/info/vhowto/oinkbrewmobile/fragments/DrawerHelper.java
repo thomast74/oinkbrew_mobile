@@ -61,9 +61,11 @@ public class DrawerHelper implements Drawer.OnDrawerItemClickListener {
 
             if (drawerItem.getIdentifier() == DrawerItems.CONFIGURATION && !(activity instanceof ConfigurationListActivity)) {
                 intent = new Intent(activity, ConfigurationListActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
             }
             else if (drawerItem.getIdentifier() == DrawerItems.BREWPIS&& !(activity instanceof BrewPiListActivity)) {
                 intent = new Intent(activity, BrewPiListActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
             }
             else if (drawerItem.getIdentifier() == DrawerItems.DEVICES) {
                 Snackbar.make(view, "You clicked Devices", Snackbar.LENGTH_LONG)
