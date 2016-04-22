@@ -8,8 +8,6 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.AdapterView;
 import android.widget.Toast;
 
 import com.mikepenz.materialdrawer.Drawer;
@@ -19,7 +17,7 @@ import java.util.ArrayList;
 import info.vhowto.oinkbrewmobile.R;
 import info.vhowto.oinkbrewmobile.adapters.BrewPiAdapter;
 import info.vhowto.oinkbrewmobile.domain.BrewPi;
-import info.vhowto.oinkbrewmobile.fragments.DrawerHelper;
+import info.vhowto.oinkbrewmobile.fragments.OinkbrewDrawer;
 import info.vhowto.oinkbrewmobile.remote.RequestCallback;
 
 public class BrewPiListActivity extends AppCompatActivity implements SwipeRefreshLayout.OnRefreshListener, RequestCallback<BrewPi> {
@@ -49,7 +47,7 @@ public class BrewPiListActivity extends AppCompatActivity implements SwipeRefres
         Toolbar toolbar = (Toolbar) findViewById(R.id.brewpi_toolbar);
         setSupportActionBar(toolbar);
 
-        drawer = new DrawerHelper().createDrawer(this, toolbar);
+        drawer = new OinkbrewDrawer().createDrawer(this, toolbar);
 
         swipeRefreshLayout.post(new Runnable() {
                                     @Override
@@ -107,7 +105,7 @@ public class BrewPiListActivity extends AppCompatActivity implements SwipeRefres
         if (drawer != null && drawer.isDrawerOpen()) {
             drawer.closeDrawer();
         } else {
-            super.onBackPressed();
+            super.finish();
         }
     }
 

@@ -20,7 +20,7 @@ import info.vhowto.oinkbrewmobile.activities.BrewPiListActivity;
 import info.vhowto.oinkbrewmobile.activities.ConfigurationListActivity;
 import info.vhowto.oinkbrewmobile.activities.SettingsActivity;
 
-public class DrawerHelper implements Drawer.OnDrawerItemClickListener {
+public class OinkbrewDrawer implements Drawer.OnDrawerItemClickListener {
 
     private Activity activity;
     private AccountHeader header = null;

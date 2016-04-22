@@ -21,7 +21,7 @@ import java.util.List;
 import info.vhowto.oinkbrewmobile.R;
 import info.vhowto.oinkbrewmobile.adapters.ConfigurationListAdapter;
 import info.vhowto.oinkbrewmobile.domain.Configuration;
-import info.vhowto.oinkbrewmobile.fragments.DrawerHelper;
+import info.vhowto.oinkbrewmobile.fragments.OinkbrewDrawer;
 import info.vhowto.oinkbrewmobile.remote.ConfigurationRequest;
 import info.vhowto.oinkbrewmobile.remote.RequestCallback;
 
@@ -66,7 +66,7 @@ public class ConfigurationListActivity extends AppCompatActivity implements Swip
             }
         });
 
-        drawer = new DrawerHelper().createDrawer(this, toolbar);
+        drawer = new OinkbrewDrawer().createDrawer(this, toolbar);
 
         swipeRefreshLayout.post(new Runnable() {
                                     @Override
@@ -141,7 +141,7 @@ public class ConfigurationListActivity extends AppCompatActivity implements Swip
         if (drawer != null && drawer.isDrawerOpen()) {
             drawer.closeDrawer();
         } else {
-            super.onBackPressed();
+            super.finish();
         }
     }
 
