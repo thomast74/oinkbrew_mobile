@@ -1,29 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
+<android.support.design.widget.CoordinatorLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
-    tools:context=".activities.SettingsActivity">
+    tools:context=".activities.BrewPiListActivity">
 
     <android.support.v7.widget.Toolbar
-        android:id="@+id/configuration_toolbar"
+        android:id="@+id/brewpi_toolbar"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
         android:background="?attr/colorPrimary"
         android:elevation="4dp"
-        android:title="@string/drawer_settings"
-        app:navigationIcon="?attr/homeAsUpIndicator"
-        app:navigationContentDescription="@string/abc_action_bar_up_description"
+        android:title="@string/drawer_brewpis"
         android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
         app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
 
-    <FrameLayout
-        android:id="@+id/content_frame"
+    <android.support.v4.widget.SwipeRefreshLayout
+        android:id="@+id/brewpi_list_swipe_refresh_layout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/configuration_toolbar" />
+        android:layout_height="wrap_content">
 
-</RelativeLayout>
+        <android.support.v7.widget.RecyclerView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/brewpi_recycler_view"
+            />
+
+    </android.support.v4.widget.SwipeRefreshLayout>
+
+
+</android.support.design.widget.CoordinatorLayout>

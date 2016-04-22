@@ -25,7 +25,7 @@ import info.vhowto.oinkbrewmobile.fragments.DrawerHelper;
 import info.vhowto.oinkbrewmobile.remote.ConfigurationRequest;
 import info.vhowto.oinkbrewmobile.remote.RequestCallback;
 
-public class ConfigurationListActivity extends AppCompatActivity implements SwipeRefreshLayout.OnRefreshListener, RequestCallback {
+public class ConfigurationListActivity extends AppCompatActivity implements SwipeRefreshLayout.OnRefreshListener, RequestCallback<Configuration> {
 
     private Menu menu;
     private ListView listView;
@@ -54,7 +54,7 @@ public class ConfigurationListActivity extends AppCompatActivity implements Swip
         });
         swipeRefreshLayout.setOnRefreshListener(this);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.configuration_toolbar);
         setSupportActionBar(toolbar);
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
