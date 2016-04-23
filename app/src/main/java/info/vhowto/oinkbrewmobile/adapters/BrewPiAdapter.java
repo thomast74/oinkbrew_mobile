@@ -1,10 +1,15 @@
 package info.vhowto.oinkbrewmobile.adapters;
 
+import android.content.Context;
+import android.support.annotation.Nullable;
 import android.support.v7.widget.CardView;
+import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -14,11 +19,14 @@ import info.vhowto.oinkbrewmobile.domain.BrewPi;
 
 public class BrewPiAdapter extends RecyclerView.Adapter<BrewPiAdapter.BrewPiViewHolder> {
 
+    private Context context;
     private ArrayList<BrewPi> brewpis;
+    private CardListener cardListener;
 
     public static class BrewPiViewHolder extends RecyclerView.ViewHolder {
 
         CardView cv;
+        ImageView menu;
         TextView name;
         TextView device_id;
         TextView firmware_version;
@@ -28,11 +36,17 @@ public class BrewPiAdapter extends RecyclerView.Adapter<BrewPiAdapter.BrewPiView
         BrewPiViewHolder(View itemView) {
             super(itemView);
             cv = (CardView)itemView.findViewById(R.id.brewpi_card_view);
+            menu = (ImageView)itemView.findViewById(R.id.brewpi_overflow);
             name = (TextView)itemView.findViewById(R.id.brewpi_name);
             device_id = (TextView)itemView.findViewById(R.id.brewpi_device_id);
             firmware_version = (TextView)itemView.findViewById(R.id.brewpi_firmware_version);
             system_version = (TextView)itemView.findViewById(R.id.brewpi_system_version);
             spark_version = (TextView)itemView.findViewById(R.id.brewpi_spark_version);
+        }
+    }
+
+    public static class CardListener {
+        public void onMenuItemClicked(int position, MenuItem item) {
         }
     }
 
@@ -47,6 +61,7 @@ public class BrewPiAdapter extends RecyclerView.Adapter<BrewPiAdapter.BrewPiView
 
     @Override
     public BrewPiViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
+        context = viewGroup.getContext();
         View v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.row_brewpi_list, viewGroup, false);
 
         return new BrewPiViewHolder(v);
@@ -54,15 +69,38 @@ public class BrewPiAdapter extends RecyclerView.Adapter<BrewPiAdapter.BrewPiView
 
     @Override
     public void onBindViewHolder(BrewPiViewHolder viewHolder, int i) {
-        viewHolder.name.setText(brewpis.get(i).name);
-        viewHolder.device_id.setText(brewpis.get(i).device_id);
-        viewHolder.firmware_version.setText(brewpis.get(i).firmware_version);
-        viewHolder.system_version.setText(brewpis.get(i).system_version);
-        viewHolder.spark_version.setText(brewpis.get(i).spark_version);
+        final int position = i;
+        viewHolder.name.setText(brewpis.get(position).name);
+        viewHolder.device_id.setText(brewpis.get(position).device_id);
+        viewHolder.firmware_version.setText(brewpis.get(position).firmware_version);
+        viewHolder.system_version.setText(brewpis.get(position).system_version);
+        viewHolder.spark_version.setText(brewpis.get(position).spark_version);
+
+        final PopupMenu popup = new PopupMenu(context, viewHolder.menu);
+        popup.inflate(R.menu.menu_brewpi_card);
+        popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                if (cardListener != null) {
+                    cardListener.onMenuItemClicked(position, item);
+                }
+                return true;
+            }
+        });
+        viewHolder.menu.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                popup.show();
+            }
+        });
     }
 
     @Override
     public void onAttachedToRecyclerView(RecyclerView recyclerView) {
         super.onAttachedToRecyclerView(recyclerView);
+    }
+
+    public void setCardListener(@Nullable CardListener l) {
+        this.cardListener = l;
     }
 }

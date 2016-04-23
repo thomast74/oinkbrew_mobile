@@ -2,53 +2,123 @@
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:padding="16dip">
-
+    android:layout_height="wrap_content"
+    android:layout_marginLeft="8dp"
+    android:layout_marginRight="8dp"
+    android:layout_marginTop="8dp"
+    >
     <android.support.v7.widget.CardView
+        xmlns:card_view="http://schemas.android.com/apk/res-auto"
         android:id="@+id/brewpi_card_view"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
+        android:layout_height="wrap_content"
+        card_view:cardCornerRadius="2dp"
+        card_view:cardElevation="2dp"
+        card_view:cardUseCompatPadding="true"
+        >
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="16dp">
+            android:paddingBottom="8dp"
+            >
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/brewpi_name"
+            <ImageView
+                android:id="@+id/brewpi_thumbnail"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
                 android:layout_alignParentTop="true"
-                android:textSize="30sp"
+                android:scaleType="centerCrop"
+                android:src="@drawable/brewpi_card"
+                />
+
+            <ImageView
+                android:id="@+id/brewpi_overflow"
+                android:layout_width="34dp"
+                android:layout_height="34dp"
+                android:layout_below="@+id/brewpi_thumbnail"
+                android:layout_alignParentRight="true"
+                android:paddingTop="15dp"
+                android:paddingRight="0dp"
+                android:src="@drawable/ic_menu_moreoverflow_material"
                 />
 
             <TextView
+                android:id="@+id/brewpi_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_below="@+id/brewpi_thumbnail"
+                android:textSize="22sp"
+                android:textColor="@color/black"
+                android:paddingTop="10dp"
+                android:paddingLeft="12dp"
+                android:paddingRight="12dp"
+                />
+
+            <TextView
                 android:id="@+id/brewpi_device_id"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_below="@+id/brewpi_name"
+                android:layout_alignStart="@id/brewpi_name"
+                android:paddingLeft="12dp"
+                android:paddingRight="12dp"
+                android:textSize="16sp"
                 />
 
             <TextView
+                android:id="@+id/brewpi_label_firmware_version"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/brewpi_firmware_version"
+                android:text="Firmware: "
                 android:layout_below="@+id/brewpi_device_id"
+                android:layout_alignStart="@id/brewpi_name"
+                android:paddingTop="16dp"
+                android:paddingLeft="12dp"
+                android:paddingRight="12dp"
+                android:textSize="16sp"
                 />
 
             <TextView
+                android:id="@+id/brewpi_firmware_version"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/brewpi_system_version"
-                android:layout_below="@+id/brewpi_firmware_version"
+                android:layout_below="@+id/brewpi_device_id"
+                android:layout_toRightOf="@+id/brewpi_label_firmware_version"
+                android:textSize="16sp"
+                android:paddingTop="16dp"
                 />
 
             <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
                 android:id="@+id/brewpi_spark_version"
-                android:layout_below="@+id/brewpi_system_version"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/brewpi_device_id"
+                android:layout_alignParentRight="true"
+                android:textSize="16sp"
+                android:paddingTop="16dp"
+                android:paddingLeft="6dp"
+                android:paddingRight="12dp"
+                />
+
+            <TextView
+                android:id="@+id/brewpi_system_version"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/brewpi_device_id"
+                android:layout_toLeftOf="@+id/brewpi_spark_version"
+                android:textSize="16sp"
+                android:paddingTop="16dp"
+                />
+
+            <TextView
+                android:id="@+id/brewpi_label_system_version"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="System: "
+                android:layout_below="@+id/brewpi_device_id"
+                android:layout_toLeftOf="@+id/brewpi_system_version"
+                android:textSize="16sp"
+                android:paddingTop="16dp"
                 />
 
         </RelativeLayout>

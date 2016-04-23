@@ -74,8 +74,8 @@ public class ConfigurationRequest {
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        Log.e(TAG, error.networkResponse.statusCode + "Server Error: " + error.getMessage());
-                        callback.onRequestFailure(error.networkResponse.statusCode, error.getMessage());
+                        callback.onRequestFailure(error.networkResponse == null ? 0 : error.networkResponse.statusCode,
+                                                  error.getMessage());
                     }
                 });
 

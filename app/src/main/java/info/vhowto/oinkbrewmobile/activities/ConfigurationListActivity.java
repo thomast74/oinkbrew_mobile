@@ -61,6 +61,7 @@ public class ConfigurationListActivity extends AppCompatActivity implements Swip
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                //TODO: Implement Create New Configuration
                 Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
             }
@@ -70,17 +71,14 @@ public class ConfigurationListActivity extends AppCompatActivity implements Swip
 
         swipeRefreshLayout.post(new Runnable() {
                                     @Override
-                                    public void run() {
-                                        fetchConfigurations();
-                                    }
-                                }
-        );
+                                    public void run() { fetchConfigurations(); }
+                                } );
     }
 
     private void fetchConfigurations() {
         swipeRefreshLayout.setRefreshing(true);
 
-        Boolean loadArchived = (menu == null || !menu.findItem(R.id.action_archived).isChecked()) ? false : true;
+        Boolean loadArchived = !(menu == null || !menu.findItem(R.id.action_archived).isChecked());
 
         configurations.clear();
         adapter.notifyDataSetChanged();
@@ -141,7 +139,7 @@ public class ConfigurationListActivity extends AppCompatActivity implements Swip
         if (drawer != null && drawer.isDrawerOpen()) {
             drawer.closeDrawer();
         } else {
-            super.finish();
+            finishAffinity();
         }
     }
 

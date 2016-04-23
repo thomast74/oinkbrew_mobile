@@ -3,6 +3,7 @@ package info.vhowto.oinkbrewmobile.activities;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -33,22 +34,29 @@ public class BrewPiListActivity extends AppCompatActivity implements SwipeRefres
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_brewpi_list);
 
-        brewpis = new ArrayList<>();
-        adapter = new BrewPiAdapter(brewpis);
-        LinearLayoutManager llm = new LinearLayoutManager(getApplicationContext());
-
-        recyclerView = (RecyclerView)findViewById(R.id.brewpi_recycler_view);
-        recyclerView.setLayoutManager(llm);
-        recyclerView.setAdapter(adapter);
-
-        swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.brewpi_list_swipe_refresh_layout);
-        swipeRefreshLayout.setOnRefreshListener(this);
-
         Toolbar toolbar = (Toolbar) findViewById(R.id.brewpi_toolbar);
         setSupportActionBar(toolbar);
 
         drawer = new OinkbrewDrawer().createDrawer(this, toolbar);
 
+        brewpis = new ArrayList<>();
+        brewpis.add(new BrewPi("280025000447343232363230", "Fridge", "0.3.0", "0.4.9", "V1"));
+        brewpis.add(new BrewPi("3b003d000747343232363230", "3b003d000747343232363230", "0.3.0", "0.4.9", "V2"));
+
+        adapter = new BrewPiAdapter(brewpis);
+        adapter.setCardListener(new BrewPiAdapter.CardListener() {
+            @Override
+            public void onMenuItemClicked(int position, MenuItem item) { onCardMenuItemClick(position, item); }
+        });
+        RecyclerView.LayoutManager llm = new LinearLayoutManager(getApplicationContext());
+
+        recyclerView = (RecyclerView)findViewById(R.id.brewpi_recycler_view);
+        recyclerView.setLayoutManager(llm);
+        recyclerView.setItemAnimator(new DefaultItemAnimator());
+        recyclerView.setAdapter(adapter);
+
+        swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.brewpi_list_swipe_refresh_layout);
+        swipeRefreshLayout.setOnRefreshListener(this);
         swipeRefreshLayout.post(new Runnable() {
                                     @Override
                                     public void run() {
@@ -57,11 +65,14 @@ public class BrewPiListActivity extends AppCompatActivity implements SwipeRefres
                                 });
     }
 
+    // TODO: Implement Fetch BrewPis
     private void fetchBrewPis() {
         swipeRefreshLayout.setRefreshing(true);
 
-        brewpis.clear();
+        //brewpis.clear();
         adapter.notifyDataSetChanged();
+
+        swipeRefreshLayout.setRefreshing(false);
     }
 
     public void onRequestSuccessful(ArrayList<BrewPi> newBrewPis) {
@@ -100,12 +111,34 @@ public class BrewPiListActivity extends AppCompatActivity implements SwipeRefres
         }
     }
 
+    public void onCardMenuItemClick(int position, MenuItem item) {
+        int id = item.getItemId();
+
+        if (position < 0 || position >= brewpis.size())
+            return;
+
+        BrewPi brewpi = brewpis.get(position);
+        if (brewpi == null)
+            return;
+
+        switch (id) {
+            case R.id.action_change_name:
+                // TODO: Implement BrewPi Change Name
+                Toast.makeText(getApplicationContext(),"Change name: " + brewpi.name, Toast.LENGTH_LONG).show();
+                break;
+            case R.id.action_reset:
+                // TODO: Implement BrewPi Reset
+                Toast.makeText(getApplicationContext(),"Reset: " + brewpi.name, Toast.LENGTH_LONG).show();
+                break;
+        }
+    }
+
     @Override
     public void onBackPressed() {
         if (drawer != null && drawer.isDrawerOpen()) {
             drawer.closeDrawer();
         } else {
-            super.finish();
+            finishAffinity();
         }
     }
 

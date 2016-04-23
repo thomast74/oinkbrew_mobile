@@ -68,6 +68,7 @@ public class OinkbrewDrawer implements Drawer.OnDrawerItemClickListener {
                 intent.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
             }
             else if (drawerItem.getIdentifier() == DrawerItems.DEVICES) {
+                //TODO: Implement Devices Activity
                 Snackbar.make(view, "You clicked Devices", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
             }
