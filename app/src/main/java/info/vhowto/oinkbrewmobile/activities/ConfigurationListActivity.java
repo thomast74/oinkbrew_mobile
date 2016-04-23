@@ -86,6 +86,10 @@ public class ConfigurationListActivity extends AppCompatActivity implements Swip
         ConfigurationRequest.getConfigurations(this, loadArchived);
     }
 
+    public void onRequestSuccessful() {
+        adapter.notifyDataSetChanged();
+    }
+
     public void onRequestSuccessful(ArrayList<Configuration> newConfigurations) {
         this.configurations.addAll(newConfigurations);
         adapter.notifyDataSetChanged();

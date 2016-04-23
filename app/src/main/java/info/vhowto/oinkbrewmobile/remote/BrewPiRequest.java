@@ -8,9 +8,11 @@ import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
+import com.android.volley.toolbox.JsonObjectRequest;
 
 import org.json.JSONArray;
 import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 
@@ -21,9 +23,9 @@ import info.vhowto.oinkbrewmobile.helpers.HttpsTrustManager;
 
 public class BrewPiRequest {
 
-    private static final String TAG = ConfigurationRequest.class.getSimpleName();
+    private static final String TAG = BrewPiRequest.class.getSimpleName();
     private static final String brewpisGeneral = "%s/brewpis/";
-    private static final String brewpiDetail = "%s/configs/%s/%s";
+    private static final String brewpiDetail = "%s/brewpis/%s/%s/";
 
     public static void getBrewPis(final RequestCallback callback) {
 
@@ -79,6 +81,53 @@ public class BrewPiRequest {
                 });
 
         OinkbrewApplication.getInstance().addToRequestQueue(req);
+    }
+
+    public static void setName(BrewPi brewpi, final RequestCallback<BrewPi> callback) {
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(callback.getApplicationContext());
+        String apiUrl = prefs.getString("pref_api_server_url", "");
+        Boolean allowAllCerts = prefs.getBoolean("pref_api_allow_all_certs", false);
+
+        if (allowAllCerts)
+            HttpsTrustManager.allowAllSSL();
+        else
+            HttpsTrustManager.allowOnlyValidSSL();
+
+        if (apiUrl.isEmpty()) {
+            callback.onRequestFailure(0, callback.getApplicationContext()
+                    .getString(R.string.error_settings_api_url_missing));
+            return;
+        }
+
+        String url = String.format(brewpiDetail, apiUrl, brewpi.device_id, "update");
+
+        try {
+            Log.d(TAG, BrewPi.toJson(brewpi));
+            JSONObject brewpiJsonObject = new JSONObject(BrewPi.toJson(brewpi));
+
+            JsonObjectRequest req = new JsonObjectRequest(Request.Method.PUT, url, brewpiJsonObject,
+
+                    new Response.Listener<JSONObject>() {
+                        @Override
+                        public void onResponse(JSONObject response) {
+                            callback.onRequestSuccessful();
+                        }
+                    },
+
+                    new Response.ErrorListener() {
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
+                            Log.d(TAG, error.getMessage(), error);
+                            callback.onRequestFailure(error.networkResponse == null ? 0 : error.networkResponse.statusCode,
+                                    error.getMessage());
+                        }
+                    });
+
+            OinkbrewApplication.getInstance().addToRequestQueue(req);
+        } catch (JSONException error) {
+            Log.d(TAG, error.getMessage(), error);
+            callback.onRequestFailure(0, error.getMessage());
+        }
     }
 
 }

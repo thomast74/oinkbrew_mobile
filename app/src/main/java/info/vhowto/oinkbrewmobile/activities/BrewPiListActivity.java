@@ -1,14 +1,18 @@
 package info.vhowto.oinkbrewmobile.activities;
 
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.text.InputType;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.EditText;
 import android.widget.Toast;
 
 import com.mikepenz.materialdrawer.Drawer;
@@ -73,6 +77,10 @@ public class BrewPiListActivity extends AppCompatActivity implements SwipeRefres
         BrewPiRequest.getBrewPis(this);
     }
 
+    public void onRequestSuccessful() {
+        adapter.notifyDataSetChanged();
+    }
+
     public void onRequestSuccessful(ArrayList<BrewPi> newBrewPis) {
         this.brewpis.addAll(newBrewPis);
         adapter.notifyDataSetChanged();
@@ -115,14 +123,34 @@ public class BrewPiListActivity extends AppCompatActivity implements SwipeRefres
         if (position < 0 || position >= brewpis.size())
             return;
 
-        BrewPi brewpi = brewpis.get(position);
+        final BrewPi brewpi = brewpis.get(position);
         if (brewpi == null)
             return;
 
         switch (id) {
             case R.id.action_change_name:
-                // TODO: Implement BrewPi Change Name
-                Toast.makeText(getApplicationContext(),"Change name: " + brewpi.name, Toast.LENGTH_LONG).show();
+                final BrewPiListActivity callback = this;
+                AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                builder.setTitle(R.string.action_change_name);
+                final EditText input = new EditText(this);
+                input.setText(brewpi.name);
+                input.setInputType(InputType.TYPE_CLASS_TEXT);
+                builder.setView(input);
+
+                builder.setPositiveButton(getString(R.string.ok), new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        brewpi.name = input.getText().toString();
+                        BrewPiRequest.setName(brewpi, callback);
+                    }
+                });
+                builder.setNegativeButton(getString(R.string.Cancel), new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.cancel();
+                    }
+                });
+                builder.show();
                 break;
             case R.id.action_reset:
                 // TODO: Implement BrewPi Reset

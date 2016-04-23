@@ -22,5 +22,7 @@
     <string name="error_settings_api_url_missing">API Url not set</string>
     <string name="action_change_name">Change name</string>
     <string name="action_reset">Reset</string>
+    <string name="ok">Ok</string>
+    <string name="Cancel">Cancel</string>
 
 </resources>
