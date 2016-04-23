@@ -16,17 +16,16 @@ import java.util.ArrayList;
 
 import info.vhowto.oinkbrewmobile.OinkbrewApplication;
 import info.vhowto.oinkbrewmobile.R;
-import info.vhowto.oinkbrewmobile.domain.Configuration;
+import info.vhowto.oinkbrewmobile.domain.BrewPi;
 import info.vhowto.oinkbrewmobile.helpers.HttpsTrustManager;
 
-public class ConfigurationRequest {
+public class BrewPiRequest {
 
     private static final String TAG = ConfigurationRequest.class.getSimpleName();
-    private static final String configsGeneral = "%s/configs/?archived=%s&all_phases=%s";
-    private static final String configsBrewPi = "%s/configs/%s/?archived=%s&all_phases=%s";
-    private static final String configsDedicated = "%s/configs/%s/%d/?archived=%s&all_phases=%s";
+    private static final String brewpisGeneral = "%s/brewpis/";
+    private static final String brewpiDetail = "%s/configs/%s/%s";
 
-    public static void getConfigurations(final RequestCallback callback, Boolean loadArchived) {
+    public static void getBrewPis(final RequestCallback callback) {
 
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(callback.getApplicationContext());
         String apiUrl = prefs.getString("pref_api_server_url", "");
@@ -39,11 +38,11 @@ public class ConfigurationRequest {
 
         if (apiUrl.isEmpty()) {
             callback.onRequestFailure(0, callback.getApplicationContext()
-                                                 .getString(R.string.error_settings_api_url_missing));
+                    .getString(R.string.error_settings_api_url_missing));
             return;
         }
 
-        String url = String.format(configsGeneral, apiUrl, loadArchived, false);
+        String url = String.format(brewpisGeneral, apiUrl);
 
         JsonArrayRequest req = new JsonArrayRequest(Request.Method.GET, url, null,
 
@@ -52,22 +51,22 @@ public class ConfigurationRequest {
                     @Override
                     public void onResponse(JSONArray response) {
                         Log.d(TAG, response.toString());
-                        ArrayList<Configuration> configurations = new ArrayList<>();
+                        ArrayList<BrewPi> brewpis = new ArrayList<>();
 
                         if (response.length() > 0) {
 
                             for (int i = 0; i < response.length(); i++) {
                                 try {
 
-                                    Configuration configuration = Configuration.fromJson(response.getJSONObject(i).toString());
-                                    configurations.add(configuration);
+                                    BrewPi brewpi= BrewPi.fromJson(response.getJSONObject(i).toString());
+                                    brewpis.add(brewpi);
 
                                 } catch (JSONException e) {
                                     Log.e(TAG, "JSON Parsing error: " + e.getMessage());
                                 }
                             }
                         }
-                        callback.onRequestSuccessful(configurations);
+                        callback.onRequestSuccessful(brewpis);
                     }
                 },
 
@@ -75,10 +74,11 @@ public class ConfigurationRequest {
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         callback.onRequestFailure(error.networkResponse == null ? 0 : error.networkResponse.statusCode,
-                                                  error.getMessage());
+                                error.getMessage());
                     }
                 });
 
         OinkbrewApplication.getInstance().addToRequestQueue(req);
     }
+
 }

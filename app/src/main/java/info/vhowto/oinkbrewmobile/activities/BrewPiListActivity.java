@@ -19,6 +19,7 @@ import info.vhowto.oinkbrewmobile.R;
 import info.vhowto.oinkbrewmobile.adapters.BrewPiAdapter;
 import info.vhowto.oinkbrewmobile.domain.BrewPi;
 import info.vhowto.oinkbrewmobile.fragments.OinkbrewDrawer;
+import info.vhowto.oinkbrewmobile.remote.BrewPiRequest;
 import info.vhowto.oinkbrewmobile.remote.RequestCallback;
 
 public class BrewPiListActivity extends AppCompatActivity implements SwipeRefreshLayout.OnRefreshListener, RequestCallback<BrewPi> {
@@ -40,8 +41,6 @@ public class BrewPiListActivity extends AppCompatActivity implements SwipeRefres
         drawer = new OinkbrewDrawer().createDrawer(this, toolbar);
 
         brewpis = new ArrayList<>();
-        brewpis.add(new BrewPi("280025000447343232363230", "Fridge", "0.3.0", "0.4.9", "V1"));
-        brewpis.add(new BrewPi("3b003d000747343232363230", "3b003d000747343232363230", "0.3.0", "0.4.9", "V2"));
 
         adapter = new BrewPiAdapter(brewpis);
         adapter.setCardListener(new BrewPiAdapter.CardListener() {
@@ -65,14 +64,13 @@ public class BrewPiListActivity extends AppCompatActivity implements SwipeRefres
                                 });
     }
 
-    // TODO: Implement Fetch BrewPis
     private void fetchBrewPis() {
         swipeRefreshLayout.setRefreshing(true);
 
-        //brewpis.clear();
+        brewpis.clear();
         adapter.notifyDataSetChanged();
 
-        swipeRefreshLayout.setRefreshing(false);
+        BrewPiRequest.getBrewPis(this);
     }
 
     public void onRequestSuccessful(ArrayList<BrewPi> newBrewPis) {

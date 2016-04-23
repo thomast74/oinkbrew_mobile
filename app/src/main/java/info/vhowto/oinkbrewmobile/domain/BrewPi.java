@@ -1,19 +1,10 @@
 package info.vhowto.oinkbrewmobile.domain;
 
+import com.google.gson.Gson;
+
 import java.util.Date;
 
 public class BrewPi {
-
-    public BrewPi() {
-    }
-
-    public BrewPi(String device_id, String name, String firmware_version, String system_version, String spark_version) {
-        this.device_id = device_id;
-        this.name = name;
-        this.firmware_version = firmware_version;
-        this.system_version = system_version;
-        this.spark_version = spark_version;
-    }
 
     public String device_id;
     public String name;
@@ -29,4 +20,16 @@ public class BrewPi {
     public Long brewpi_time;
 
     public Date last_update;
+
+    public BrewPi() {
+    }
+
+    public static BrewPi fromJson(String json) {
+        return new Gson().fromJson(json, BrewPi.class);
+    }
+
+    public static String toJson(BrewPi brewpi) {
+        return new Gson().toJson(brewpi);
+    }
+
 }
