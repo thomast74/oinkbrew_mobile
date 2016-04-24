@@ -1,97 +1,98 @@
 package info.vhowto.oinkbrewmobile.adapters;
 
-import android.app.Activity;
-import android.content.Context;
 import android.graphics.drawable.Drawable;
+import android.support.annotation.Nullable;
+import android.support.v7.widget.CardView;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.mikepenz.community_material_typeface_library.CommunityMaterial;
-import com.mikepenz.iconics.IconicsDrawable;
-
 import java.text.SimpleDateFormat;
-import java.util.List;
+import java.util.ArrayList;
 
 import info.vhowto.oinkbrewmobile.R;
 import info.vhowto.oinkbrewmobile.domain.Configuration;
 import info.vhowto.oinkbrewmobile.domain.ConfigurationType;
 
-public class ConfigurationListAdapter extends BaseAdapter {
+public class ConfigurationListAdapter extends RecyclerView.Adapter<ConfigurationListAdapter.ConfigurationViewHolder> {
 
-    private Activity activity;
-    private LayoutInflater inflater;
-    private List<Configuration> configurations;
+    private ArrayList<Configuration> configurations;
+    private ItemListener itemListener;
 
-    private Drawable beerBrew;
-    private Drawable beerFermentation;
+    public static class ConfigurationViewHolder extends RecyclerView.ViewHolder {
 
-    static class ViewHolder {
-        public ImageView image;
-        public TextView name;
-        public TextView brewpi;
-        public TextView date;
+        CardView cv;
+        ImageView thumbnail;
+        TextView name;
+        TextView brewpi;
+        TextView create_date;
+        Drawable brewDrawable;
+        Drawable fermentationDrawable;
+
+        ConfigurationViewHolder(View itemView) {
+            super(itemView);
+            cv = (CardView)itemView.findViewById(R.id.configuration_card_view);
+            thumbnail = (ImageView)itemView.findViewById(R.id.configuration_thumbnail);
+            name = (TextView)itemView.findViewById(R.id.configuration_name);
+            brewpi = (TextView)itemView.findViewById(R.id.configuration_brewpi);
+            create_date = (TextView)itemView.findViewById(R.id.configuration_create_date);
+
+            brewDrawable = itemView.getContext().getDrawable(R.drawable.config_beer_card);
+            fermentationDrawable = itemView.getContext().getDrawable(R.drawable.config_fermentation_card);
+        }
+
+        public void bind(final Configuration item, final ItemListener listener) {
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override public void onClick(View v) {
+                    if (listener != null) {
+                        listener.onItemClick(item);
+                    }
+                }
+            });
+        }
     }
 
+    public interface ItemListener {
+        void onItemClick(Configuration item);
+    }
 
-    public ConfigurationListAdapter(Activity activity, List<Configuration> configurations) {
-        this.activity = activity;
+    public ConfigurationListAdapter(ArrayList<Configuration> configurations) {
         this.configurations = configurations;
-
-        beerBrew = new IconicsDrawable(this.activity.getApplicationContext())
-                .icon(CommunityMaterial.Icon.cmd_glass_mug)
-                .color(this.activity.getResources().getColor(R.color.material_orange_500, null))
-                .sizeDp(32);
-
-        beerFermentation = new IconicsDrawable(this.activity.getApplicationContext())
-                .icon(CommunityMaterial.Icon.cmd_fridge)
-                .color(this.activity.getResources().getColor(R.color.material_orange_500, null))
-                .sizeDp(32);
     }
 
     @Override
-    public int getCount() {
+    public int getItemCount() {
         return configurations.size();
     }
 
     @Override
-    public Object getItem(int location) {
-        return configurations.get(location);
+    public ConfigurationViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
+        View v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.row_configuration_list, viewGroup, false);
+
+        return new ConfigurationViewHolder(v);
     }
 
     @Override
-    public long getItemId(int position) {
-        return position;
+    public void onBindViewHolder(ConfigurationViewHolder viewHolder, int i) {
+        final int position = i;
+
+        viewHolder.bind(configurations.get(i), itemListener);
+
+        viewHolder.thumbnail.setImageDrawable(ConfigurationType.BREW.equals(configurations.get(i).type) ? viewHolder.brewDrawable : viewHolder.fermentationDrawable);
+        viewHolder.name.setText(configurations.get(position).name);
+        viewHolder.brewpi.setText(configurations.get(position).brewpi.name);
+        viewHolder.create_date.setText(new SimpleDateFormat("EEE dd MMM yyyy 'at' HH:mm").format(configurations.get(i).create_date));
     }
 
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
+    public void onAttachedToRecyclerView(RecyclerView recyclerView) {
+        super.onAttachedToRecyclerView(recyclerView);
+    }
 
-        if (inflater == null)
-            inflater = (LayoutInflater) activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-
-        if (convertView == null) {
-            convertView = inflater.inflate(R.layout.row_configuration_list, null);
-
-            ViewHolder viewHolder = new ViewHolder();
-            viewHolder.image = (ImageView) convertView.findViewById(R.id.configuration_type_icon);
-            viewHolder.name = (TextView) convertView.findViewById(R.id.configuration_name);
-            viewHolder.brewpi = (TextView) convertView.findViewById(R.id.configuration_brewpi);
-            viewHolder.date = (TextView) convertView.findViewById(R.id.configuration_create_date);
-            convertView.setTag(viewHolder);
-        }
-
-        Configuration configuration = configurations.get(position);
-        ViewHolder holder = (ViewHolder) convertView.getTag();
-
-        holder.image.setImageDrawable(ConfigurationType.BREW.equals(configuration.type) ? beerBrew : beerFermentation);
-        holder.name.setText(String.valueOf(configuration.name));
-        holder.brewpi.setText("Running on: " + String.valueOf(configuration.brewpi.name));
-        holder.date.setText(new SimpleDateFormat("'Created on' EEE dd MMM yyyy 'at' HH:mm").format(configuration.create_date));
-
-        return convertView;
+    public void setItemListener(@Nullable ItemListener l) {
+        this.itemListener = l;
     }
 }

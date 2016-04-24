@@ -17,11 +17,11 @@ import java.util.ArrayList;
 import info.vhowto.oinkbrewmobile.R;
 import info.vhowto.oinkbrewmobile.domain.BrewPi;
 
-public class BrewPiAdapter extends RecyclerView.Adapter<BrewPiAdapter.BrewPiViewHolder> {
+public class BrewPiListAdapter extends RecyclerView.Adapter<BrewPiListAdapter.BrewPiViewHolder> {
 
     private Context context;
     private ArrayList<BrewPi> brewpis;
-    private CardListener cardListener;
+    private ItemListener itemListener;
 
     public static class BrewPiViewHolder extends RecyclerView.ViewHolder {
 
@@ -35,6 +35,7 @@ public class BrewPiAdapter extends RecyclerView.Adapter<BrewPiAdapter.BrewPiView
 
         BrewPiViewHolder(View itemView) {
             super(itemView);
+
             cv = (CardView)itemView.findViewById(R.id.brewpi_card_view);
             menu = (ImageView)itemView.findViewById(R.id.brewpi_overflow);
             name = (TextView)itemView.findViewById(R.id.brewpi_name);
@@ -43,14 +44,24 @@ public class BrewPiAdapter extends RecyclerView.Adapter<BrewPiAdapter.BrewPiView
             system_version = (TextView)itemView.findViewById(R.id.brewpi_system_version);
             spark_version = (TextView)itemView.findViewById(R.id.brewpi_spark_version);
         }
-    }
 
-    public static class CardListener {
-        public void onMenuItemClicked(int position, MenuItem item) {
+        public void bind(final BrewPi item, final ItemListener listener) {
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override public void onClick(View v) {
+                    if (listener != null) {
+                        listener.onItemClick(item);
+                    }
+                }
+            });
         }
     }
 
-    public BrewPiAdapter(ArrayList<BrewPi> brewpis) {
+    public interface ItemListener {
+        void onMenuItemClicked(BrewPi item, MenuItem menuItem);
+        void onItemClick(BrewPi item);
+    }
+
+    public BrewPiListAdapter(ArrayList<BrewPi> brewpis) {
         this.brewpis = brewpis;
     }
 
@@ -70,6 +81,9 @@ public class BrewPiAdapter extends RecyclerView.Adapter<BrewPiAdapter.BrewPiView
     @Override
     public void onBindViewHolder(BrewPiViewHolder viewHolder, int i) {
         final int position = i;
+
+        viewHolder.bind(brewpis.get(i), itemListener);
+
         viewHolder.name.setText(brewpis.get(position).name);
         viewHolder.device_id.setText(brewpis.get(position).device_id);
         viewHolder.firmware_version.setText(brewpis.get(position).firmware_version);
@@ -81,8 +95,8 @@ public class BrewPiAdapter extends RecyclerView.Adapter<BrewPiAdapter.BrewPiView
         popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
-                if (cardListener != null) {
-                    cardListener.onMenuItemClicked(position, item);
+                if (itemListener != null) {
+                    itemListener.onMenuItemClicked(brewpis.get(position), item);
                 }
                 return true;
             }
@@ -100,7 +114,7 @@ public class BrewPiAdapter extends RecyclerView.Adapter<BrewPiAdapter.BrewPiView
         super.onAttachedToRecyclerView(recyclerView);
     }
 
-    public void setCardListener(@Nullable CardListener l) {
-        this.cardListener = l;
+    public void setItemListener(@Nullable ItemListener l) {
+        this.itemListener = l;
     }
 }

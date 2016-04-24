@@ -11,8 +11,8 @@
     android:paddingBottom="@dimen/activity_vertical_margin"
     android:background="@color/md_blue_grey_50"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:showIn="@layout/activity_configuration_list"
-    tools:context=".activities.ConfigurationListActivity">
+    tools:showIn="@layout/activity_brewpi_list"
+    tools:context=".activities.BrewPiListActivity">
 
     <android.support.v4.widget.SwipeRefreshLayout
         android:id="@+id/brewpi_list_swipe_refresh_layout"

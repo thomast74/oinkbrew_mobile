@@ -20,7 +20,7 @@ import com.mikepenz.materialdrawer.Drawer;
 import java.util.ArrayList;
 
 import info.vhowto.oinkbrewmobile.R;
-import info.vhowto.oinkbrewmobile.adapters.BrewPiAdapter;
+import info.vhowto.oinkbrewmobile.adapters.BrewPiListAdapter;
 import info.vhowto.oinkbrewmobile.domain.BrewPi;
 import info.vhowto.oinkbrewmobile.fragments.OinkbrewDrawer;
 import info.vhowto.oinkbrewmobile.remote.BrewPiRequest;
@@ -30,9 +30,9 @@ public class BrewPiListActivity extends AppCompatActivity implements SwipeRefres
 
     private ArrayList<BrewPi> brewpis;
     private RecyclerView recyclerView;
-    private BrewPiAdapter adapter;
+    private BrewPiListAdapter adapter;
     private SwipeRefreshLayout swipeRefreshLayout;
-    private Drawer drawer = null;
+    private Drawer drawer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,16 +40,19 @@ public class BrewPiListActivity extends AppCompatActivity implements SwipeRefres
         setContentView(R.layout.activity_brewpi_list);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.brewpi_toolbar);
+        toolbar.setTitle(R.string.drawer_brewpis);
         setSupportActionBar(toolbar);
 
         drawer = new OinkbrewDrawer().createDrawer(this, toolbar);
 
         brewpis = new ArrayList<>();
 
-        adapter = new BrewPiAdapter(brewpis);
-        adapter.setCardListener(new BrewPiAdapter.CardListener() {
+        adapter = new BrewPiListAdapter(brewpis);
+        adapter.setItemListener(new BrewPiListAdapter.ItemListener() {
             @Override
-            public void onMenuItemClicked(int position, MenuItem item) { onCardMenuItemClick(position, item); }
+            public void onMenuItemClicked(BrewPi item, MenuItem menuItem) { onCardMenuItemClick(item, menuItem); }
+            @Override
+            public void onItemClick(BrewPi item) { BrewPiListActivity.this.onItemClick(item); }
         });
         RecyclerView.LayoutManager llm = new LinearLayoutManager(getApplicationContext());
 
@@ -98,6 +101,10 @@ public class BrewPiListActivity extends AppCompatActivity implements SwipeRefres
         swipeRefreshLayout.setRefreshing(false);
     }
 
+    private void onItemClick(BrewPi item) {
+        Toast.makeText(this, item.name + " selected", Toast.LENGTH_LONG).show();
+    }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_brewpi_list, menu);
@@ -117,14 +124,10 @@ public class BrewPiListActivity extends AppCompatActivity implements SwipeRefres
         }
     }
 
-    public void onCardMenuItemClick(int position, MenuItem item) {
-        int id = item.getItemId();
+    public void onCardMenuItemClick(final BrewPi item, MenuItem menuItem) {
+        int id = menuItem.getItemId();
 
-        if (position < 0 || position >= brewpis.size())
-            return;
-
-        final BrewPi brewpi = brewpis.get(position);
-        if (brewpi == null)
+        if (item == null)
             return;
 
         switch (id) {
@@ -133,15 +136,15 @@ public class BrewPiListActivity extends AppCompatActivity implements SwipeRefres
                 AlertDialog.Builder builder = new AlertDialog.Builder(this);
                 builder.setTitle(R.string.action_change_name);
                 final EditText input = new EditText(this);
-                input.setText(brewpi.name);
+                input.setText(item.name);
                 input.setInputType(InputType.TYPE_CLASS_TEXT);
                 builder.setView(input);
 
                 builder.setPositiveButton(getString(R.string.ok), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        brewpi.name = input.getText().toString();
-                        BrewPiRequest.setName(brewpi, callback);
+                        item.name = input.getText().toString();
+                        BrewPiRequest.setName(item, callback);
                     }
                 });
                 builder.setNegativeButton(getString(R.string.Cancel), new DialogInterface.OnClickListener() {
@@ -154,7 +157,7 @@ public class BrewPiListActivity extends AppCompatActivity implements SwipeRefres
                 break;
             case R.id.action_reset:
                 // TODO: Implement BrewPi Reset
-                Toast.makeText(getApplicationContext(),"Reset: " + brewpi.name, Toast.LENGTH_LONG).show();
+                Toast.makeText(getApplicationContext(),"Reset: " + item.name, Toast.LENGTH_LONG).show();
                 break;
         }
     }
@@ -164,7 +167,7 @@ public class BrewPiListActivity extends AppCompatActivity implements SwipeRefres
         if (drawer != null && drawer.isDrawerOpen()) {
             drawer.closeDrawer();
         } else {
-            finishAffinity();
+            super.onBackPressed();
         }
     }
 

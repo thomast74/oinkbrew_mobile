@@ -1,48 +1,99 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="?android:attr/listPreferredItemHeight"
-    android:padding="6dip">
-
-    <ImageView
-        android:id="@+id/configuration_type_icon"
-        android:layout_width="32dip"
-        android:layout_height="32dip"
-        android:layout_marginLeft="14dip"
-        android:layout_marginRight="14dip"
-        android:layout_centerVertical="true"
-        android:contentDescription="Icon"
-        android:src="@android:drawable/ic_dialog_info" />
-
-    <TextView
-        android:id="@+id/configuration_name"
-        android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_marginLeft="8dp"
+    android:layout_marginRight="8dp"
+    android:layout_marginTop="8dp"
+    >
+    <android.support.v7.widget.CardView
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:card_view="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/configuration_card_view"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="2dip"
-        android:layout_marginLeft="10dip"
-        android:layout_toRightOf="@id/configuration_type_icon"
-        android:text="Name"
-        android:textSize="22sp" />
+        card_view:cardCornerRadius="2dp"
+        card_view:cardElevation="2dp"
+        card_view:cardUseCompatPadding="true"
+        >
+        <RelativeLayout
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingBottom="8dp"
+            >
+            <ImageView
+                android:id="@+id/configuration_thumbnail"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:layout_alignParentTop="true"
+                android:scaleType="centerCrop"
+                android:src="@drawable/config_beer_card"
+                />
 
-    <TextView
-        android:id="@+id/configuration_brewpi"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/configuration_name"
-        android:layout_alignStart="@id/configuration_name"
-        android:layout_marginTop="4dip"
-        android:text="BrewPi"
-        android:textSize="14sp" />
+            <TextView
+                android:id="@+id/configuration_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/configuration_thumbnail"
+                android:textSize="22sp"
+                android:textColor="@color/black"
+                android:paddingTop="10dp"
+                android:paddingLeft="12dp"
+                android:paddingRight="12dp"
+                />
 
-    <TextView
-        android:id="@+id/configuration_create_date"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/configuration_brewpi"
-        android:layout_alignStart="@id/configuration_name"
-        android:layout_marginTop="4dip"
-        android:text="Create Date"
-        android:textSize="14sp" />
+            <TextView
+                android:id="@+id/configuration_label_brewpi"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="BrewPi: "
+                android:layout_below="@+id/configuration_name"
+                android:layout_alignStart="@id/configuration_name"
+                android:paddingTop="8dp"
+                android:paddingLeft="12dp"
+                android:paddingRight="12dp"
+                android:textSize="16sp"
+                />
 
-</RelativeLayout>
+            <TextView
+                android:id="@+id/configuration_brewpi"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/configuration_name"
+                android:layout_toRightOf="@+id/configuration_label_brewpi"
+                android:paddingTop="8dp"
+                android:textSize="16sp"
+                android:textColor="@color/black"
+                />
+
+            <TextView
+                android:id="@+id/configuration_label_create_date"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Start date: "
+                android:layout_below="@+id/configuration_label_brewpi"
+                android:layout_alignStart="@id/configuration_name"
+                android:paddingTop="4dp"
+                android:paddingLeft="12dp"
+                android:paddingRight="12dp"
+                android:textSize="16sp"
+                />
+
+            <TextView
+                android:id="@+id/configuration_create_date"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/configuration_label_brewpi"
+                android:layout_toRightOf="@+id/configuration_label_create_date"
+                android:paddingTop="4dp"
+                android:textColor="@color/black"
+                android:textSize="16sp"
+                />
+
+        </RelativeLayout>
+
+    </android.support.v7.widget.CardView>
+
+</LinearLayout>

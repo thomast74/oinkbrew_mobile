@@ -5,18 +5,18 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ListView;
 import android.widget.Toast;
 
 import com.mikepenz.materialdrawer.Drawer;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import info.vhowto.oinkbrewmobile.R;
 import info.vhowto.oinkbrewmobile.adapters.ConfigurationListAdapter;
@@ -27,35 +27,23 @@ import info.vhowto.oinkbrewmobile.remote.RequestCallback;
 
 public class ConfigurationListActivity extends AppCompatActivity implements SwipeRefreshLayout.OnRefreshListener, RequestCallback<Configuration> {
 
-    private Menu menu;
-    private ListView listView;
+    private ArrayList<Configuration> configurations;
+    private RecyclerView recyclerView;
     private ConfigurationListAdapter adapter;
     private SwipeRefreshLayout swipeRefreshLayout;
-    private Drawer drawer = null;
-
-    private List<Configuration> configurations;
+    private Menu menu;
+    private Drawer drawer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_configuration_list);
 
-        configurations = new ArrayList<>();
-
-        listView = (ListView) findViewById(R.id.configuration_list_view);
-        swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.configuration_list_swipe_refresh_layout);
-        adapter = new ConfigurationListAdapter(this, configurations);
-        listView.setAdapter(adapter);
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                onListItemClick((Configuration)listView.getAdapter().getItem(position));
-            }
-        });
-        swipeRefreshLayout.setOnRefreshListener(this);
-
         Toolbar toolbar = (Toolbar) findViewById(R.id.configuration_toolbar);
+        toolbar.setTitle(R.string.drawer_configurations);
         setSupportActionBar(toolbar);
+
+        drawer = new OinkbrewDrawer().createDrawer(this, toolbar);
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -67,12 +55,28 @@ public class ConfigurationListActivity extends AppCompatActivity implements Swip
             }
         });
 
-        drawer = new OinkbrewDrawer().createDrawer(this, toolbar);
+        configurations = new ArrayList<>();
 
+        adapter = new ConfigurationListAdapter(configurations);
+        adapter.setItemListener(new ConfigurationListAdapter.ItemListener() {
+            @Override
+            public void onItemClick(Configuration item) { ConfigurationListActivity.this.onItemClick(item); }
+        });
+        RecyclerView.LayoutManager llm = new LinearLayoutManager(getApplicationContext());
+
+        recyclerView = (RecyclerView)findViewById(R.id.configuration_recycler_view);
+        recyclerView.setLayoutManager(llm);
+        recyclerView.setItemAnimator(new DefaultItemAnimator());
+        recyclerView.setAdapter(adapter);
+
+        swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.configuration_list_swipe_refresh_layout);
+        swipeRefreshLayout.setOnRefreshListener(this);
         swipeRefreshLayout.post(new Runnable() {
-                                    @Override
-                                    public void run() { fetchConfigurations(); }
-                                } );
+            @Override
+            public void run() {
+                fetchConfigurations();
+            }
+        });
     }
 
     private void fetchConfigurations() {
@@ -107,8 +111,8 @@ public class ConfigurationListActivity extends AppCompatActivity implements Swip
         swipeRefreshLayout.setRefreshing(false);
     }
 
-    private void onListItemClick(Configuration configuration) {
-        Toast.makeText(this, configuration.name + " selected", Toast.LENGTH_LONG).show();
+    private void onItemClick(Configuration item) {
+        Toast.makeText(this, item.name + " selected", Toast.LENGTH_LONG).show();
     }
 
     @Override
@@ -143,7 +147,7 @@ public class ConfigurationListActivity extends AppCompatActivity implements Swip
         if (drawer != null && drawer.isDrawerOpen()) {
             drawer.closeDrawer();
         } else {
-            finishAffinity();
+            super.onBackPressed();
         }
     }
 
