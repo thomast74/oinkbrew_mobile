@@ -1,5 +1,6 @@
 package info.vhowto.oinkbrewmobile.activities;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -112,7 +113,9 @@ public class ConfigurationListActivity extends AppCompatActivity implements Swip
     }
 
     private void onItemClick(Configuration item) {
-        Toast.makeText(this, item.name + " selected", Toast.LENGTH_LONG).show();
+        Intent intent = new Intent(this, ConfigurationOperationActivity.class);
+        intent.putExtra("item", item);
+        this.startActivity(intent);
     }
 
     @Override

@@ -9,12 +9,11 @@ import android.preference.PreferenceFragment;
 
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.Map;
 
 import info.vhowto.oinkbrewmobile.R;
 
 public class SettingsFragment extends PreferenceFragment implements SharedPreferences.OnSharedPreferenceChangeListener {
-
-    EditTextPreference apiServerUrl = null;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -25,28 +24,39 @@ public class SettingsFragment extends PreferenceFragment implements SharedPrefer
         SharedPreferences sp = getPreferenceScreen().getSharedPreferences();
         sp.registerOnSharedPreferenceChangeListener(this);
 
-        apiServerUrl = (EditTextPreference) findPreference("pref_api_server_url");
-        apiServerUrl.setSummary(sp.getString("pref_api_server_url", ""));
-        apiServerUrl.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+        ((EditTextPreference) findPreference("pref_api_server_url"))
+                .setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
             @Override
             public boolean onPreferenceChange(Preference preference, Object newValue) {
-                try {
-                    URL url = new URL((String)newValue);
-                    return true;
-                }
-                catch (MalformedURLException e) {
-                    final AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-                    builder.setTitle(R.string.error_title_invalid_input);
-                    builder.setMessage(R.string.error_msg_invalid_url);
-                    builder.setPositiveButton(android.R.string.ok, null);
-                    builder.show();
-                    return false;
-                }
+                    try {
+                        URL url = new URL((String)newValue);
+                        return true;
+                    }
+                    catch (MalformedURLException e) {
+                        final AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                        builder.setTitle(R.string.error_title_invalid_input);
+                        builder.setMessage(R.string.error_msg_invalid_url);
+                        builder.setPositiveButton(android.R.string.ok, null);
+                        builder.show();
+                        return false;
+                    }
             }
         });
 
-        EditTextPreference editTextPref = (EditTextPreference) findPreference("pref_api_server_username");
-        editTextPref.setSummary(sp.getString("pref_api_server_username", ""));
+        setSummaries();
+    }
+
+    private void setSummaries() {
+        Map<String, ?> preferences = getPreferenceScreen().getSharedPreferences().getAll();
+
+        for (Map.Entry<String, ?> entry : preferences.entrySet()) {
+            if (!entry.getKey().equals("pref_api_server_password") && !entry.getKey().equals("pref_api_allow_all_certs")) {
+                EditTextPreference etp = (EditTextPreference)findPreference(entry.getKey());
+                if (etp != null) {
+                    etp.setSummary(entry.getValue().toString());
+                }
+            }
+        }
     }
 
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {

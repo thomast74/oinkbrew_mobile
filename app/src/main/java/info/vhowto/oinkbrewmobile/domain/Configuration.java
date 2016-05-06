@@ -2,11 +2,12 @@ package info.vhowto.oinkbrewmobile.domain;
 
 import com.google.gson.Gson;
 
+import java.io.Serializable;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
-public class Configuration {
+public class Configuration implements Serializable {
 
     public int pk;
     public String name;

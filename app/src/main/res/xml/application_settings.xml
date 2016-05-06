@@ -24,4 +24,43 @@
             android:summary="WARNING! Activating this option can be a security issue."
             android:defaultValue="false" />
     </PreferenceCategory>
+    <PreferenceCategory
+        android:key="pref_key_fermentation_settings"
+        android:title="@string/pref_key_fermentation_settings">
+        <EditTextPreference
+            android:key="pref_fermentation_heat_period"
+            android:inputType="number"
+            android:title="@string/pref_title_fermentation_heat_period"
+            android:defaultValue="4000" />
+        <EditTextPreference
+            android:key="pref_fermentation_cooling_period"
+            android:inputType="number"
+            android:title="@string/pref_title_fermentation_cooling_period"
+            android:defaultValue="1200000" />
+        <EditTextPreference
+            android:key="pref_fermentation_cooling_on_time"
+            android:inputType="number"
+            android:title="@string/pref_title_fermentation_cooling_on_time"
+            android:defaultValue="210000" />
+        <EditTextPreference
+            android:key="pref_fermentation_cooling_off_time"
+            android:inputType="number"
+            android:title="@string/pref_title_fermentation_cooling_off_time"
+            android:defaultValue="300000" />
+        <EditTextPreference
+            android:key="pref_fermentation_p"
+            android:inputType="numberDecimal"
+            android:title="@string/pref_title_fermentation_p"
+            android:defaultValue="60.0" />
+        <EditTextPreference
+            android:key="pref_fermentation_i"
+            android:inputType="numberDecimal"
+            android:title="@string/pref_title_fermentation_i"
+            android:defaultValue="0.001" />
+        <EditTextPreference
+            android:key="pref_fermentation_d"
+            android:inputType="numberDecimal"
+            android:title="@string/pref_title_fermentation_d"
+            android:defaultValue="-2" />
+    </PreferenceCategory>
 </PreferenceScreen>
