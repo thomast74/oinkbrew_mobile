@@ -30,6 +30,10 @@
             android:name=".activities.BrewPiListActivity"
             android:label="@string/drawer_brewpis"
             />
+        <activity
+            android:name=".activities.ConfigurationOperationActivity"
+            android:label="@string/drawer_configurations"
+            />
     </application>
 
 </manifest>

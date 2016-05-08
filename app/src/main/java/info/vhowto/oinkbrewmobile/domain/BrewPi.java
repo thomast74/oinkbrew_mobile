@@ -2,9 +2,10 @@ package info.vhowto.oinkbrewmobile.domain;
 
 import com.google.gson.Gson;
 
+import java.io.Serializable;
 import java.util.Date;
 
-public class BrewPi {
+public class BrewPi implements Serializable {
 
     public String device_id;
     public String name;

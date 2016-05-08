@@ -6,8 +6,7 @@
 
     <item android:id="@+id/action_device_configuration"
           android:title="@string/action_device_configuration"
-          app:ico_icon="gmd-settings-input-component"
           android:orderInCategory="100"
-          app:showAsAction="always" />
+          app:showAsAction="never" />
 
 </menu>

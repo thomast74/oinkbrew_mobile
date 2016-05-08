@@ -11,10 +11,12 @@ import com.mikepenz.iconics.context.IconicsLayoutInflater;
 import com.mikepenz.materialdrawer.Drawer;
 
 import info.vhowto.oinkbrewmobile.R;
+import info.vhowto.oinkbrewmobile.domain.Configuration;
 import info.vhowto.oinkbrewmobile.fragments.OinkbrewDrawer;
 
 public class ConfigurationOperationActivity extends AppCompatActivity {
 
+    private Configuration configuration;
     private Menu menu;
     private Drawer drawer;
 
@@ -24,8 +26,10 @@ public class ConfigurationOperationActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_configuration_operation);
 
+        configuration = (Configuration)getIntent().getSerializableExtra("item");
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.configuration_operation_toolbar);
-        toolbar.setTitle("<NAME>");
+        toolbar.setTitle(configuration.name);
         setSupportActionBar(toolbar);
 
         drawer = new OinkbrewDrawer().createDrawer(this, toolbar);

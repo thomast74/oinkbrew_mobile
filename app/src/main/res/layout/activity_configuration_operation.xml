@@ -18,6 +18,6 @@
         android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
         app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
 
-    <include layout="@layout/content_configuration_operation" />
+    <include layout="@layout/content_configuration_fermentation_operation" />
 
 </android.support.design.widget.CoordinatorLayout>

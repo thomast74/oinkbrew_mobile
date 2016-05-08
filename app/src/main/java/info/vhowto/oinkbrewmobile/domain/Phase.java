@@ -1,8 +1,9 @@
 package info.vhowto.oinkbrewmobile.domain;
 
+import java.io.Serializable;
 import java.util.Date;
 
-public class Phase {
+public class Phase implements Serializable {
 
     public Date start_date;
 
