@@ -33,5 +33,15 @@
     <string name="pref_title_fermentation_i">PID: integral value (I)</string>
     <string name="pref_title_fermentation_d">PID: derivative value (D)</string>
     <string name="action_device_configuration">Device configuration</string>
+    <string name="configuration_wort_pump">Wort Pump</string>
+    <string name="configuration_water_pump">Water Pump</string>
+    <string name="configuration_boil_out">Boil Out</string>
+    <string name="configuration_boil_inside">Boil Inside</string>
+    <string name="configuration_boil_intensity">Boil Intensity</string>
+    <string name="configuration_hlt_out">HLT Out</string>
+    <string name="configuration_mash_in">Mash In</string>
+    <string name="configuration_mash_out">Mash Out</string>
+    <string name="configuration_target">Target</string>
+    <string name="configuration_timer">Timer</string>
 
 </resources>

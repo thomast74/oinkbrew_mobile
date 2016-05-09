@@ -31,6 +31,10 @@
             android:label="@string/drawer_brewpis"
             />
         <activity
+            android:name=".activities.ConfigurationBrewOperationActivity"
+            android:label="@string/drawer_configurations"
+            />
+        <activity
             android:name=".activities.ConfigurationFermentationOperationActivity"
             android:label="@string/drawer_configurations"
             />

@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import info.vhowto.oinkbrewmobile.R;
 import info.vhowto.oinkbrewmobile.adapters.ConfigurationListAdapter;
 import info.vhowto.oinkbrewmobile.domain.Configuration;
+import info.vhowto.oinkbrewmobile.domain.ConfigurationType;
 import info.vhowto.oinkbrewmobile.fragments.OinkbrewDrawer;
 import info.vhowto.oinkbrewmobile.remote.ConfigurationRequest;
 import info.vhowto.oinkbrewmobile.remote.RequestCallback;
@@ -113,9 +114,19 @@ public class ConfigurationListActivity extends AppCompatActivity implements Swip
     }
 
     private void onItemClick(Configuration item) {
-        Intent intent = new Intent(this, ConfigurationFermentationOperationActivity.class);
-        intent.putExtra("item", item);
-        this.startActivity(intent);
+        Intent intent = null;
+
+        if (ConfigurationType.BREW.equals(item.type)) {
+            intent = new Intent(this, ConfigurationBrewOperationActivity.class);
+        }
+        else if (ConfigurationType.FERMENTATION.equals(item.type)) {
+            intent = new Intent(this, ConfigurationFermentationOperationActivity.class);
+        }
+
+        if (intent != null) {
+            intent.putExtra("item", item);
+            this.startActivity(intent);
+        }
     }
 
     @Override
