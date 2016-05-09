@@ -31,8 +31,7 @@ public class ConfigurationBrewOperationActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.configuration_brew_operation_toolbar);
         toolbar.setTitle(configuration.name);
         setSupportActionBar(toolbar);
-
-        drawer = new OinkbrewDrawer().createDrawer(this, toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
     @Override
@@ -47,17 +46,11 @@ public class ConfigurationBrewOperationActivity extends AppCompatActivity {
         int id = item.getItemId();
 
         switch (id) {
+            case android.R.id.home:
+                super.onBackPressed();
+                return true;
             default:
-                return false;
-        }
-    }
-
-    @Override
-    public void onBackPressed() {
-        if (drawer != null && drawer.isDrawerOpen()) {
-            drawer.closeDrawer();
-        } else {
-            super.onBackPressed();
+                return super.onOptionsItemSelected(item);
         }
     }
 }
