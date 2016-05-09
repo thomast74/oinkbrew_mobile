@@ -37,11 +37,17 @@
     <string name="configuration_water_pump">Water Pump</string>
     <string name="configuration_boil_out">Boil Out</string>
     <string name="configuration_boil_inside">Boil Inside</string>
-    <string name="configuration_boil_intensity">Boil Intensity</string>
+    <string name="configuration_boil_intensity">Boil PWM</string>
     <string name="configuration_hlt_out">HLT Out</string>
     <string name="configuration_mash_in">Mash In</string>
     <string name="configuration_mash_out">Mash Out</string>
     <string name="configuration_target">Target</string>
     <string name="configuration_timer">Timer</string>
+    <string name="configuration_fridge">Fridge</string>
+    <string name="configuration_beer_1">Beer 1</string>
+    <string name="configuration_beer_2">Beer 2</string>
+    <string name="configuration_empty_temp">--.- ºC</string>
+    <string name="configuration_empty_time">--:--:--</string>
+    <string name="configuration_empty_pwm">-%</string>
 
 </resources>
