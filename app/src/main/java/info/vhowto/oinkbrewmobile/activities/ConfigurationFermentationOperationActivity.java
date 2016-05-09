@@ -14,7 +14,7 @@ import info.vhowto.oinkbrewmobile.R;
 import info.vhowto.oinkbrewmobile.domain.Configuration;
 import info.vhowto.oinkbrewmobile.fragments.OinkbrewDrawer;
 
-public class ConfigurationOperationActivity extends AppCompatActivity {
+public class ConfigurationFermentationOperationActivity extends AppCompatActivity {
 
     private Configuration configuration;
     private Menu menu;
@@ -24,11 +24,11 @@ public class ConfigurationOperationActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         LayoutInflaterCompat.setFactory(getLayoutInflater(), new IconicsLayoutInflater(getDelegate()));
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_configuration_operation);
+        setContentView(R.layout.activity_configuration_fermentation_operation);
 
         configuration = (Configuration)getIntent().getSerializableExtra("item");
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.configuration_operation_toolbar);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.configuration_fermentation_operation_toolbar);
         toolbar.setTitle(configuration.name);
         setSupportActionBar(toolbar);
 
@@ -38,7 +38,7 @@ public class ConfigurationOperationActivity extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         this.menu = menu;
-        getMenuInflater().inflate(R.menu.menu_configuration_operation, menu);
+        getMenuInflater().inflate(R.menu.menu_configuration_fermentation_operation, menu);
         return true;
     }
 

@@ -113,7 +113,7 @@ public class ConfigurationListActivity extends AppCompatActivity implements Swip
     }
 
     private void onItemClick(Configuration item) {
-        Intent intent = new Intent(this, ConfigurationOperationActivity.class);
+        Intent intent = new Intent(this, ConfigurationFermentationOperationActivity.class);
         intent.putExtra("item", item);
         this.startActivity(intent);
     }
