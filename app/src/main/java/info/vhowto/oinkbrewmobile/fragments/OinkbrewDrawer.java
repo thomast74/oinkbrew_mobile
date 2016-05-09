@@ -78,6 +78,7 @@ public class OinkbrewDrawer implements Drawer.OnDrawerItemClickListener {
 
             if (intent != null) {
                 activity.startActivity(intent);
+                activity.finish();
             }
         }
 
