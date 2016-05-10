@@ -7,6 +7,9 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.github.mikephil.charting.charts.LineChart;
+import com.github.mikephil.charting.components.XAxis;
+import com.github.mikephil.charting.components.YAxis;
 import com.mikepenz.iconics.context.IconicsLayoutInflater;
 import com.mikepenz.materialdrawer.Drawer;
 
@@ -32,6 +35,23 @@ public class ConfigurationFermentationOperationActivity extends AppCompatActivit
         toolbar.setTitle(configuration.name);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        configureChart();
+    }
+
+    private void configureChart() {
+        LineChart chart = (LineChart) findViewById(R.id.chart);
+        chart.setAutoScaleMinMaxEnabled(true);
+
+        XAxis xAxis = chart.getXAxis();
+        xAxis.setEnabled(true);
+        xAxis.setDrawLabels(true);
+        xAxis.setDrawAxisLine(true);
+        xAxis.setDrawGridLines(true);
+
+        YAxis leftAxis = chart.getAxisLeft();
+        leftAxis.setAxisMinValue(0);
+        leftAxis.setAxisMaxValue(100);
     }
 
     @Override
