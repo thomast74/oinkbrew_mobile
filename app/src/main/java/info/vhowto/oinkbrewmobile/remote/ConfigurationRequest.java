@@ -8,14 +8,17 @@ import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
+import com.android.volley.toolbox.JsonObjectRequest;
 
 import org.json.JSONArray;
 import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 
 import info.vhowto.oinkbrewmobile.OinkbrewApplication;
 import info.vhowto.oinkbrewmobile.R;
+import info.vhowto.oinkbrewmobile.domain.BrewPi;
 import info.vhowto.oinkbrewmobile.domain.Configuration;
 import info.vhowto.oinkbrewmobile.helpers.HttpsTrustManager;
 
@@ -24,7 +27,7 @@ public class ConfigurationRequest {
     private static final String TAG = ConfigurationRequest.class.getSimpleName();
     private static final String configsGeneral = "%s/configs/?archived=%s&all_phases=%s";
     private static final String configsBrewPi = "%s/configs/%s/?archived=%s&all_phases=%s";
-    private static final String configsDedicated = "%s/configs/%s/%d/?archived=%s&all_phases=%s";
+    private static final String configsDedicated = "%s/configs/%s/%d/";
 
     public static void getConfigurations(final RequestArrayCallback callback, Boolean loadArchived) {
 
@@ -80,5 +83,54 @@ public class ConfigurationRequest {
                 });
 
         OinkbrewApplication.getInstance().addToRequestQueue(req);
+    }
+
+    public static void updateConfiguration(Configuration configuration, final RequestObjectCallback callback) {
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(callback.getApplicationContext());
+        String apiUrl = prefs.getString("pref_api_server_url", "");
+        Boolean allowAllCerts = prefs.getBoolean("pref_api_allow_all_certs", false);
+
+        if (allowAllCerts)
+            HttpsTrustManager.allowAllSSL();
+        else
+            HttpsTrustManager.allowOnlyValidSSL();
+
+        if (apiUrl.isEmpty()) {
+            callback.onRequestFailure(0, callback.getApplicationContext()
+                    .getString(R.string.error_settings_api_url_missing));
+            return;
+        }
+
+        String url = String.format(configsDedicated, apiUrl, configuration.brewpi.device_id, configuration.pk);
+        configuration.phases = null;
+        Log.d(TAG, Configuration.toJson(configuration));
+
+        try {
+            JSONObject configurationJson = new JSONObject(Configuration.toJson(configuration));
+
+            JsonObjectRequest req = new JsonObjectRequest(Request.Method.PUT, url, configurationJson,
+
+                    new Response.Listener<JSONObject>() {
+                        @Override
+                        public void onResponse(JSONObject response) {
+                            callback.onRequestSuccessful();
+                        }
+                    },
+
+                    new Response.ErrorListener() {
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
+                            Log.d(TAG, error.getMessage(), error);
+                            callback.onRequestFailure(
+                                    error.networkResponse == null ? 0 : error.networkResponse.statusCode,
+                                    error.networkResponse != null ? error.networkResponse.data.toString() : error.getMessage());
+                        }
+                    });
+
+            OinkbrewApplication.getInstance().addToRequestQueue(req);
+        } catch (JSONException error) {
+            Log.d(TAG, error.getMessage(), error);
+            callback.onRequestFailure(0, error.getMessage());
+        }
     }
 }

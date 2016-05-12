@@ -1,15 +1,23 @@
 package info.vhowto.oinkbrewmobile.activities;
 
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
+import android.preference.PreferenceManager;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.LayoutInflaterCompat;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.Toolbar;
+import android.text.InputType;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -30,7 +38,10 @@ import java.util.TimerTask;
 import info.vhowto.oinkbrewmobile.R;
 import info.vhowto.oinkbrewmobile.domain.Configuration;
 import info.vhowto.oinkbrewmobile.domain.Log;
+import info.vhowto.oinkbrewmobile.domain.Phase;
 import info.vhowto.oinkbrewmobile.helpers.TempAxisValueFormatter;
+import info.vhowto.oinkbrewmobile.remote.BrewPiRequest;
+import info.vhowto.oinkbrewmobile.remote.ConfigurationRequest;
 import info.vhowto.oinkbrewmobile.remote.LogRequest;
 import info.vhowto.oinkbrewmobile.remote.RequestObjectCallback;
 
@@ -58,6 +69,7 @@ public class ConfigurationFermentationOperationActivity extends AppCompatActivit
         int white;
         int red;
         int green;
+        int green_light;
         int amber;
         int grey;
     }
@@ -86,20 +98,29 @@ public class ConfigurationFermentationOperationActivity extends AppCompatActivit
         viewHolder.white = getColor(R.color.white);
         viewHolder.red = getColor(R.color.md_red_500);
         viewHolder.green = getColor(R.color.md_green_500);
+        viewHolder.green_light = getColor(R.color.md_green_200);
         viewHolder.amber = getColor(R.color.md_amber_500);
         viewHolder.grey = getColor(R.color.md_grey_300);
 
         if (configuration.temp_sensor.contains("Beer 1")) {
-            viewHolder.lbl_beer_1.setBackgroundColor(viewHolder.green);
+            viewHolder.lbl_beer_1.setBackgroundColor(viewHolder.green_light);
             viewHolder.lbl_beer_1.setTextColor(viewHolder.white);
             viewHolder.lbl_beer_2.setBackgroundColor(viewHolder.grey);
             viewHolder.lbl_beer_2.setTextColor(viewHolder.black);
         } else if (configuration.temp_sensor.contains("Beer 2")) {
-            viewHolder.lbl_beer_2.setBackgroundColor(viewHolder.green);
+            viewHolder.lbl_beer_2.setBackgroundColor(viewHolder.green_light);
             viewHolder.lbl_beer_2.setTextColor(viewHolder.white);
             viewHolder.lbl_beer_1.setBackgroundColor(viewHolder.grey);
             viewHolder.lbl_beer_1.setTextColor(viewHolder.black);
         }
+
+        TextView targetCard = (TextView)findViewById(R.id.configuration_target);
+        targetCard.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                adjustTargetTemperature();
+            }
+        });
 
         chart = configureChart();
         fetchLogData();
@@ -315,5 +336,48 @@ public class ConfigurationFermentationOperationActivity extends AppCompatActivit
         if (handler != null) {
             handler.removeCallbacks(runnable);
         }
+    }
+
+    private void adjustTargetTemperature() {
+
+        final ConfigurationFermentationOperationActivity callback = this;
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle(R.string.action_change_target_temp);
+
+        final EditText input = new EditText(this);
+        input.setText(viewHolder.target.getText().subSequence(0,viewHolder.target.getText().length() - 3));
+        input.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
+        builder.setView(input);
+
+        builder.setPositiveButton(getString(R.string.ok), new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+
+                SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(callback.getApplicationContext());
+                float newTargetTemp = Float.parseFloat(input.getText().toString());
+
+                configuration.phase = new Phase();
+                configuration.phase.temperature = newTargetTemp;
+                configuration.phase.fan_pwm = Float.parseFloat(prefs.getString("pref_fermentation_fan_pwm", "100.0"));
+                configuration.phase.heating_period = Long.parseLong(prefs.getString("pref_fermentation_heat_period", "1000"));
+                configuration.phase.cooling_period = Long.parseLong(prefs.getString("pref_fermentation_cooling_period", "600000"));
+                configuration.phase.cooling_on_time = Long.parseLong(prefs.getString("pref_fermentation_cooling_on_time", "150000"));
+                configuration.phase.cooling_off_time = Long.parseLong(prefs.getString("pref_fermentation_cooling_off_time", "180000"));
+                configuration.phase.p = Float.parseFloat(prefs.getString("pref_fermentation_p", "18.0"));
+                configuration.phase.i = Float.parseFloat(prefs.getString("pref_fermentation_i", "0.0001"));
+                configuration.phase.d = Float.parseFloat(prefs.getString("pref_fermentation_d", "-8.0"));
+
+                ConfigurationRequest.updateConfiguration(configuration, callback);
+            }
+        });
+        builder.setNegativeButton(getString(R.string.Cancel), new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.cancel();
+            }
+        });
+        builder.show();
+
     }
 }

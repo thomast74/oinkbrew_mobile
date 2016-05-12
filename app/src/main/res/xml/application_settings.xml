@@ -28,39 +28,52 @@
         android:key="pref_key_fermentation_settings"
         android:title="@string/pref_key_fermentation_settings">
         <EditTextPreference
+            android:key="pref_fermentation_fan_pwm"
+            android:inputType="number"
+            android:title="@string/pref_title_fermentation_fan_pwm"
+            android:defaultValue="100"
+            />
+        <EditTextPreference
             android:key="pref_fermentation_heat_period"
             android:inputType="number"
             android:title="@string/pref_title_fermentation_heat_period"
-            android:defaultValue="4000" />
+            android:defaultValue="1000"
+            />
         <EditTextPreference
             android:key="pref_fermentation_cooling_period"
             android:inputType="number"
             android:title="@string/pref_title_fermentation_cooling_period"
-            android:defaultValue="1200000" />
+            android:defaultValue="600000"
+            />
         <EditTextPreference
             android:key="pref_fermentation_cooling_on_time"
             android:inputType="number"
             android:title="@string/pref_title_fermentation_cooling_on_time"
-            android:defaultValue="210000" />
+            android:defaultValue="150000"
+            />
         <EditTextPreference
             android:key="pref_fermentation_cooling_off_time"
             android:inputType="number"
             android:title="@string/pref_title_fermentation_cooling_off_time"
-            android:defaultValue="300000" />
+            android:defaultValue="180000"
+            />
         <EditTextPreference
             android:key="pref_fermentation_p"
             android:inputType="numberDecimal"
             android:title="@string/pref_title_fermentation_p"
-            android:defaultValue="60.0" />
+            android:defaultValue="18.0"
+            />
         <EditTextPreference
             android:key="pref_fermentation_i"
             android:inputType="numberDecimal"
             android:title="@string/pref_title_fermentation_i"
-            android:defaultValue="0.001" />
+            android:defaultValue="0.0001"
+            />
         <EditTextPreference
             android:key="pref_fermentation_d"
             android:inputType="numberDecimal"
             android:title="@string/pref_title_fermentation_d"
-            android:defaultValue="-2" />
+            android:defaultValue="-8.0"
+            />
     </PreferenceCategory>
 </PreferenceScreen>

@@ -58,19 +58,23 @@ public class OinkbrewDrawer implements Drawer.OnDrawerItemClickListener {
     {
         if (drawerItem != null) {
             Intent intent = null;
+            boolean finish = false;
 
             if (drawerItem.getIdentifier() == DrawerItems.CONFIGURATION && !(activity instanceof ConfigurationListActivity)) {
                 intent = new Intent(activity, ConfigurationListActivity.class);
                 intent.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
+                finish = true;
             }
             else if (drawerItem.getIdentifier() == DrawerItems.BREWPIS&& !(activity instanceof BrewPiListActivity)) {
                 intent = new Intent(activity, BrewPiListActivity.class);
                 intent.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
+                finish = true;
             }
             else if (drawerItem.getIdentifier() == DrawerItems.DEVICES) {
                 //TODO: Implement Devices Activity
                 Snackbar.make(view, "You clicked Devices", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
+                finish = true;
             }
             else if (drawerItem.getIdentifier() == DrawerItems.SETTINGS && !(activity instanceof SettingsActivity)) {
                 intent = new Intent(activity, SettingsActivity.class);
@@ -78,7 +82,8 @@ public class OinkbrewDrawer implements Drawer.OnDrawerItemClickListener {
 
             if (intent != null) {
                 activity.startActivity(intent);
-                activity.finish();
+                if (finish)
+                    activity.finish();
             }
         }
 

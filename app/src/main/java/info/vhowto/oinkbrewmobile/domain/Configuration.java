@@ -23,8 +23,9 @@ public class Configuration implements Serializable {
     public String pump_2_actuator;
     public String temp_sensor;
 
-    Map<String, Integer> function = new HashMap<String, Integer>() {};
-    Phase[] phases = new Phase[] {};
+    public Map<String, Integer> function = new HashMap<String, Integer>() {};
+    public Phase[] phases = new Phase[] {};
+    public Phase phase = new Phase();
 
     public Boolean archived;
 
