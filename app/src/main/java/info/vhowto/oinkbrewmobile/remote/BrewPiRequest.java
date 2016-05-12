@@ -118,8 +118,9 @@ public class BrewPiRequest {
                         @Override
                         public void onErrorResponse(VolleyError error) {
                             Log.d(TAG, error.getMessage(), error);
-                            callback.onRequestFailure(error.networkResponse == null ? 0 : error.networkResponse.statusCode,
-                                    error.getMessage());
+                            callback.onRequestFailure(
+                                    error.networkResponse == null ? 0 : error.networkResponse.statusCode,
+                                    error.networkResponse == null ? error.getMessage() : new String(error.networkResponse.data));
                         }
                     });
 

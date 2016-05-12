@@ -55,7 +55,9 @@ public class LogRequest {
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        callback.onRequestFailure(error.networkResponse == null ? 0 : error.networkResponse.statusCode, error.getMessage());
+                        callback.onRequestFailure(
+                                error.networkResponse == null ? 0 : error.networkResponse.statusCode,
+                                error.networkResponse == null ? error.getMessage() : new String(error.networkResponse.data));
                     }
                 });
 

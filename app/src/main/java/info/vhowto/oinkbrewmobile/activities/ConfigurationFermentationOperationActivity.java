@@ -18,6 +18,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.NumberPicker;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -47,6 +48,7 @@ import info.vhowto.oinkbrewmobile.remote.RequestObjectCallback;
 
 public class ConfigurationFermentationOperationActivity extends AppCompatActivity implements RequestObjectCallback<Log> {
 
+    private static final String TAG = ConfigurationFermentationOperationActivity.class.getSimpleName();
     private static long TIMER_PERIOD = 60000;
 
     private Configuration configuration;
@@ -56,6 +58,7 @@ public class ConfigurationFermentationOperationActivity extends AppCompatActivit
     private Handler handler;
     private Runnable runnable;
     private ConfigurationOperationViewHolder viewHolder;
+    private int requestErrorCount = 0;
 
     private static class ConfigurationOperationViewHolder {
         TextView target;
@@ -80,7 +83,7 @@ public class ConfigurationFermentationOperationActivity extends AppCompatActivit
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_configuration_fermentation_operation);
 
-        configuration = (Configuration)getIntent().getSerializableExtra("item");
+        configuration = (Configuration) getIntent().getSerializableExtra("item");
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.configuration_fermentation_operation_toolbar);
         toolbar.setTitle(configuration.name);
@@ -88,12 +91,12 @@ public class ConfigurationFermentationOperationActivity extends AppCompatActivit
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         viewHolder = new ConfigurationOperationViewHolder();
-        viewHolder.target = (TextView)findViewById(R.id.configuration_target);
-        viewHolder.fridge = (TextView)findViewById(R.id.configuration_fridge);
-        viewHolder.beer_1 = (TextView)findViewById(R.id.configuration_beer_1);
-        viewHolder.beer_2 = (TextView)findViewById(R.id.configuration_beer_2);
-        viewHolder.lbl_beer_1 = (TextView)findViewById(R.id.lbl_configuration_beer_1);
-        viewHolder.lbl_beer_2 = (TextView)findViewById(R.id.lbl_configuration_beer_2);
+        viewHolder.target = (TextView) findViewById(R.id.configuration_target);
+        viewHolder.fridge = (TextView) findViewById(R.id.configuration_fridge);
+        viewHolder.beer_1 = (TextView) findViewById(R.id.configuration_beer_1);
+        viewHolder.beer_2 = (TextView) findViewById(R.id.configuration_beer_2);
+        viewHolder.lbl_beer_1 = (TextView) findViewById(R.id.lbl_configuration_beer_1);
+        viewHolder.lbl_beer_2 = (TextView) findViewById(R.id.lbl_configuration_beer_2);
         viewHolder.black = getColor(R.color.black);
         viewHolder.white = getColor(R.color.white);
         viewHolder.red = getColor(R.color.md_red_500);
@@ -114,7 +117,7 @@ public class ConfigurationFermentationOperationActivity extends AppCompatActivit
             viewHolder.lbl_beer_1.setTextColor(viewHolder.black);
         }
 
-        TextView targetCard = (TextView)findViewById(R.id.configuration_target);
+        TextView targetCard = (TextView) findViewById(R.id.configuration_target);
         targetCard.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -124,6 +127,22 @@ public class ConfigurationFermentationOperationActivity extends AppCompatActivit
 
         chart = configureChart();
         fetchLogData();
+        startTimer();
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        stopTimer();
+    }
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        fetchLogData();
+
+        if (menu.findItem(R.id.action_refresh_automatically).isChecked())
+            startTimer();
     }
 
     private LineChart configureChart() {
@@ -161,7 +180,9 @@ public class ConfigurationFermentationOperationActivity extends AppCompatActivit
     }
 
     public void onRequestSuccessful() {
-        // this should never be called
+        // target temp change request successful;
+        Toast.makeText(getApplicationContext(), R.string.configuration_target_update_success, Toast.LENGTH_LONG).show();
+        requestErrorCount = 0;
     }
 
     public void onRequestSuccessful(Log item) {
@@ -256,6 +277,12 @@ public class ConfigurationFermentationOperationActivity extends AppCompatActivit
 
     public void onRequestFailure(int statusCode, String errorMessage) {
         switch (statusCode) {
+            case 400:
+                Toast.makeText(getApplicationContext(), errorMessage, Toast.LENGTH_LONG).show();
+                requestErrorCount++;
+                if (requestErrorCount < 5) {
+                    ConfigurationRequest.updateConfiguration(configuration, this);
+                }
             case 404:
                 Toast.makeText(getApplicationContext(), getString(R.string.error_log_empty), Toast.LENGTH_LONG).show();
                 break;
@@ -278,7 +305,9 @@ public class ConfigurationFermentationOperationActivity extends AppCompatActivit
 
         switch (id) {
             case android.R.id.home:
+                stopTimer();
                 super.onBackPressed();
+                finish();
                 result = true;
                 break;
             case R.id.action_refresh:
@@ -341,21 +370,29 @@ public class ConfigurationFermentationOperationActivity extends AppCompatActivit
     private void adjustTargetTemperature() {
 
         final ConfigurationFermentationOperationActivity callback = this;
+        View view = getLayoutInflater().inflate(R.layout.content_target_temperature, null);
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle(R.string.action_change_target_temp);
+        builder.setView(view);
 
-        final EditText input = new EditText(this);
-        input.setText(viewHolder.target.getText().subSequence(0,viewHolder.target.getText().length() - 3));
-        input.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
-        builder.setView(input);
+        Float currentTargetTemp = Float.parseFloat(viewHolder.target.getText().subSequence(0,viewHolder.target.getText().length() - 3).toString());
+        final NumberPicker mainNumber = (NumberPicker)view.findViewById(R.id.mainNumber);
+        final NumberPicker decimalNumber = (NumberPicker)view.findViewById(R.id.decimalNumber);
+
+        mainNumber.setMinValue(0);
+        mainNumber.setMaxValue(100);
+        mainNumber.setValue(currentTargetTemp.intValue());
+        decimalNumber.setMinValue(0);
+        decimalNumber.setMaxValue(9);
+        decimalNumber.setValue((int)Math.round((currentTargetTemp % 1) * 10));
 
         builder.setPositiveButton(getString(R.string.ok), new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
 
                 SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(callback.getApplicationContext());
-                float newTargetTemp = Float.parseFloat(input.getText().toString());
+                Float newTargetTemp = Float.parseFloat(mainNumber.getValue() + "." + decimalNumber.getValue());
 
                 configuration.phase = new Phase();
                 configuration.phase.temperature = newTargetTemp;
@@ -371,13 +408,14 @@ public class ConfigurationFermentationOperationActivity extends AppCompatActivit
                 ConfigurationRequest.updateConfiguration(configuration, callback);
             }
         });
+
         builder.setNegativeButton(getString(R.string.Cancel), new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 dialog.cancel();
             }
         });
-        builder.show();
 
+        builder.show();
     }
 }

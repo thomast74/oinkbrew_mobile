@@ -56,5 +56,6 @@
     <string name="action_last_12_hours">Last 12 hours</string>
     <string name="action_change_target_temp">Change Target Temperature</string>
     <string name="pref_title_fermentation_fan_pwm">Fan PWM</string>
+    <string name="configuration_target_update_success">Target Temperature Updated</string>
 
 </resources>
