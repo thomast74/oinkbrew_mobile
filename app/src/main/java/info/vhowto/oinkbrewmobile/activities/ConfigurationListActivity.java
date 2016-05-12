@@ -25,9 +25,9 @@ import info.vhowto.oinkbrewmobile.domain.Configuration;
 import info.vhowto.oinkbrewmobile.domain.ConfigurationType;
 import info.vhowto.oinkbrewmobile.fragments.OinkbrewDrawer;
 import info.vhowto.oinkbrewmobile.remote.ConfigurationRequest;
-import info.vhowto.oinkbrewmobile.remote.RequestCallback;
+import info.vhowto.oinkbrewmobile.remote.RequestArrayCallback;
 
-public class ConfigurationListActivity extends AppCompatActivity implements SwipeRefreshLayout.OnRefreshListener, RequestCallback<Configuration> {
+public class ConfigurationListActivity extends AppCompatActivity implements SwipeRefreshLayout.OnRefreshListener, RequestArrayCallback<Configuration> {
 
     private ArrayList<Configuration> configurations;
     private RecyclerView recyclerView;

@@ -26,7 +26,7 @@ public class ConfigurationRequest {
     private static final String configsBrewPi = "%s/configs/%s/?archived=%s&all_phases=%s";
     private static final String configsDedicated = "%s/configs/%s/%d/?archived=%s&all_phases=%s";
 
-    public static void getConfigurations(final RequestCallback callback, Boolean loadArchived) {
+    public static void getConfigurations(final RequestArrayCallback callback, Boolean loadArchived) {
 
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(callback.getApplicationContext());
         String apiUrl = prefs.getString("pref_api_server_url", "");

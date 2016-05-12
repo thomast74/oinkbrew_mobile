@@ -1,13 +1,17 @@
 package info.vhowto.oinkbrewmobile.activities;
 
+import android.content.Context;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.LayoutInflaterCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.components.XAxis;
@@ -17,24 +21,46 @@ import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
 import com.mikepenz.iconics.context.IconicsLayoutInflater;
-import com.mikepenz.materialdrawer.Drawer;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.GregorianCalendar;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import info.vhowto.oinkbrewmobile.R;
 import info.vhowto.oinkbrewmobile.domain.Configuration;
-import info.vhowto.oinkbrewmobile.fragments.OinkbrewDrawer;
+import info.vhowto.oinkbrewmobile.domain.Log;
 import info.vhowto.oinkbrewmobile.helpers.TempAxisValueFormatter;
+import info.vhowto.oinkbrewmobile.remote.LogRequest;
+import info.vhowto.oinkbrewmobile.remote.RequestObjectCallback;
 
-public class ConfigurationFermentationOperationActivity extends AppCompatActivity {
+public class ConfigurationFermentationOperationActivity extends AppCompatActivity implements RequestObjectCallback<Log> {
+
+    private static long TIMER_PERIOD = 60000;
 
     private Configuration configuration;
     private Menu menu;
-    private Drawer drawer;
+    private LineChart chart;
+    private int limit = 3;
+    private Handler handler;
+    private Runnable runnable;
+    private ConfigurationOperationViewHolder viewHolder;
+
+    private static class ConfigurationOperationViewHolder {
+        TextView target;
+        TextView fridge;
+        TextView beer_1;
+        TextView beer_2;
+        TextView lbl_beer_1;
+        TextView lbl_beer_2;
+
+        int black;
+        int white;
+        int red;
+        int green;
+        int amber;
+        int grey;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,10 +75,37 @@ public class ConfigurationFermentationOperationActivity extends AppCompatActivit
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        configureChart();
+        viewHolder = new ConfigurationOperationViewHolder();
+        viewHolder.target = (TextView)findViewById(R.id.configuration_target);
+        viewHolder.fridge = (TextView)findViewById(R.id.configuration_fridge);
+        viewHolder.beer_1 = (TextView)findViewById(R.id.configuration_beer_1);
+        viewHolder.beer_2 = (TextView)findViewById(R.id.configuration_beer_2);
+        viewHolder.lbl_beer_1 = (TextView)findViewById(R.id.lbl_configuration_beer_1);
+        viewHolder.lbl_beer_2 = (TextView)findViewById(R.id.lbl_configuration_beer_2);
+        viewHolder.black = getColor(R.color.black);
+        viewHolder.white = getColor(R.color.white);
+        viewHolder.red = getColor(R.color.md_red_500);
+        viewHolder.green = getColor(R.color.md_green_500);
+        viewHolder.amber = getColor(R.color.md_amber_500);
+        viewHolder.grey = getColor(R.color.md_grey_300);
+
+        if (configuration.temp_sensor.contains("Beer 1")) {
+            viewHolder.lbl_beer_1.setBackgroundColor(viewHolder.green);
+            viewHolder.lbl_beer_1.setTextColor(viewHolder.white);
+            viewHolder.lbl_beer_2.setBackgroundColor(viewHolder.grey);
+            viewHolder.lbl_beer_2.setTextColor(viewHolder.black);
+        } else if (configuration.temp_sensor.contains("Beer 2")) {
+            viewHolder.lbl_beer_2.setBackgroundColor(viewHolder.green);
+            viewHolder.lbl_beer_2.setTextColor(viewHolder.white);
+            viewHolder.lbl_beer_1.setBackgroundColor(viewHolder.grey);
+            viewHolder.lbl_beer_1.setTextColor(viewHolder.black);
+        }
+
+        chart = configureChart();
+        fetchLogData();
     }
 
-    private void configureChart() {
+    private LineChart configureChart() {
         LineChart chart = (LineChart) findViewById(R.id.chart);
         chart.setAutoScaleMinMaxEnabled(true);
         chart.setDescription("");
@@ -79,78 +132,33 @@ public class ConfigurationFermentationOperationActivity extends AppCompatActivit
         rightAxis.setGranularityEnabled(true);
         rightAxis.setValueFormatter(new TempAxisValueFormatter());
 
-        ArrayList<String> xVals = new ArrayList<String>();
-        ArrayList<Entry> targetTempData = new ArrayList<Entry>();
-        ArrayList<Entry> fridgeTempData = new ArrayList<Entry>();
-        ArrayList<Entry> beer1TempData = new ArrayList<Entry>();
-        ArrayList<Entry> coolingData = new ArrayList<Entry>();
-        ArrayList<Entry> heatData = new ArrayList<Entry>();
+        return chart;
+    }
 
-        float targetTemp = 14F;
-        float fridgeTemp = 19F;
-        float beer1Temp = 16F;
-        double cooling = 0.0F;
-        float heat = 0.0F;
-        int fridgeDirection = -1;
-        int beerDirection = -1;
-        boolean isCooling = true;
-        int cooling_direction = 1;
+    private void fetchLogData() {
+        LogRequest.getLogs(configuration.brewpi.device_id, configuration.pk, limit, this);
+    }
 
-        SimpleDateFormat ft = new SimpleDateFormat ("hh:mm");
-        GregorianCalendar date = new GregorianCalendar();
-        date.add(Calendar.HOUR, -3);
+    public void onRequestSuccessful() {
+        // this should never be called
+    }
 
-        for(int i=0; i < 180; i++) {
+    public void onRequestSuccessful(Log item) {
+        SimpleDateFormat ft = new SimpleDateFormat ("HH:mm");
+        ArrayList<String> xVals = new ArrayList<>();
+        ArrayList<Entry> targetTempData = new ArrayList<>();
+        ArrayList<Entry> fridgeTempData = new ArrayList<>();
+        ArrayList<Entry> beer1TempData = new ArrayList<>();
+        ArrayList<Entry> coolingData = new ArrayList<>();
+        ArrayList<Entry> heatData = new ArrayList<>();
 
-            xVals.add(ft.format(date.getTime()));
-            date.add(Calendar.MINUTE, 1);
-
-            targetTempData.add(new Entry(targetTemp, i));
-            fridgeTempData.add(new Entry(fridgeTemp, i));
-            beer1TempData.add(new Entry(beer1Temp, i));
-
-            if (fridgeTemp < 10)
-                fridgeDirection = 1;
-            else if (fridgeTemp > 18)
-                fridgeDirection = -1;
-
-            if (beer1Temp < 13.8)
-                beerDirection = 1;
-            else if (beer1Temp > 14.2)
-                beerDirection = -1;
-
-            if (isCooling && cooling > 20)
-                cooling_direction = -1;
-            else if (isCooling && cooling < 0) {
-                isCooling = false;
-                cooling_direction = 1;
-            }
-            else if (!isCooling && heat > 19)
-                cooling_direction = -1;
-            else if (!isCooling && heat < 0) {
-                isCooling = true;
-                cooling_direction = 1;
-            }
-
-            if (isCooling) {
-                if (cooling_direction == 1)
-                    cooling += 0.5;
-                else
-                    cooling -= 0.5;
-            }
-            else {
-                if (cooling_direction == 1)
-                    heat += 0.3;
-                else
-                    heat -= 0.3;
-            }
-
-            coolingData.add(new Entry((float)Math.log10(cooling)*34, i));
-            heatData.add(new Entry(heat, i));
-
-
-            fridgeTemp = fridgeDirection < 0 ? (fridgeTemp - 0.2F) : (fridgeTemp + 0.2F);
-            beer1Temp = beerDirection < 0 ? (beer1Temp - 0.063F) : (beer1Temp + 0.063F);
+        for(int i=0; i < item.points.length; i++) {
+            xVals.add(ft.format(item.points[i].time));
+            targetTempData.add(new Entry(item.points[i].Target, i));
+            fridgeTempData.add(new Entry(item.points[i].Fridge, i));
+            beer1TempData.add(new Entry(item.points[i].Beer_1, i));
+            coolingData.add(new Entry(item.points[i].Cooling, i));
+            heatData.add(new Entry(item.points[i].Heating, i));
         }
 
         LineDataSet coolingDataSet = new LineDataSet(coolingData, "Cooling");
@@ -184,7 +192,7 @@ public class ConfigurationFermentationOperationActivity extends AppCompatActivit
         beer1TempDataSet.setColor(ContextCompat.getColor(getApplicationContext(), R.color.chart_beer_1));
         beer1TempDataSet.setLineWidth(2.5f);
 
-        ArrayList<ILineDataSet> dataSets = new ArrayList<ILineDataSet>();
+        ArrayList<ILineDataSet> dataSets = new ArrayList<>();
         dataSets.add(coolingDataSet);
         dataSets.add(heatingDataSet);
         dataSets.add(targetTempDataSet);
@@ -193,6 +201,46 @@ public class ConfigurationFermentationOperationActivity extends AppCompatActivit
 
         LineData lineData = new LineData(xVals, dataSets);
         chart.setData(lineData);
+        chart.notifyDataSetChanged();
+        chart.invalidate();
+
+        if (item.points.length > 0) {
+            viewHolder.target.setText(String.format("%.2f ºC", item.points[item.points.length - 1].Target));
+            viewHolder.fridge.setText(String.format("%.2f ºC", item.points[item.points.length - 1].Fridge));
+            viewHolder.beer_1.setText(String.format("%.2f ºC", item.points[item.points.length - 1].Beer_1));
+            viewHolder.beer_2.setText(String.format("%.2f ºC", item.points[item.points.length - 1].Beer_2));
+
+            if (item.points[item.points.length - 1].Beer_1 > 0) {
+                float beer_1_error = item.points[item.points.length - 1].Beer_1 - item.points[item.points.length - 1].Target;
+                if (beer_1_error < 0)
+                    beer_1_error *= -1;
+
+                if (beer_1_error > 0.5)
+                    viewHolder.beer_1.setTextColor(viewHolder.red);
+                else if (beer_1_error > 0.149)
+                    viewHolder.beer_1.setTextColor(viewHolder.amber);
+                else
+                    viewHolder.beer_1.setTextColor(viewHolder.green);
+            }
+        }
+        else {
+            viewHolder.target.setText("--.-- ºC");
+            viewHolder.fridge.setText("--.-- ºC");
+            viewHolder.beer_1.setText("--.-- ºC");
+            viewHolder.beer_2.setText("--.-- ºC");
+            viewHolder.beer_1.setTextColor(viewHolder.black);
+            viewHolder.beer_2.setTextColor(viewHolder.black);
+        }
+    }
+
+    public void onRequestFailure(int statusCode, String errorMessage) {
+        switch (statusCode) {
+            case 404:
+                Toast.makeText(getApplicationContext(), getString(R.string.error_log_empty), Toast.LENGTH_LONG).show();
+                break;
+            default:
+                Toast.makeText(getApplicationContext(), errorMessage, Toast.LENGTH_LONG).show();
+        }
     }
 
     @Override
@@ -205,13 +253,67 @@ public class ConfigurationFermentationOperationActivity extends AppCompatActivit
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
+        boolean result = false;
 
         switch (id) {
             case android.R.id.home:
                 super.onBackPressed();
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
+                result = true;
+                break;
+            case R.id.action_refresh:
+                fetchLogData();
+                result = true;
+                break;
+            case R.id.action_refresh_automatically:
+                if (item.isChecked()) {
+                    item.setChecked(false);
+                    stopTimer();
+                }
+                else {
+                    item.setChecked(true);
+                    startTimer();
+                }
+                result = true;
+                break;
+            case R.id.action_last_3_hours:
+                limit = 3;
+                fetchLogData();
+                result = true;
+                break;
+            case R.id.action_last_6_hours:
+                limit = 6;
+                fetchLogData();
+                result = true;
+                break;
+            case R.id.action_last_12_hours:
+                limit = 12;
+                fetchLogData();
+                result = true;
+                break;
+        }
+
+        return result;
+    }
+
+    private void startTimer() {
+        if (handler == null) {
+            handler = new Handler();
+        }
+        if (runnable == null) {
+            runnable = new Runnable() {
+                @Override
+                public void run() {
+                    fetchLogData();
+                    handler.postDelayed(this, TIMER_PERIOD);
+                }
+            };
+        }
+        handler.postDelayed(runnable, TIMER_PERIOD);
+    }
+
+    private void stopTimer() {
+        if (handler != null) {
+            handler.removeCallbacks(runnable);
         }
     }
 }

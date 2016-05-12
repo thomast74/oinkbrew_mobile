@@ -27,7 +27,7 @@ public class BrewPiRequest {
     private static final String brewpisGeneral = "%s/brewpis/";
     private static final String brewpiDetail = "%s/brewpis/%s/%s/";
 
-    public static void getBrewPis(final RequestCallback callback) {
+    public static void getBrewPis(final RequestArrayCallback callback) {
 
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(callback.getApplicationContext());
         String apiUrl = prefs.getString("pref_api_server_url", "");
@@ -83,7 +83,7 @@ public class BrewPiRequest {
         OinkbrewApplication.getInstance().addToRequestQueue(req);
     }
 
-    public static void setName(BrewPi brewpi, final RequestCallback<BrewPi> callback) {
+    public static void setName(BrewPi brewpi, final RequestArrayCallback<BrewPi> callback) {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(callback.getApplicationContext());
         String apiUrl = prefs.getString("pref_api_server_url", "");
         Boolean allowAllCerts = prefs.getBoolean("pref_api_allow_all_certs", false);

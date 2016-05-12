@@ -2,13 +2,9 @@ package info.vhowto.oinkbrewmobile.remote;
 
 import android.content.Context;
 
-import java.util.ArrayList;
-
-import info.vhowto.oinkbrewmobile.domain.Configuration;
-
-public interface RequestCallback<Entity> {
+public interface RequestObjectCallback<Entity> {
     void onRequestSuccessful();
-    void onRequestSuccessful(ArrayList<Entity> configurations);
+    void onRequestSuccessful(Entity item);
     void onRequestFailure(int statusCode, String errorMessage);
     Context getApplicationContext();
 }

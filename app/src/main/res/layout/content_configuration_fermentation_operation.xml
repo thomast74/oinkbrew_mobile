@@ -97,7 +97,7 @@
                             android:layout_height="match_parent"
                             android:gravity="center"
                             android:text="@string/configuration_empty_temp"
-                            android:textSize="32sp"
+                            android:textSize="24sp"
                             android:textColor="@color/black"
                             />
                     </LinearLayout>
@@ -149,7 +149,7 @@
                             android:layout_height="match_parent"
                             android:gravity="center"
                             android:text="@string/configuration_empty_temp"
-                            android:textSize="32sp"
+                            android:textSize="24sp"
                             android:textColor="@color/black"
                             />
                     </LinearLayout>
@@ -212,7 +212,7 @@
                         android:layout_height="match_parent"
                         android:gravity="center"
                         android:text="@string/configuration_empty_temp"
-                        android:textSize="32sp"
+                        android:textSize="24sp"
                         android:textColor="@color/black"
                         />
                 </LinearLayout>
@@ -264,7 +264,7 @@
                         android:layout_height="match_parent"
                         android:gravity="center"
                         android:text="@string/configuration_empty_temp"
-                        android:textSize="32sp"
+                        android:textSize="24sp"
                         android:textColor="@color/black"
                         />
                 </LinearLayout>

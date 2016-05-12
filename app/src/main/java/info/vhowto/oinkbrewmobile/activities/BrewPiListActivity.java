@@ -24,9 +24,9 @@ import info.vhowto.oinkbrewmobile.adapters.BrewPiListAdapter;
 import info.vhowto.oinkbrewmobile.domain.BrewPi;
 import info.vhowto.oinkbrewmobile.fragments.OinkbrewDrawer;
 import info.vhowto.oinkbrewmobile.remote.BrewPiRequest;
-import info.vhowto.oinkbrewmobile.remote.RequestCallback;
+import info.vhowto.oinkbrewmobile.remote.RequestArrayCallback;
 
-public class BrewPiListActivity extends AppCompatActivity implements SwipeRefreshLayout.OnRefreshListener, RequestCallback<BrewPi> {
+public class BrewPiListActivity extends AppCompatActivity implements SwipeRefreshLayout.OnRefreshListener, RequestArrayCallback<BrewPi> {
 
     private ArrayList<BrewPi> brewpis;
     private RecyclerView recyclerView;

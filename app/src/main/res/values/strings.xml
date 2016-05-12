@@ -18,6 +18,7 @@
     <string name="error_title_invalid_input">Invalid Input</string>
     <string name="error_msg_invalid_url">Provided text is not a valid Url</string>
     <string name="error_configurations_empty">No configurations found.</string>
+    <string name="error_log_empty">No log data found.</string>
     <string name="error_brewpis_empty">No BrewPi found.</string>
     <string name="error_settings_api_url_missing">API Url not set</string>
     <string name="action_change_name">Change name</string>
