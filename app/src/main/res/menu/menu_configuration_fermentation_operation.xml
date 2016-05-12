@@ -7,6 +7,38 @@
     <item android:id="@+id/action_device_configuration"
           android:title="@string/action_device_configuration"
           android:orderInCategory="100"
-          app:showAsAction="never" />
+          app:showAsAction="never"
+          />
+
+    <item android:drawable="@+id/action_refresh"
+        android:title="@string/action_refresh"
+        android:orderInCategory="101"
+        app:showAsAction="never"
+    />
+
+    <item android:drawable="@+id/action_refresh_automatically"
+        android:title="@string/action_auto_refresh"
+        android:orderInCategory="102"
+        app:showAsAction="never"
+        android:checkable="true"
+        />
+
+    <item android:drawable="@+id/action_last_3_hours"
+        android:title="@string/action_last_3_hours"
+        android:orderInCategory="103"
+        app:showAsAction="never"
+        />
+
+    <item android:drawable="@+id/action_last_6_hours"
+        android:title="@string/action_last_6_hours"
+        android:orderInCategory="104"
+        app:showAsAction="never"
+        />
+
+    <item android:drawable="@+id/action_last_12_hours"
+        android:title="@string/action_last_12_hours"
+        android:orderInCategory="105"
+        app:showAsAction="never"
+        />
 
 </menu>

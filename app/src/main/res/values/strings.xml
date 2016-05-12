@@ -49,5 +49,9 @@
     <string name="configuration_empty_temp">--.- ºC</string>
     <string name="configuration_empty_time">--:--:--</string>
     <string name="configuration_empty_pwm">-%</string>
+    <string name="action_auto_refresh">Auto refresh</string>
+    <string name="action_last_3_hours">Last 3 hours</string>
+    <string name="action_last_6_hours">Last 6 hours</string>
+    <string name="action_last_12_hours">Last 12 hours</string>
 
 </resources>
