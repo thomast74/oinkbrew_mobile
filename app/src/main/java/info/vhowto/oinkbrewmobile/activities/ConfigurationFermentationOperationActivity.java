@@ -281,7 +281,7 @@ public class ConfigurationFermentationOperationActivity extends AppCompatActivit
                 Toast.makeText(getApplicationContext(), errorMessage, Toast.LENGTH_LONG).show();
                 requestErrorCount++;
                 if (requestErrorCount < 5) {
-                    ConfigurationRequest.updateConfiguration(configuration, this);
+                    ConfigurationRequest.updateConfiguration(configuration.clone(), this);
                 }
             case 404:
                 Toast.makeText(getApplicationContext(), getString(R.string.error_log_empty), Toast.LENGTH_LONG).show();
@@ -405,7 +405,7 @@ public class ConfigurationFermentationOperationActivity extends AppCompatActivit
                 configuration.phase.i = Float.parseFloat(prefs.getString("pref_fermentation_i", "0.0001"));
                 configuration.phase.d = Float.parseFloat(prefs.getString("pref_fermentation_d", "-8.0"));
 
-                ConfigurationRequest.updateConfiguration(configuration, callback);
+                ConfigurationRequest.updateConfiguration(configuration.clone(), callback);
             }
         });
 

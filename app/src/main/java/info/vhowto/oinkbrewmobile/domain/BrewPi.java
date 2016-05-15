@@ -33,4 +33,21 @@ public class BrewPi implements Serializable {
         return new Gson().toJson(brewpi);
     }
 
+    public BrewPi clone() {
+        BrewPi clone = new BrewPi();
+
+        clone.device_id = device_id;
+        clone.name = name;
+        clone.firmware_version = firmware_version;
+        clone.system_version = system_version;
+        clone.spark_version = spark_version;
+        clone.ip_address = ip_address;
+        clone.web_address = web_address;
+        clone.web_port = web_port;
+        clone.brewpi_time = brewpi_time;
+        clone.last_update = last_update;
+
+        return clone;
+    }
+
 }
