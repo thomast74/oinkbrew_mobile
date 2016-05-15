@@ -14,6 +14,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 
 import info.vhowto.oinkbrewmobile.OinkbrewApplication;
@@ -77,9 +78,21 @@ public class ConfigurationRequest {
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
+                        Log.d(TAG, error.getMessage(), error);
+
+                        String errorMessage = error.getMessage();
+                        if (error.networkResponse != null && error.networkResponse.data.length > 0) {
+                            try {
+                                errorMessage = new String(error.networkResponse.data, "UTF-8");
+                            }
+                            catch (UnsupportedEncodingException e) {
+                                Log.d(TAG, e.getMessage(), e);
+                            }
+                        }
+
                         callback.onRequestFailure(
                                 error.networkResponse == null ? 0 : error.networkResponse.statusCode,
-                                error.networkResponse == null ? error.getMessage() : new String(error.networkResponse.data));
+                                errorMessage);
                     }
                 });
 
@@ -122,9 +135,20 @@ public class ConfigurationRequest {
                         @Override
                         public void onErrorResponse(VolleyError error) {
                             Log.d(TAG, error.getMessage(), error);
+
+                            String errorMessage = error.getMessage();
+                            if (error.networkResponse != null && error.networkResponse.data.length > 0) {
+                                try {
+                                    errorMessage = new String(error.networkResponse.data, "UTF-8");
+                                }
+                                catch (UnsupportedEncodingException e) {
+                                    Log.d(TAG, e.getMessage(), e);
+                                }
+                            }
+
                             callback.onRequestFailure(
                                     error.networkResponse == null ? 0 : error.networkResponse.statusCode,
-                                    error.networkResponse != null ? error.networkResponse.data.toString() : error.getMessage());
+                                    errorMessage);
                         }
                     });
 
