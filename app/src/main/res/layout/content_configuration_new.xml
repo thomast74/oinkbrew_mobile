@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <RelativeLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/material_orange_500">
+
+        <Button
+            android:id="@+id/cancel"
+            android:layout_width="48dp"
+            android:layout_height="wrap_content"
+            android:background="?android:attr/selectableItemBackground"
+            android:text="X"
+            android:textColor="@color/white"
+            />
+
+        <Button
+            android:id="@+id/save"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:background="?android:attr/selectableItemBackground"
+            android:text="Save"
+            android:textColor="@color/white"
+            />
+
+    </RelativeLayout>
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:id="@+id/name"
+        android:textColor="@color/white"
+        android:text="Enter Name"
+        android:background="@color/material_orange_500"
+        android:paddingLeft="12dp"
+        android:textIsSelectable="true"
+        android:enabled="true"
+        android:inputType="textNoSuggestions|text"
+        android:focusable="true"
+        android:focusableInTouchMode="true" />
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="50dp">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="Type"
+            android:id="@+id/lbl_type"
+            android:paddingLeft="12dp"
+            android:gravity="left|center_vertical"
+            android:layout_weight="1"
+            />
+
+        <Spinner
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:id="@+id/spinner"
+            android:layout_weight="2"
+            android:spinnerMode="dropdown"
+            />
+
+    </LinearLayout>
+
+</LinearLayout>

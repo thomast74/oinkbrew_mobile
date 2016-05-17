@@ -2,7 +2,7 @@
 <resources>
     <color name="material_orange_500">#ff9800</color>
     <color name="black">#263238</color>
-    <color name="white">#ECEFF1</color>
+    <color name="white">#eceff1</color>
 
     <color name="chart_cooling">#97a4ff</color>
     <color name="chart_heating">#ef767b</color>

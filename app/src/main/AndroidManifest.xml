@@ -38,6 +38,12 @@
             android:name=".activities.ConfigurationFermentationOperationActivity"
             android:label="@string/drawer_configurations"
             />
+        <activity
+            android:name=".activities.ConfigurationNewActivity"
+            android:label="@string/drawer_configurations"
+            android:windowSoftInputMode="adjustResize"
+            />
+
     </application>
 
 </manifest>

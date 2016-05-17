@@ -1,5 +1,6 @@
 package info.vhowto.oinkbrewmobile.activities;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -51,9 +52,10 @@ public class ConfigurationListActivity extends AppCompatActivity implements Swip
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //TODO: Implement Create New Configuration
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                Activity host = (Activity) view.getContext();
+                Intent intent = new Intent(host, ConfigurationNewActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
+                host.startActivity(intent);
             }
         });
 
