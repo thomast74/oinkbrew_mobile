@@ -50,4 +50,7 @@ public class BrewPi implements Serializable {
         return clone;
     }
 
+    public String toString() {
+        return this.name;
+    }
 }

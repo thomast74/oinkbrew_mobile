@@ -41,7 +41,7 @@
         <activity
             android:name=".activities.ConfigurationNewActivity"
             android:label="@string/drawer_configurations"
-            android:windowSoftInputMode="adjustResize"
+            android:windowSoftInputMode="stateVisible|adjustResize"
             />
 
     </application>
