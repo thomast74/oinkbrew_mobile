@@ -1,14 +1,16 @@
 package info.vhowto.oinkbrewmobile.activities;
 
-import android.app.Activity;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -17,8 +19,12 @@ import java.util.ArrayList;
 
 import info.vhowto.oinkbrewmobile.R;
 import info.vhowto.oinkbrewmobile.domain.BrewPi;
+import info.vhowto.oinkbrewmobile.domain.Configuration;
 import info.vhowto.oinkbrewmobile.domain.ConfigurationType;
 import info.vhowto.oinkbrewmobile.domain.Device;
+import info.vhowto.oinkbrewmobile.domain.Phase;
+import info.vhowto.oinkbrewmobile.helpers.ActuatorsViewHolder;
+import info.vhowto.oinkbrewmobile.helpers.SensorsViewHolder;
 import info.vhowto.oinkbrewmobile.remote.BrewPiRequest;
 import info.vhowto.oinkbrewmobile.remote.DeviceRequest;
 import info.vhowto.oinkbrewmobile.remote.RequestArrayCallback;
@@ -28,169 +34,9 @@ public class ConfigurationNewActivity extends AppCompatActivity {
 
     private ActuatorsViewHolder actuatorsViewHolder;
     private SensorsViewHolder sensorsViewHolder;
+    private TextView name;
     private Spinner type;
     private Spinner brewpi;
-    private ArrayList<Device> devices;
-
-
-    private class ActuatorsViewHolder {
-        LinearLayout cooling_layout;
-        LinearLayout heating_1_layout;
-        LinearLayout heating_2_layout;
-        LinearLayout fan_layout;
-        LinearLayout pump_1_layout;
-        LinearLayout pump_2_layout;
-        TextView lbl_heating_1;
-        TextView lbl_heating_2;
-        Spinner cooling;
-        Spinner heating_1;
-        Spinner heating_2;
-        Spinner fan;
-        Spinner pump_1;
-        Spinner pump_2;
-
-        public ActuatorsViewHolder(Activity activity) {
-            cooling_layout = (LinearLayout)activity.findViewById(R.id.cooling_actuator_parent);
-            heating_1_layout = (LinearLayout)activity.findViewById(R.id.heating_1_actuator_parent);
-            heating_2_layout = (LinearLayout)activity.findViewById(R.id.heating_2_actuator_parent);
-            fan_layout = (LinearLayout)activity.findViewById(R.id.fan_actuator_parent);
-            pump_1_layout = (LinearLayout)activity.findViewById(R.id.pump_1_actuator_parent);
-            pump_2_layout = (LinearLayout)activity.findViewById(R.id.pump_2_actuator_parent);
-
-            lbl_heating_1 = (TextView)activity.findViewById(R.id.lbl_heating_1_actuator);
-            lbl_heating_2 = (TextView)activity.findViewById(R.id.lbl_heating_2_actuator);
-
-            cooling = (Spinner)activity.findViewById(R.id.cooling_actuator);
-            heating_1 = (Spinner)activity.findViewById(R.id.heating_1_actuator);
-            heating_2 = (Spinner)activity.findViewById(R.id.heating_2_actuator);
-            fan = (Spinner)activity.findViewById(R.id.fan_actuator);
-            pump_1 = (Spinner)activity.findViewById(R.id.pump_1_actuator);
-            pump_2 = (Spinner)activity.findViewById(R.id.pump_2_actuator);
-        }
-
-        public void changeToNoSelect() {
-            cooling_layout.setVisibility(View.GONE);
-            heating_1_layout.setVisibility(View.GONE);
-            heating_2_layout.setVisibility(View.GONE);
-            fan_layout.setVisibility(View.GONE);
-            pump_1_layout.setVisibility(View.GONE);
-            pump_2_layout.setVisibility(View.GONE);
-        }
-
-        public void changeToFermentation() {
-            cooling_layout.setVisibility(View.VISIBLE);
-            heating_1_layout.setVisibility(View.VISIBLE);
-            heating_2_layout.setVisibility(View.GONE);
-            fan_layout.setVisibility(View.VISIBLE);
-            pump_1_layout.setVisibility(View.GONE);
-            pump_2_layout.setVisibility(View.GONE);
-
-            lbl_heating_1.setText("Heating");
-        }
-
-        public void changeToBrew() {
-            cooling_layout.setVisibility(View.GONE);
-            heating_1_layout.setVisibility(View.VISIBLE);
-            heating_2_layout.setVisibility(View.VISIBLE);
-            fan_layout.setVisibility(View.GONE);
-            pump_1_layout.setVisibility(View.VISIBLE);
-            pump_2_layout.setVisibility(View.VISIBLE);
-
-            lbl_heating_1.setText("Heating HLT");
-            lbl_heating_2.setText("Heating Boil");
-        }
-    }
-
-    private class SensorsViewHolder {
-        LinearLayout fridge_inside_layout;
-        LinearLayout fridge_outside_layout;
-        LinearLayout beer_1_layout;
-        LinearLayout beer_2_layout;
-        LinearLayout hlt_out_layout;
-        LinearLayout mash_in_layout;
-        LinearLayout mash_out_layout;
-        LinearLayout boil_inside_layout;
-        LinearLayout boil_out_layout;
-
-        Spinner fridge_inside;
-        Spinner fridge_outside;
-        Spinner beer_1;
-        Spinner beer_2;
-        Spinner hlt_out;
-        Spinner mash_in;
-        Spinner mash_out;
-        Spinner boil_inside;
-        Spinner boil_out;
-
-        public SensorsViewHolder(Activity activity) {
-            fridge_inside_layout = (LinearLayout)activity.findViewById(R.id.fridge_inside_sensor_parent);
-            fridge_outside_layout = (LinearLayout)activity.findViewById(R.id.fridge_outside_sensor_parent);
-            beer_1_layout = (LinearLayout)activity.findViewById(R.id.beer_1_sensor_parent);
-            beer_2_layout = (LinearLayout)activity.findViewById(R.id.beer_2_sensor_parent);
-            hlt_out_layout = (LinearLayout)activity.findViewById(R.id.hlt_out_sensor_parent);
-            mash_in_layout = (LinearLayout)activity.findViewById(R.id.mash_in_sensor_parent);
-            mash_out_layout = (LinearLayout)activity.findViewById(R.id.mash_out_sensor_parent);
-            boil_inside_layout = (LinearLayout)activity.findViewById(R.id.boil_inside_sensor_parent);
-            boil_out_layout = (LinearLayout)activity.findViewById(R.id.boil_out_sensor_parent);
-
-            fridge_inside = (Spinner)activity.findViewById(R.id.fridge_inside_sensor);
-            fridge_outside = (Spinner)activity.findViewById(R.id.fridge_outside_sensor);
-            beer_1 = (Spinner)activity.findViewById(R.id.beer_1_sensor);
-            beer_2 = (Spinner)activity.findViewById(R.id.beer_2_sensor);
-            hlt_out = (Spinner)activity.findViewById(R.id.hlt_out_sensor);
-            mash_in = (Spinner)activity.findViewById(R.id.mash_in_sensor);
-            mash_out = (Spinner)activity.findViewById(R.id.mash_out_sensor);
-            boil_inside = (Spinner)activity.findViewById(R.id.boil_inside_sensor);
-            boil_out = (Spinner)activity.findViewById(R.id.boil_out_sensor);
-        }
-
-        public void changeToNoSelect() {
-            fridge_inside_layout.setVisibility(View.GONE);
-            fridge_outside_layout.setVisibility(View.GONE);
-            beer_1_layout.setVisibility(View.GONE);
-            beer_2_layout.setVisibility(View.GONE);
-            hlt_out_layout.setVisibility(View.GONE);
-            mash_in_layout.setVisibility(View.GONE);
-            mash_out_layout.setVisibility(View.GONE);
-            boil_inside_layout.setVisibility(View.GONE);
-            boil_out_layout.setVisibility(View.GONE);
-        }
-
-        public void changeToFermentation() {
-            fridge_inside_layout.setVisibility(View.VISIBLE);
-            fridge_outside_layout.setVisibility(View.VISIBLE);
-            beer_1_layout.setVisibility(View.VISIBLE);
-            beer_2_layout.setVisibility(View.VISIBLE);
-            hlt_out_layout.setVisibility(View.GONE);
-            mash_in_layout.setVisibility(View.GONE);
-            mash_out_layout.setVisibility(View.GONE);
-            boil_inside_layout.setVisibility(View.GONE);
-            boil_out_layout.setVisibility(View.GONE);
-        }
-
-        public void changeToBrew() {
-            fridge_inside_layout.setVisibility(View.GONE);
-            fridge_outside_layout.setVisibility(View.GONE);
-            beer_1_layout.setVisibility(View.GONE);
-            beer_2_layout.setVisibility(View.GONE);
-            hlt_out_layout.setVisibility(View.VISIBLE);
-            mash_in_layout.setVisibility(View.VISIBLE);
-            mash_out_layout.setVisibility(View.VISIBLE);
-            boil_inside_layout.setVisibility(View.VISIBLE);
-            boil_out_layout.setVisibility(View.VISIBLE);
-        }
-
-        public void clearSensors() {
-
-        }
-
-        public void setSensors(ArrayList<Device> items) {
-            ArrayAdapter<Device> adapter = new ArrayAdapter<Device>(this, R.layout.spinner_drop_down_item, items.toArray());
-            type.setAdapter(adapter);
-
-        }
-    }
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -199,8 +45,10 @@ public class ConfigurationNewActivity extends AppCompatActivity {
 
         final ConfigurationNewActivity activity = this;
 
+        name = (TextView)findViewById(R.id.name);
         type = (Spinner)findViewById(R.id.type);
         brewpi = (Spinner)findViewById(R.id.brewpi);
+
         actuatorsViewHolder = new ActuatorsViewHolder(this);
         actuatorsViewHolder.changeToNoSelect();
         sensorsViewHolder = new SensorsViewHolder(this);
@@ -344,33 +192,140 @@ public class ConfigurationNewActivity extends AppCompatActivity {
     private void prepareActuators(ArrayList<Device> items) {
         String selectedType = (String)type.getSelectedItem();
 
-        if (selectedType.equals("- Please Select -") || devices == null || devices.isEmpty())
+        if (selectedType.equals("- Please Select -") || items == null || items.isEmpty())
             return;
 
-        // activate drop downs based on type
-        // clear these drop downs
+        ArrayList<Device> actuators = new ArrayList<>();
+        for (Device device : items) {
+            if (device.isActuator() && !device.isInUse()) {
+                actuators.add(device);
+            }
+        }
 
-        // fill drop downs with actuators
-        // drop downs need to be configured that if selected this entry needs to be removed
-        // from the other actuator drop downs
+        actuatorsViewHolder.setActuators(this, actuators);
     }
 
     private void prepareSensors(ArrayList<Device> items) {
         String selectedType = (String)type.getSelectedItem();
 
-        if (selectedType.equals("- Please Select -") || devices == null || devices.isEmpty())
+        if (selectedType.equals("- Please Select -") || items == null || items.isEmpty())
             return;
 
-        // activate drop downs based on type
-        // clear these drop downs
+        ArrayList<Device> sensors = new ArrayList<>();
+        for (Device device : items) {
+            if (device.isTempSensor() && !device.isInUse()) {
+                sensors.add(device);
+            }
+        }
 
-        // fill drop downs with sensors
-        // drop downs need to be configured that if selected this entry needs to be removed
-        // from the other sensor drop downs
-
+        sensorsViewHolder.setSensors(this, sensors);
     }
 
     private void saveConfiguration() {
 
+        if (name.getText().length() == 0) {
+            showErrorMessage("You need to enter a name");
+            return;
+        }
+
+        if (type.getSelectedItemPosition() == 0) {
+            showErrorMessage("You need to select a configuration type");
+            return;
+        }
+
+        if (brewpi.getSelectedItemPosition() == 0) {
+            showErrorMessage("You need to select a BrewPi that will run the configuration");
+            return;
+        }
+
+        Configuration configuration = null;
+        String typeSelected = (String)type.getSelectedItem();
+        if (ConfigurationType.FERMENTATION.equals(typeSelected)) {
+
+            Device cooling = actuatorsViewHolder.getCooling();
+            Device heating = actuatorsViewHolder.getHeating();
+            Device fan = actuatorsViewHolder.getFan();
+
+            Device fridgeOutside = sensorsViewHolder.getFridgeOutside();
+            Device fridgeInside = sensorsViewHolder.getFridgeInside();
+            Device beer1 = sensorsViewHolder.getBeer1();
+            Device beer2 = sensorsViewHolder.getBeer2();
+
+            if (cooling.pk == 0) {
+                showErrorMessage("For a fermentation configuration you need to select a cooling actuator");
+                return;
+            }
+            if (heating.pk == 0) {
+                showErrorMessage("For a fermentation configuration you need to select a heating actuator");
+                return;
+            }
+            if (cooling.pk == heating.pk || cooling.pk == fan.pk || heating.pk == fan.pk) {
+                showErrorMessage("All actuators must be different");
+                return;
+            }
+            if (fridgeInside.pk == 0) {
+                showErrorMessage("For a fermentation configuration you need to select a fridge inside sensor");
+                return;
+            }
+            if (beer1.pk == 0) {
+                showErrorMessage("For a fermentation configuration you need to select a beer sensor");
+                return;
+            }
+            if (fridgeOutside.pk > 0 && (fridgeOutside.pk == fridgeInside.pk || fridgeOutside.pk == beer1.pk || fridgeOutside.pk == beer2.pk) ||
+                fridgeInside.pk == beer1.pk || fridgeInside.pk == beer2.pk || beer1.pk == beer2.pk) {
+                showErrorMessage("All sensors must be different");
+
+            }
+            configuration = new Configuration();
+            configuration.name = name.getText().toString();
+            configuration.type = (String)type.getSelectedItem();
+            configuration.cool_actuator = "Fridge Cooling Actuator";
+            configuration.heat_actuator = "Fridge Heating Actuator";
+            if (fan.pk > 0)
+                configuration.fan_actuator = "Fridge Fan Actuator";
+            configuration.temp_sensor = "Fridge Beer 1 Temp Sensor";
+
+            configuration.function.put("Fridge Cooling Actuator", cooling.pk);
+            configuration.function.put("Fridge Heating Actuator", heating.pk);
+            configuration.function.put("Fridge Inside Temp Sensor", fridgeInside.pk);
+            configuration.function.put("Fridge Beer 1 Temp Sensor", beer1.pk);
+
+            if (fan.pk > 0)
+                configuration.function.put("Fridge Fan Actuator", fan.pk);
+            if (fridgeOutside.pk > 0)
+                configuration.function.put("Outside Fridge Temp Sensor", fridgeOutside.pk);
+            if (beer2.pk > 0)
+                configuration.function.put("Fridge Beer 2 Temp Sensor", beer2.pk);
+
+            SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+
+            configuration.phase = new Phase();
+            configuration.phase.temperature = 19.0F;
+            configuration.phase.fan_pwm = Float.parseFloat(prefs.getString("pref_fermentation_fan_pwm", "100.0"));
+            configuration.phase.heating_period = Long.parseLong(prefs.getString("pref_fermentation_heat_period", "1000"));
+            configuration.phase.cooling_period = Long.parseLong(prefs.getString("pref_fermentation_cooling_period", "600000"));
+            configuration.phase.cooling_on_time = Long.parseLong(prefs.getString("pref_fermentation_cooling_on_time", "150000"));
+            configuration.phase.cooling_off_time = Long.parseLong(prefs.getString("pref_fermentation_cooling_off_time", "180000"));
+            configuration.phase.p = Float.parseFloat(prefs.getString("pref_fermentation_p", "18.0"));
+            configuration.phase.i = Float.parseFloat(prefs.getString("pref_fermentation_i", "0.0001"));
+            configuration.phase.d = Float.parseFloat(prefs.getString("pref_fermentation_d", "-8.0"));
+        }
+
+        if (configuration != null) {
+            // send configuration
+        }
+    }
+
+    private void showErrorMessage(String errorMessage) {
+        AlertDialog alertDialog = new AlertDialog.Builder(this).create();
+        alertDialog.setTitle("Alert");
+        alertDialog.setMessage(errorMessage);
+        alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                });
+        alertDialog.show();
     }
 }

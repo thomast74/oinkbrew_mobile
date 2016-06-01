@@ -32,13 +32,13 @@ public class Device {
         return new Gson().fromJson(json, Device.class);
     }
 
-    public boolean isActuator() {
-        return device_type == 1;
-    }
+    public boolean isActuator() { return device_type == 1; }
 
     public boolean isTempSensor() {
         return device_type == 3;
     }
+
+    public boolean isInUse() { return  function > 0; }
 
     public String toString() {
         if (name == null || name.isEmpty()) {

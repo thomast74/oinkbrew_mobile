@@ -43,7 +43,9 @@ public class DeviceRequest {
             return;
         }
 
-        String url = String.format(device_id == null ? devicesGeneral : devicesBrewPi, apiUrl);
+        String url = device_id == null
+                ? String.format(devicesGeneral, apiUrl)
+                : String.format(devicesBrewPi, apiUrl, device_id);
 
         JsonArrayRequest req = new JsonArrayRequest(Request.Method.GET, url, null,
 
