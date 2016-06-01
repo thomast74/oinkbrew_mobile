@@ -104,13 +104,21 @@ public class ActuatorsViewHolder {
     public Device getCooling() {
         return (Device)cooling.getSelectedItem();
     }
-
-    public Device getHeating() {
+    public Device getFridgeHeating() {
         return (Device)heating_1.getSelectedItem();
     }
-
-    public Device getFan() {
-        return (Device)fan.getSelectedItem();
+    public Device getFan() { return (Device)fan.getSelectedItem(); }
+    public Device getHltHeating() {
+        return (Device)heating_1.getSelectedItem();
+    }
+    public Device getBoilHeating() {
+        return (Device)heating_2.getSelectedItem();
+    }
+    public Device getPump1() {
+        return (Device)pump_1.getSelectedItem();
+    }
+    public Device getPump2() {
+        return (Device)pump_2.getSelectedItem();
     }
 
 }

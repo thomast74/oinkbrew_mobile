@@ -481,6 +481,7 @@
                         android:spinnerMode="dropdown"
                         />
                 </LinearLayout>
+                <!--
                 <LinearLayout
                     android:id="@+id/boil_inside_sensor_parent"
                     android:orientation="horizontal"
@@ -506,6 +507,7 @@
                         android:spinnerMode="dropdown"
                         />
                 </LinearLayout>
+                -->
                 <LinearLayout
                     android:id="@+id/boil_out_sensor_parent"
                     android:orientation="horizontal"

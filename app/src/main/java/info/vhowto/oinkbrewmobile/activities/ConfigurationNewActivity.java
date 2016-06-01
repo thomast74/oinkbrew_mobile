@@ -2,6 +2,7 @@ package info.vhowto.oinkbrewmobile.activities;
 
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -10,7 +11,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -26,8 +26,10 @@ import info.vhowto.oinkbrewmobile.domain.Phase;
 import info.vhowto.oinkbrewmobile.helpers.ActuatorsViewHolder;
 import info.vhowto.oinkbrewmobile.helpers.SensorsViewHolder;
 import info.vhowto.oinkbrewmobile.remote.BrewPiRequest;
+import info.vhowto.oinkbrewmobile.remote.ConfigurationRequest;
 import info.vhowto.oinkbrewmobile.remote.DeviceRequest;
 import info.vhowto.oinkbrewmobile.remote.RequestArrayCallback;
+import info.vhowto.oinkbrewmobile.remote.RequestObjectCallback;
 
 
 public class ConfigurationNewActivity extends AppCompatActivity {
@@ -57,14 +59,14 @@ public class ConfigurationNewActivity extends AppCompatActivity {
         prepareTypeSpinner();
         prepareBrewPiSpinner();
 
-        ((Button)findViewById(R.id.save)).setOnClickListener(new View.OnClickListener() {
+        findViewById(R.id.save).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 saveConfiguration();
             }
         });
 
-        ((Button)findViewById(R.id.cancel)).setOnClickListener(new View.OnClickListener() {
+        findViewById(R.id.cancel).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 activity.finish();
@@ -74,7 +76,7 @@ public class ConfigurationNewActivity extends AppCompatActivity {
 
     private void prepareTypeSpinner() {
         String[] typeValues = new String[] { "- Please Select -", ConfigurationType.BREW, ConfigurationType.FERMENTATION };
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, R.layout.spinner_drop_down_item, typeValues);
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, R.layout.spinner_drop_down_item, typeValues);
         type.setAdapter(adapter);
 
         type.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -118,7 +120,7 @@ public class ConfigurationNewActivity extends AppCompatActivity {
                 pleaseSelect.name = "- Please Select -";
                 items.add(0, pleaseSelect);
 
-                ArrayAdapter<BrewPi> adapter = new ArrayAdapter<BrewPi>(activity, R.layout.spinner_drop_down_item, items);
+                ArrayAdapter<BrewPi> adapter = new ArrayAdapter<>(activity, R.layout.spinner_drop_down_item, items);
                 brewpi.setAdapter(adapter);
             }
 
@@ -239,11 +241,12 @@ public class ConfigurationNewActivity extends AppCompatActivity {
         }
 
         Configuration configuration = null;
-        String typeSelected = (String)type.getSelectedItem();
+        final String typeSelected = (String)type.getSelectedItem();
+        final ConfigurationNewActivity activity = this;
         if (ConfigurationType.FERMENTATION.equals(typeSelected)) {
 
             Device cooling = actuatorsViewHolder.getCooling();
-            Device heating = actuatorsViewHolder.getHeating();
+            Device heating = actuatorsViewHolder.getFridgeHeating();
             Device fan = actuatorsViewHolder.getFan();
 
             Device fridgeOutside = sensorsViewHolder.getFridgeOutside();
@@ -310,9 +313,131 @@ public class ConfigurationNewActivity extends AppCompatActivity {
             configuration.phase.i = Float.parseFloat(prefs.getString("pref_fermentation_i", "0.0001"));
             configuration.phase.d = Float.parseFloat(prefs.getString("pref_fermentation_d", "-8.0"));
         }
+        else if (ConfigurationType.BREW.equals(typeSelected)) {
+
+            Device hltHeating = actuatorsViewHolder.getHltHeating();
+            Device boilHeating = actuatorsViewHolder.getBoilHeating();
+            Device pump1 = actuatorsViewHolder.getPump1();
+            Device pump2 = actuatorsViewHolder.getPump2();
+
+            Device hltOut = sensorsViewHolder.getHltOut();
+            Device mashIn = sensorsViewHolder.getMashIn();
+            Device mashOut = sensorsViewHolder.getMashOut();
+            //Device boilInside = sensorsViewHolder.getBoilInside();
+            Device boilOut = sensorsViewHolder.getBoilOut();
+
+            if (hltHeating.pk == 0) {
+                showErrorMessage("For a brew configuration you need to select a hlt heating actuator");
+                return;
+            }
+            if (boilHeating.pk == 0) {
+                showErrorMessage("For a brew configuration you need to select a boil heating actuator");
+                return;
+            }
+            if (pump1.pk == 0) {
+                showErrorMessage("For a brew configuration you need to select a water pump actuator");
+                return;
+            }
+            if (pump2.pk == 0) {
+                showErrorMessage("For a brew configuration you need to select a wort pump actuator");
+                return;
+            }
+            if (hltHeating.pk == boilHeating.pk || hltHeating.pk == pump1.pk || hltHeating.pk == pump2.pk ||
+                boilHeating.pk == pump1.pk || boilHeating.pk == pump2.pk ||
+                pump1.pk == pump2.pk) {
+                showErrorMessage("All actuators must be different");
+                return;
+            }
+
+            if (hltOut.pk == 0) {
+                showErrorMessage("For a fermentation configuration you need to select a fridge inside sensor");
+                return;
+            }
+            if (mashIn.pk == 0) {
+                showErrorMessage("For a fermentation configuration you need to select a beer sensor");
+                return;
+            }
+            if (mashOut.pk == 0) {
+                showErrorMessage("For a fermentation configuration you need to select a beer sensor");
+                return;
+            }
+            if (boilOut.pk == 0) {
+                showErrorMessage("For a fermentation configuration you need to select a beer sensor");
+                return;
+            }
+            if (hltOut.pk == mashIn.pk || hltOut.pk == mashOut.pk || hltOut.pk == boilOut.pk ||
+                mashIn.pk == mashOut.pk || mashIn.pk == boilOut.pk ||
+                mashOut.pk == boilOut.pk) {
+                showErrorMessage("All sensors must be different");
+
+            }
+            configuration = new Configuration();
+            configuration.name = name.getText().toString();
+            configuration.type = (String)type.getSelectedItem();
+
+            configuration.heat_actuator = "HLT Heating Actuator";
+            configuration.pump_1_actuator = "Pump 1 Actuator";
+            configuration.pump_2_actuator = "Pump 2 Actuator";
+            configuration.temp_sensor = "HLT Out Temp Sensor";
+
+            configuration.function.put("HLT Heating Actuator", hltHeating.pk);
+            configuration.function.put("Boil Heating Actuator", boilHeating.pk);
+            configuration.function.put("Pump 1 Actuator", pump1.pk);
+            configuration.function.put("Pump 2 Actuator", pump2.pk);
+            configuration.function.put("HLT Out Temp Sensor", hltOut.pk);
+            configuration.function.put("Mash In Temp Sensor", mashIn.pk);
+            configuration.function.put("Mash Out Temp Sensor", mashOut.pk);
+            configuration.function.put("Boil Out Temp Sensor", boilOut.pk);
+
+            SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+
+            configuration.phase = new Phase();
+            configuration.phase.temperature = 1.0F;
+            configuration.phase.pump_1_pwm = 100.0F;
+            configuration.phase.pump_2_pwm = 100.0F;
+            configuration.phase.heating_period = Long.parseLong(prefs.getString("pref_brew_heat_period", "2000"));
+            configuration.phase.p = Float.parseFloat(prefs.getString("pref_brew_p", "90.0"));
+            configuration.phase.i = Float.parseFloat(prefs.getString("pref_brew_i", "0.0001"));
+            configuration.phase.d = Float.parseFloat(prefs.getString("pref_brew_d", "-45.0"));
+        }
 
         if (configuration != null) {
-            // send configuration
+            BrewPi selectedBrewPi = (BrewPi)brewpi.getSelectedItem();
+            configuration.brewpi.device_id = selectedBrewPi.device_id;
+
+            ConfigurationRequest.createConfiguration(configuration, new RequestObjectCallback<Configuration>() {
+                @Override
+                public void onRequestSuccessful() {
+                    // will not be called
+                }
+
+                @Override
+                public void onRequestSuccessful(Configuration item) {
+                    Intent intent = null;
+                    if (ConfigurationType.FERMENTATION.equals(typeSelected)) {
+                        intent = new Intent(activity, ConfigurationFermentationOperationActivity.class);
+
+                    }
+                    else if (ConfigurationType.BREW.equals(typeSelected)) {
+                        intent = new Intent(activity, ConfigurationBrewOperationActivity.class);
+                    }
+                    if (intent != null) {
+                        intent.putExtra("item", item);
+                        activity.startActivity(intent);
+                        activity.finish();
+                    }
+                }
+
+                @Override
+                public void onRequestFailure(int statusCode, String errorMessage) {
+                    Toast.makeText(getApplicationContext(), errorMessage, Toast.LENGTH_LONG).show();
+                }
+
+                @Override
+                public Context getApplicationContext() {
+                    return null;
+                }
+            });
         }
     }
 

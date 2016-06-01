@@ -19,7 +19,7 @@ public class SensorsViewHolder {
     private LinearLayout hlt_out_layout;
     private LinearLayout mash_in_layout;
     private LinearLayout mash_out_layout;
-    private LinearLayout boil_inside_layout;
+    //private LinearLayout boil_inside_layout;
     private LinearLayout boil_out_layout;
 
     private Spinner fridge_inside;
@@ -29,7 +29,7 @@ public class SensorsViewHolder {
     private Spinner hlt_out;
     private Spinner mash_in;
     private Spinner mash_out;
-    private Spinner boil_inside;
+    //private Spinner boil_inside;
     private Spinner boil_out;
 
     public SensorsViewHolder(Activity activity) {
@@ -40,7 +40,7 @@ public class SensorsViewHolder {
         hlt_out_layout = (LinearLayout)activity.findViewById(R.id.hlt_out_sensor_parent);
         mash_in_layout = (LinearLayout)activity.findViewById(R.id.mash_in_sensor_parent);
         mash_out_layout = (LinearLayout)activity.findViewById(R.id.mash_out_sensor_parent);
-        boil_inside_layout = (LinearLayout)activity.findViewById(R.id.boil_inside_sensor_parent);
+        //boil_inside_layout = (LinearLayout)activity.findViewById(R.id.boil_inside_sensor_parent);
         boil_out_layout = (LinearLayout)activity.findViewById(R.id.boil_out_sensor_parent);
 
         fridge_inside = (Spinner)activity.findViewById(R.id.fridge_inside_sensor);
@@ -50,7 +50,7 @@ public class SensorsViewHolder {
         hlt_out = (Spinner)activity.findViewById(R.id.hlt_out_sensor);
         mash_in = (Spinner)activity.findViewById(R.id.mash_in_sensor);
         mash_out = (Spinner)activity.findViewById(R.id.mash_out_sensor);
-        boil_inside = (Spinner)activity.findViewById(R.id.boil_inside_sensor);
+        //boil_inside = (Spinner)activity.findViewById(R.id.boil_inside_sensor);
         boil_out = (Spinner)activity.findViewById(R.id.boil_out_sensor);
     }
 
@@ -62,7 +62,7 @@ public class SensorsViewHolder {
         hlt_out_layout.setVisibility(View.GONE);
         mash_in_layout.setVisibility(View.GONE);
         mash_out_layout.setVisibility(View.GONE);
-        boil_inside_layout.setVisibility(View.GONE);
+        //boil_inside_layout.setVisibility(View.GONE);
         boil_out_layout.setVisibility(View.GONE);
     }
 
@@ -74,7 +74,7 @@ public class SensorsViewHolder {
         hlt_out_layout.setVisibility(View.GONE);
         mash_in_layout.setVisibility(View.GONE);
         mash_out_layout.setVisibility(View.GONE);
-        boil_inside_layout.setVisibility(View.GONE);
+        //boil_inside_layout.setVisibility(View.GONE);
         boil_out_layout.setVisibility(View.GONE);
     }
 
@@ -86,7 +86,7 @@ public class SensorsViewHolder {
         hlt_out_layout.setVisibility(View.VISIBLE);
         mash_in_layout.setVisibility(View.VISIBLE);
         mash_out_layout.setVisibility(View.VISIBLE);
-        boil_inside_layout.setVisibility(View.VISIBLE);
+        //boil_inside_layout.setVisibility(View.VISIBLE);
         boil_out_layout.setVisibility(View.VISIBLE);
     }
 
@@ -103,7 +103,7 @@ public class SensorsViewHolder {
         ArrayAdapter<Device> hltOutAdapter = new ArrayAdapter<>(activity, R.layout.spinner_drop_down_item, devices);
         ArrayAdapter<Device> mashInAdapter = new ArrayAdapter<>(activity, R.layout.spinner_drop_down_item, devices);
         ArrayAdapter<Device> mashOutAdapter = new ArrayAdapter<>(activity, R.layout.spinner_drop_down_item, devices);
-        ArrayAdapter<Device> boildInsideAdapter = new ArrayAdapter<>(activity, R.layout.spinner_drop_down_item, devices);
+        //ArrayAdapter<Device> boildInsideAdapter = new ArrayAdapter<>(activity, R.layout.spinner_drop_down_item, devices);
         ArrayAdapter<Device> boilOutAdapter = new ArrayAdapter<>(activity, R.layout.spinner_drop_down_item, devices);
 
         fridge_inside.setAdapter(fridgeInsideAdapter);
@@ -113,23 +113,22 @@ public class SensorsViewHolder {
         hlt_out.setAdapter(hltOutAdapter);
         mash_in.setAdapter(mashInAdapter);
         mash_out.setAdapter(mashOutAdapter);
-        boil_inside.setAdapter(boildInsideAdapter);
+        ///boil_inside.setAdapter(boildInsideAdapter);
         boil_out.setAdapter(boilOutAdapter);
     }
 
     public Device getFridgeOutside() {
         return (Device)fridge_outside.getSelectedItem();
     }
-
     public Device getFridgeInside() {
         return (Device)fridge_inside.getSelectedItem();
     }
-
     public Device getBeer1() {
         return (Device)beer_1.getSelectedItem();
     }
-
-    public Device getBeer2() {
-        return (Device)beer_2.getSelectedItem();
-    }
+    public Device getBeer2() { return (Device)beer_2.getSelectedItem(); }
+    public Device getHltOut() { return (Device)hlt_out.getSelectedItem(); }
+    public Device getMashIn() { return (Device)mash_in.getSelectedItem(); }
+    public Device getMashOut() { return (Device)mash_out.getSelectedItem(); }
+    public Device getBoilOut() { return (Device)boil_out.getSelectedItem(); }
 }

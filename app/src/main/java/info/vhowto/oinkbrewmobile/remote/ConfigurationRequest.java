@@ -28,6 +28,7 @@ public class ConfigurationRequest {
     private static final String TAG = ConfigurationRequest.class.getSimpleName();
     private static final String configsGeneral = "%s/configs/?archived=%s&all_phases=%s";
     private static final String configsBrewPi = "%s/configs/%s/?archived=%s&all_phases=%s";
+    private static final String configsCreate = "%s/configs/%s/";
     private static final String configsDedicated = "%s/configs/%s/%d/";
 
     public static void getConfigurations(final RequestArrayCallback callback, Boolean loadArchived) {
@@ -99,6 +100,72 @@ public class ConfigurationRequest {
         OinkbrewApplication.getInstance().addToRequestQueue(req);
     }
 
+    public static void createConfiguration(final Configuration configuration, final RequestObjectCallback callback) {
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(callback.getApplicationContext());
+        String apiUrl = prefs.getString("pref_api_server_url", "");
+        Boolean allowAllCerts = prefs.getBoolean("pref_api_allow_all_certs", false);
+
+        if (allowAllCerts)
+            HttpsTrustManager.allowAllSSL();
+        else
+            HttpsTrustManager.allowOnlyValidSSL();
+
+        if (apiUrl.isEmpty()) {
+            callback.onRequestFailure(0, callback.getApplicationContext()
+                    .getString(R.string.error_settings_api_url_missing));
+            return;
+        }
+
+        String url = String.format(configsCreate, apiUrl, configuration.brewpi.device_id);
+        configuration.phases = null;
+        Log.d(TAG, Configuration.toJson(configuration));
+
+        try {
+            JSONObject configurationJson = new JSONObject(Configuration.toJson(configuration));
+
+            JsonObjectRequest req = new JsonObjectRequest(Request.Method.POST, url, configurationJson,
+
+                    new Response.Listener<JSONObject>() {
+                        @Override
+                        public void onResponse(JSONObject response) {
+                            try {
+                                // get response object and get the ID
+                                configuration.pk = response.getInt("ConfigId");
+                                callback.onRequestSuccessful(configuration);
+                            } catch (JSONException e) {
+                                Log.e(TAG, "JSON Parsing error: " + e.getMessage());
+                            }
+                        }
+                    },
+
+                    new Response.ErrorListener() {
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
+                            Log.d(TAG, error.getMessage(), error);
+
+                            String errorMessage = error.getMessage();
+                            if (error.networkResponse != null && error.networkResponse.data.length > 0) {
+                                try {
+                                    errorMessage = new String(error.networkResponse.data, "UTF-8");
+                                }
+                                catch (UnsupportedEncodingException e) {
+                                    Log.d(TAG, e.getMessage(), e);
+                                }
+                            }
+
+                            callback.onRequestFailure(
+                                    error.networkResponse == null ? 0 : error.networkResponse.statusCode,
+                                    errorMessage);
+                        }
+                    });
+
+            OinkbrewApplication.getInstance().addToRequestQueue(req);
+        } catch (JSONException error) {
+            Log.d(TAG, error.getMessage(), error);
+            callback.onRequestFailure(0, error.getMessage());
+        }
+    }
+
     public static void updateConfiguration(Configuration configuration, final RequestObjectCallback callback) {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(callback.getApplicationContext());
         String apiUrl = prefs.getString("pref_api_server_url", "");
@@ -158,4 +225,5 @@ public class ConfigurationRequest {
             callback.onRequestFailure(0, error.getMessage());
         }
     }
+
 }
