@@ -76,4 +76,32 @@
             android:defaultValue="-8.0"
             />
     </PreferenceCategory>
+    <PreferenceCategory
+        android:key="pref_key_fermentation_settings"
+        android:title="@string/pref_key_brew_settings">
+        <EditTextPreference
+            android:key="pref_brew_heat_period"
+            android:inputType="number"
+            android:title="@string/pref_title_brew_heat_period"
+            android:defaultValue="2000"
+            />
+        <EditTextPreference
+            android:key="pref_brew_p"
+            android:inputType="numberDecimal"
+            android:title="@string/pref_title_brew_p"
+            android:defaultValue="90.0"
+            />
+        <EditTextPreference
+            android:key="pref_brew_i"
+            android:inputType="numberDecimal"
+            android:title="@string/pref_title_brew_i"
+            android:defaultValue="0.0001"
+            />
+        <EditTextPreference
+            android:key="pref_brew_d"
+            android:inputType="numberDecimal"
+            android:title="@string/pref_title_brew_d"
+            android:defaultValue="-45.0"
+            />
+    </PreferenceCategory>
 </PreferenceScreen>

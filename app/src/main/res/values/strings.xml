@@ -60,5 +60,10 @@
     <string name="configuration_new_heating_hlt">Heating HLT</string>
     <string name="configuration_new_heating_boil">Heating Boil</string>
     <string name="configuration_new_heating_fridge">Heating</string>
+    <string name="pref_key_brew_settings">Brew</string>
+    <string name="pref_title_brew_heat_period">Heating Period (ms)</string>
+    <string name="pref_title_brew_p">PID: proportinal value (P)</string>
+    <string name="pref_title_brew_i">PID: integral value (I)</string>
+    <string name="pref_title_brew_d">PID: derivative value (D)</string>
 
 </resources>
