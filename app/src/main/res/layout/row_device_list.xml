@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="?android:attr/listPreferredItemHeight"
+    android:padding="6dip"
+    >
+
+    <ImageView
+        android:id="@+id/device_type_icon"
+        android:layout_width="32dip"
+        android:layout_height="32dip"
+        android:layout_margin="14dip"
+        android:layout_centerVertical="true"
+        android:contentDescription="TODO"
+        android:src="@android:drawable/ic_dialog_info"
+        />
+
+    <TextView
+        android:id="@+id/device_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="2dip"
+        android:layout_marginLeft="10dip"
+        android:layout_toRightOf="@id/device_type_icon"
+        android:text="Example application"
+        android:textSize="22sp"
+        />
+
+    <TextView
+        android:id="@+id/device_pin_nr"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/device_name"
+        android:layout_alignStart="@id/device_name"
+        android:layout_marginTop="4dip"
+        android:text="Description"
+        android:textSize="14sp"
+        />
+
+    <TextView
+        android:id="@+id/device_separator"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/device_name"
+        android:layout_toRightOf="@id/device_pin_nr"
+        android:layout_marginTop="4dip"
+        android:layout_marginLeft="4dip"
+        android:layout_marginRight="4dip"
+        android:text="/"
+        android:textSize="14sp"
+        />
+
+    <TextView
+        android:id="@+id/device_hwaddress"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/device_name"
+        android:layout_toRightOf="@id/device_separator"
+        android:layout_marginTop="4dip"
+        android:layout_marginLeft="4dip"
+        android:text="Description"
+        android:textSize="14sp"
+        />
+
+    <TextView
+        android:id="@+id/device_configuration"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/device_pin_nr"
+        android:layout_alignStart="@id/device_name"
+        android:layout_marginTop="4dip"
+        android:text="Description"
+        android:textSize="14sp"
+        />
+
+
+</RelativeLayout>

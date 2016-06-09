@@ -62,12 +62,10 @@ public class OinkbrewDrawer implements Drawer.OnDrawerItemClickListener {
 
             if (drawerItem.getIdentifier() == DrawerItems.CONFIGURATION && !(activity instanceof ConfigurationListActivity)) {
                 intent = new Intent(activity, ConfigurationListActivity.class);
-                intent.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
                 finish = true;
             }
             else if (drawerItem.getIdentifier() == DrawerItems.BREWPIS&& !(activity instanceof BrewPiListActivity)) {
                 intent = new Intent(activity, BrewPiListActivity.class);
-                intent.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
                 finish = true;
             }
             else if (drawerItem.getIdentifier() == DrawerItems.DEVICES) {

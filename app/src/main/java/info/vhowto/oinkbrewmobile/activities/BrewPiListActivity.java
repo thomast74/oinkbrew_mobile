@@ -1,6 +1,7 @@
 package info.vhowto.oinkbrewmobile.activities;
 
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AlertDialog;
@@ -102,7 +103,9 @@ public class BrewPiListActivity extends AppCompatActivity implements SwipeRefres
     }
 
     private void onItemClick(BrewPi item) {
-        Toast.makeText(this, item.name + " selected", Toast.LENGTH_LONG).show();
+        Intent intent = new Intent(this, BrewPiDevicesActivity.class);
+        intent.putExtra("device_id", item.device_id);
+        this.startActivity(intent);
     }
 
     @Override

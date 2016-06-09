@@ -10,7 +10,7 @@ public class Device {
     public String name;
     public int function;
     public int device_type;
-    public int configuration;
+    public Configuration configuration = new Configuration();
     public boolean is_deactivate;
 
     public BrewPi brewPi = new BrewPi();
@@ -30,6 +30,10 @@ public class Device {
 
     public static Device fromJson(String json) {
         return new Gson().fromJson(json, Device.class);
+    }
+
+    public static String toJson(Device device) {
+        return new Gson().toJson(device);
     }
 
     public boolean isActuator() { return device_type == 1; }
