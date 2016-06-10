@@ -11,6 +11,7 @@ import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -29,6 +30,8 @@ import info.vhowto.oinkbrewmobile.remote.ConfigurationRequest;
 import info.vhowto.oinkbrewmobile.remote.RequestArrayCallback;
 
 public class ConfigurationListActivity extends AppCompatActivity implements SwipeRefreshLayout.OnRefreshListener, RequestArrayCallback<Configuration> {
+
+    private static final String TAG = ConfigurationListActivity.class.getSimpleName();
 
     private ArrayList<Configuration> configurations;
     private RecyclerView recyclerView;
@@ -73,6 +76,29 @@ public class ConfigurationListActivity extends AppCompatActivity implements Swip
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.setAdapter(adapter);
 
+        ItemTouchHelper.SimpleCallback simpleItemTouchCallBack = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.RIGHT) {
+            @Override
+            public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
+                return false;
+            }
+
+            @Override
+            public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
+
+                // show alert to ask to really want to archive
+                // if yes
+                Configuration configuration = configurations.get(viewHolder.getAdapterPosition());
+
+                // ConfigurationRequest.archive(configuration);
+                // if positive archived remove from list
+                // if not show error message
+                configurations.remove(viewHolder.getAdapterPosition());
+                adapter.notifyDataSetChanged();
+            }
+        };
+        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(simpleItemTouchCallBack);
+        itemTouchHelper.attachToRecyclerView(recyclerView);
+
         swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.configuration_list_swipe_refresh_layout);
         swipeRefreshLayout.setOnRefreshListener(this);
         swipeRefreshLayout.post(new Runnable() {
@@ -81,6 +107,8 @@ public class ConfigurationListActivity extends AppCompatActivity implements Swip
                 fetchConfigurations();
             }
         });
+
+
     }
 
     private void fetchConfigurations() {
