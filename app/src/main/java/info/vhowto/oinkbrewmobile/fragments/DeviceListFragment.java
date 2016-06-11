@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AlertDialog;
 import android.text.InputType;
 import android.view.LayoutInflater;
@@ -20,15 +21,14 @@ import info.vhowto.oinkbrewmobile.R;
 import info.vhowto.oinkbrewmobile.activities.DevicesActivity;
 import info.vhowto.oinkbrewmobile.adapters.DeviceListAdapter;
 import info.vhowto.oinkbrewmobile.domain.Device;
-import info.vhowto.oinkbrewmobile.remote.BrewPiRequest;
 import info.vhowto.oinkbrewmobile.remote.DeviceRequest;
 import info.vhowto.oinkbrewmobile.remote.RequestArrayCallback;
 import info.vhowto.oinkbrewmobile.remote.RequestObjectCallback;
 
-public class DeviceListFragment extends ListFragment implements AdapterView.OnItemClickListener {
+public class DeviceListFragment extends ListFragment implements AdapterView.OnItemClickListener, SwipeRefreshLayout.OnRefreshListener {
 
     private List<Device> devices;
-    private String device_id;
+    private SwipeRefreshLayout swipeRefreshLayout;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -41,17 +41,26 @@ public class DeviceListFragment extends ListFragment implements AdapterView.OnIt
         super.onActivityCreated(savedInstanceState);
 
         devices = new ArrayList<>();
-        device_id = ((DevicesActivity)getActivity()).getDeviceId();
 
         DeviceListAdapter adapter = new DeviceListAdapter(this, devices);
         setListAdapter(adapter);
         getListView().setOnItemClickListener(this);
 
-        fetchDevices();
+        swipeRefreshLayout = (SwipeRefreshLayout) getView().findViewById(R.id.swipe_refresh_layout);
+        swipeRefreshLayout.setOnRefreshListener(this);
+        swipeRefreshLayout.post(new Runnable() {
+            @Override
+            public void run() {
+                fetchDevices();
+            }
+        });
+
     }
 
-    private void fetchDevices() {
+    public void fetchDevices() {
+        swipeRefreshLayout.setRefreshing(true);
         devices.clear();
+        String device_id = ((DevicesActivity)getActivity()).getDeviceId();
         DeviceRequest.getDevices(device_id, new RequestArrayCallback<Device>() {
             @Override
             public void onRequestSuccessful() {
@@ -62,11 +71,13 @@ public class DeviceListFragment extends ListFragment implements AdapterView.OnIt
             public void onRequestSuccessful(ArrayList<Device> items) {
                 devices.addAll(items);
                 ((DeviceListAdapter)getListAdapter()).notifyDataSetChanged();
+                swipeRefreshLayout.setRefreshing(false);
             }
 
             @Override
             public void onRequestFailure(int statusCode, String errorMessage) {
                 Toast.makeText(getApplicationContext(), errorMessage, Toast.LENGTH_LONG).show();
+                swipeRefreshLayout.setRefreshing(false);
             }
 
             @Override
@@ -75,7 +86,6 @@ public class DeviceListFragment extends ListFragment implements AdapterView.OnIt
             }
         });
     }
-
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position,long id) {
@@ -125,4 +135,10 @@ public class DeviceListFragment extends ListFragment implements AdapterView.OnIt
         });
         builder.show();
     }
+
+    @Override
+    public void onRefresh() {
+        fetchDevices();
+    }
+
 }

@@ -5,29 +5,29 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.mikepenz.materialdrawer.Drawer;
+
 import info.vhowto.oinkbrewmobile.R;
+import info.vhowto.oinkbrewmobile.fragments.OinkbrewDrawer;
 
-public class BrewPiDevicesActivity extends DevicesActivity {
+public class DevicesListActivity extends DevicesActivity {
 
-    private String device_id;
+    private Drawer drawer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_brewpi_devices);
+        setContentView(R.layout.activity_devices);
 
-        device_id = getIntent().getStringExtra("device_id");
-
-        Toolbar toolbar = (Toolbar) findViewById(R.id.brewpi_devices_toolbar);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.devices_toolbar);
         toolbar.setTitle(R.string.drawer_devices);
         setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        drawer = new OinkbrewDrawer().createDrawer(this, toolbar);
     }
 
     @Override
-    public String getDeviceId() {
-        return device_id;
-    }
+    public String getDeviceId() { return null; }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -37,12 +37,9 @@ public class BrewPiDevicesActivity extends DevicesActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        int itemId = item.getItemId();
+        int id = item.getItemId();
 
-        switch (itemId) {
-            case android.R.id.home:
-                onBackPressed();
-                return true;
+        switch (id) {
             case R.id.action_refresh:
                 refreshDevices();
                 return true;
@@ -53,7 +50,11 @@ public class BrewPiDevicesActivity extends DevicesActivity {
 
     @Override
     public void onBackPressed() {
-        finish();
+        if (drawer != null && drawer.isDrawerOpen()) {
+            drawer.closeDrawer();
+        } else {
+            super.onBackPressed();
+        }
     }
 
 }

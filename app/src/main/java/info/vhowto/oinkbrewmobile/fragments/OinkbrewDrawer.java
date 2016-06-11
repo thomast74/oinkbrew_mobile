@@ -18,6 +18,7 @@ import com.mikepenz.materialdrawer.model.interfaces.IDrawerItem;
 import info.vhowto.oinkbrewmobile.R;
 import info.vhowto.oinkbrewmobile.activities.BrewPiListActivity;
 import info.vhowto.oinkbrewmobile.activities.ConfigurationListActivity;
+import info.vhowto.oinkbrewmobile.activities.DevicesListActivity;
 import info.vhowto.oinkbrewmobile.activities.SettingsActivity;
 
 public class OinkbrewDrawer implements Drawer.OnDrawerItemClickListener {
@@ -58,21 +59,15 @@ public class OinkbrewDrawer implements Drawer.OnDrawerItemClickListener {
     {
         if (drawerItem != null) {
             Intent intent = null;
-            boolean finish = false;
 
             if (drawerItem.getIdentifier() == DrawerItems.CONFIGURATION && !(activity instanceof ConfigurationListActivity)) {
                 intent = new Intent(activity, ConfigurationListActivity.class);
-                finish = true;
             }
-            else if (drawerItem.getIdentifier() == DrawerItems.BREWPIS&& !(activity instanceof BrewPiListActivity)) {
+            else if (drawerItem.getIdentifier() == DrawerItems.BREWPIS && !(activity instanceof BrewPiListActivity)) {
                 intent = new Intent(activity, BrewPiListActivity.class);
-                finish = true;
             }
-            else if (drawerItem.getIdentifier() == DrawerItems.DEVICES) {
-                //TODO: Implement Devices Activity
-                Snackbar.make(view, "You clicked Devices", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-                finish = true;
+            else if (drawerItem.getIdentifier() == DrawerItems.DEVICES && !(activity instanceof DevicesListActivity)) {
+                intent = new Intent(activity, DevicesListActivity.class);
             }
             else if (drawerItem.getIdentifier() == DrawerItems.SETTINGS && !(activity instanceof SettingsActivity)) {
                 intent = new Intent(activity, SettingsActivity.class);
@@ -80,7 +75,7 @@ public class OinkbrewDrawer implements Drawer.OnDrawerItemClickListener {
 
             if (intent != null) {
                 activity.startActivity(intent);
-                if (finish)
+                if (activity instanceof BrewPiListActivity || activity instanceof DevicesListActivity)
                     activity.finish();
             }
         }
