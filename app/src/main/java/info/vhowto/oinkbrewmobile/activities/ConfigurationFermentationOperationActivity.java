@@ -120,7 +120,10 @@ public class ConfigurationFermentationOperationActivity extends AppCompatActivit
 
         chart = configureChart();
         fetchLogData();
-        startTimer();
+
+        if (configuration.archived) {
+            startTimer();
+        }
     }
 
     @Override
@@ -288,6 +291,12 @@ public class ConfigurationFermentationOperationActivity extends AppCompatActivit
     public boolean onCreateOptionsMenu(Menu menu) {
         this.menu = menu;
         getMenuInflater().inflate(R.menu.menu_configuration_fermentation_operation, menu);
+
+        if (configuration.archived)
+            menu.findItem(R.id.action_refresh_automatically).setEnabled(false);
+        else
+            menu.findItem(R.id.action_refresh_automatically).setEnabled(true);
+
         return true;
     }
 
