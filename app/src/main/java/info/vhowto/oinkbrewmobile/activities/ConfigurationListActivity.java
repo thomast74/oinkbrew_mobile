@@ -1,10 +1,10 @@
 package info.vhowto.oinkbrewmobile.activities;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -28,6 +28,7 @@ import info.vhowto.oinkbrewmobile.domain.ConfigurationType;
 import info.vhowto.oinkbrewmobile.fragments.OinkbrewDrawer;
 import info.vhowto.oinkbrewmobile.remote.ConfigurationRequest;
 import info.vhowto.oinkbrewmobile.remote.RequestArrayCallback;
+import info.vhowto.oinkbrewmobile.remote.RequestObjectCallback;
 
 public class ConfigurationListActivity extends AppCompatActivity implements SwipeRefreshLayout.OnRefreshListener, RequestArrayCallback<Configuration> {
 
@@ -76,28 +77,52 @@ public class ConfigurationListActivity extends AppCompatActivity implements Swip
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.setAdapter(adapter);
 
-        ItemTouchHelper.SimpleCallback simpleItemTouchCallBack = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.RIGHT) {
-            @Override
-            public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
-                return false;
-            }
+        Boolean loadArchived = !(menu == null || !menu.findItem(R.id.action_archived).isChecked());
 
-            @Override
-            public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
+        if (!loadArchived) {
+            ItemTouchHelper.SimpleCallback simpleItemTouchCallBack = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.RIGHT) {
+                @Override
+                public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
+                    return false;
+                }
 
-                // show alert to ask to really want to archive
-                // if yes
-                Configuration configuration = configurations.get(viewHolder.getAdapterPosition());
+                @Override
+                public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
 
-                // ConfigurationRequest.archive(configuration);
-                // if positive archived remove from list
-                // if not show error message
-                configurations.remove(viewHolder.getAdapterPosition());
-                adapter.notifyDataSetChanged();
-            }
-        };
-        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(simpleItemTouchCallBack);
-        itemTouchHelper.attachToRecyclerView(recyclerView);
+                    // show alert to ask to really want to archive
+                    // if yes
+                    final Context context = getApplicationContext();
+                    final int position = viewHolder.getAdapterPosition();
+                    Configuration configuration = configurations.get(position);
+
+                    ConfigurationRequest.archive(configuration, new RequestObjectCallback<Configuration>() {
+                        @Override
+                        public void onRequestSuccessful() {
+                            Toast.makeText(context, R.string.configuration_archived, Toast.LENGTH_LONG).show();
+                            configurations.remove(position);
+                            adapter.notifyDataSetChanged();
+                        }
+
+                        @Override
+                        public void onRequestSuccessful(Configuration item) {
+                            // will not be called
+                        }
+
+                        @Override
+                        public void onRequestFailure(int statusCode, String errorMessage) {
+                            Toast.makeText(context, errorMessage, Toast.LENGTH_LONG).show();
+                        }
+
+                        @Override
+                        public Context getApplicationContext() {
+                            return context;
+                        }
+                    });
+                }
+            };
+            ItemTouchHelper itemTouchHelper = new ItemTouchHelper(simpleItemTouchCallBack);
+            itemTouchHelper.attachToRecyclerView(recyclerView);
+        }
 
         swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.configuration_list_swipe_refresh_layout);
         swipeRefreshLayout.setOnRefreshListener(this);
@@ -119,7 +144,7 @@ public class ConfigurationListActivity extends AppCompatActivity implements Swip
         configurations.clear();
         adapter.notifyDataSetChanged();
 
-        ConfigurationRequest.getConfigurations(this, loadArchived);
+        ConfigurationRequest.get(this, loadArchived);
     }
 
     public void onRequestSuccessful() {

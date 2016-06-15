@@ -1,6 +1,5 @@
 package info.vhowto.oinkbrewmobile.activities;
 
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.graphics.Color;
@@ -11,13 +10,10 @@ import android.support.v4.content.ContextCompat;
 import android.support.v4.view.LayoutInflaterCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.CardView;
 import android.support.v7.widget.Toolbar;
-import android.text.InputType;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.EditText;
 import android.widget.NumberPicker;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -33,15 +29,12 @@ import com.mikepenz.iconics.context.IconicsLayoutInflater;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Timer;
-import java.util.TimerTask;
 
 import info.vhowto.oinkbrewmobile.R;
 import info.vhowto.oinkbrewmobile.domain.Configuration;
 import info.vhowto.oinkbrewmobile.domain.Log;
 import info.vhowto.oinkbrewmobile.domain.Phase;
 import info.vhowto.oinkbrewmobile.helpers.TempAxisValueFormatter;
-import info.vhowto.oinkbrewmobile.remote.BrewPiRequest;
 import info.vhowto.oinkbrewmobile.remote.ConfigurationRequest;
 import info.vhowto.oinkbrewmobile.remote.LogRequest;
 import info.vhowto.oinkbrewmobile.remote.RequestObjectCallback;
@@ -281,7 +274,7 @@ public class ConfigurationFermentationOperationActivity extends AppCompatActivit
                 Toast.makeText(getApplicationContext(), errorMessage, Toast.LENGTH_LONG).show();
                 requestErrorCount++;
                 if (requestErrorCount < 5) {
-                    ConfigurationRequest.updateConfiguration(configuration.clone(), this);
+                    ConfigurationRequest.update(configuration.clone(), this);
                 }
             case 404:
                 Toast.makeText(getApplicationContext(), getString(R.string.error_log_empty), Toast.LENGTH_LONG).show();
@@ -405,7 +398,7 @@ public class ConfigurationFermentationOperationActivity extends AppCompatActivit
                 configuration.phase.i = Float.parseFloat(prefs.getString("pref_fermentation_i", "0.0001"));
                 configuration.phase.d = Float.parseFloat(prefs.getString("pref_fermentation_d", "-8.0"));
 
-                ConfigurationRequest.updateConfiguration(configuration.clone(), callback);
+                ConfigurationRequest.update(configuration.clone(), callback);
             }
         });
 
