@@ -405,7 +405,7 @@ public class ConfigurationNewActivity extends AppCompatActivity {
             BrewPi selectedBrewPi = (BrewPi)brewpi.getSelectedItem();
             configuration.brewpi.device_id = selectedBrewPi.device_id;
 
-            ConfigurationRequest.createConfiguration(configuration, new RequestObjectCallback<Configuration>() {
+            ConfigurationRequest.create(configuration, new RequestObjectCallback<Configuration>() {
                 @Override
                 public void onRequestSuccessful() {
                     // will not be called

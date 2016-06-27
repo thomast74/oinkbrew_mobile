@@ -65,5 +65,6 @@
     <string name="pref_title_brew_p">PID: proportinal value (P)</string>
     <string name="pref_title_brew_i">PID: integral value (I)</string>
     <string name="pref_title_brew_d">PID: derivative value (D)</string>
+    <string name="configuration_archived">Configuration archived</string>
 
 </resources>

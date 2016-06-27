@@ -1,16 +1,17 @@
 package info.vhowto.oinkbrewmobile.activities;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -27,8 +28,11 @@ import info.vhowto.oinkbrewmobile.domain.ConfigurationType;
 import info.vhowto.oinkbrewmobile.fragments.OinkbrewDrawer;
 import info.vhowto.oinkbrewmobile.remote.ConfigurationRequest;
 import info.vhowto.oinkbrewmobile.remote.RequestArrayCallback;
+import info.vhowto.oinkbrewmobile.remote.RequestObjectCallback;
 
 public class ConfigurationListActivity extends AppCompatActivity implements SwipeRefreshLayout.OnRefreshListener, RequestArrayCallback<Configuration> {
+
+    private static final String TAG = ConfigurationListActivity.class.getSimpleName();
 
     private ArrayList<Configuration> configurations;
     private RecyclerView recyclerView;
@@ -73,6 +77,53 @@ public class ConfigurationListActivity extends AppCompatActivity implements Swip
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.setAdapter(adapter);
 
+        Boolean loadArchived = !(menu == null || !menu.findItem(R.id.action_archived).isChecked());
+
+        if (!loadArchived) {
+            ItemTouchHelper.SimpleCallback simpleItemTouchCallBack = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.RIGHT) {
+                @Override
+                public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
+                    return false;
+                }
+
+                @Override
+                public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
+
+                    // show alert to ask to really want to archive
+                    // if yes
+                    final Context context = getApplicationContext();
+                    final int position = viewHolder.getAdapterPosition();
+                    Configuration configuration = configurations.get(position);
+
+                    ConfigurationRequest.archive(configuration, new RequestObjectCallback<Configuration>() {
+                        @Override
+                        public void onRequestSuccessful() {
+                            Toast.makeText(context, R.string.configuration_archived, Toast.LENGTH_LONG).show();
+                            configurations.remove(position);
+                            adapter.notifyDataSetChanged();
+                        }
+
+                        @Override
+                        public void onRequestSuccessful(Configuration item) {
+                            // will not be called
+                        }
+
+                        @Override
+                        public void onRequestFailure(int statusCode, String errorMessage) {
+                            Toast.makeText(context, errorMessage, Toast.LENGTH_LONG).show();
+                        }
+
+                        @Override
+                        public Context getApplicationContext() {
+                            return context;
+                        }
+                    });
+                }
+            };
+            ItemTouchHelper itemTouchHelper = new ItemTouchHelper(simpleItemTouchCallBack);
+            itemTouchHelper.attachToRecyclerView(recyclerView);
+        }
+
         swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.configuration_list_swipe_refresh_layout);
         swipeRefreshLayout.setOnRefreshListener(this);
         swipeRefreshLayout.post(new Runnable() {
@@ -81,6 +132,8 @@ public class ConfigurationListActivity extends AppCompatActivity implements Swip
                 fetchConfigurations();
             }
         });
+
+
     }
 
     private void fetchConfigurations() {
@@ -91,7 +144,7 @@ public class ConfigurationListActivity extends AppCompatActivity implements Swip
         configurations.clear();
         adapter.notifyDataSetChanged();
 
-        ConfigurationRequest.getConfigurations(this, loadArchived);
+        ConfigurationRequest.get(this, loadArchived);
     }
 
     public void onRequestSuccessful() {
