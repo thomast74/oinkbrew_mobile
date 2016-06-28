@@ -435,7 +435,7 @@ public class ConfigurationNewActivity extends AppCompatActivity {
 
                 @Override
                 public Context getApplicationContext() {
-                    return null;
+                    return activity.getApplicationContext();
                 }
             });
         }
