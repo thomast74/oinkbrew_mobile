@@ -110,13 +110,15 @@ public class ConfigurationFermentationOperationActivity extends AppCompatActivit
             viewHolder.lbl_beer_1.setTextColor(viewHolder.black);
         }
 
-        TextView targetCard = (TextView) findViewById(R.id.configuration_target);
-        targetCard.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                adjustTargetTemperature();
-            }
-        });
+        if (!configuration.archived) {
+            TextView targetCard = (TextView) findViewById(R.id.configuration_target);
+            targetCard.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    adjustTargetTemperature();
+                }
+            });
+        }
 
         chart = configureChart();
         fetchLogData();
