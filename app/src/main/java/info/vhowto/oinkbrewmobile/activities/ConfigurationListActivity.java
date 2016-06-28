@@ -132,8 +132,6 @@ public class ConfigurationListActivity extends AppCompatActivity implements Swip
                 fetchConfigurations();
             }
         });
-
-
     }
 
     private void fetchConfigurations() {
