@@ -1,16 +1,13 @@
 package info.vhowto.oinkbrewmobile.activities;
 
 import android.content.DialogInterface;
-import android.content.SharedPreferences;
 import android.graphics.Color;
-import android.media.AudioManager;
 import android.media.Ringtone;
 import android.media.RingtoneManager;
-import android.media.ToneGenerator;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.CountDownTimer;
-import android.preference.PreferenceManager;
+import android.os.Handler;
 import android.support.v4.view.LayoutInflaterCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -18,32 +15,40 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Chronometer;
 import android.widget.ImageButton;
 import android.widget.NumberPicker;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.mikepenz.iconics.context.IconicsLayoutInflater;
 import com.mikepenz.materialdrawer.Drawer;
 
 import info.vhowto.oinkbrewmobile.R;
 import info.vhowto.oinkbrewmobile.domain.Configuration;
-import info.vhowto.oinkbrewmobile.domain.Phase;
+import info.vhowto.oinkbrewmobile.domain.Log;
 import info.vhowto.oinkbrewmobile.domain.TimerButtonState;
-import info.vhowto.oinkbrewmobile.fragments.OinkbrewDrawer;
 import info.vhowto.oinkbrewmobile.remote.ConfigurationRequest;
+import info.vhowto.oinkbrewmobile.remote.LogRequest;
+import info.vhowto.oinkbrewmobile.remote.RequestObjectCallback;
 
-public class ConfigurationBrewOperationActivity extends AppCompatActivity {
+public class ConfigurationBrewOperationActivity extends AppCompatActivity implements RequestObjectCallback<Log> {
+
+    private static long TIMER_PERIOD = 5000;
 
     private Configuration configuration;
     private Menu menu;
     private Drawer drawer;
     private TextView chrono;
     private CountDownTimer timer;
+    private int limit = 1;
     private TimerButtonState timerButtonState = TimerButtonState.NOT_RUNNING;
     private ImageButton timerButton;
     private long timerMillisUntilFinished;
     private Ringtone ringtone;
+    private Handler handler;
+    private Runnable runnable;
+    private int requestErrorCount = 0;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,6 +79,69 @@ public class ConfigurationBrewOperationActivity extends AppCompatActivity {
             }
         });
         timerButton.setColorFilter(Color.GRAY);
+
+
+        if (!configuration.archived) {
+            TextView targetCard = (TextView) findViewById(R.id.configuration_target);
+            targetCard.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    //adjustTargetTemperature();
+                }
+            });
+        }
+
+        //chart = configureChart();
+        fetchLogData();
+
+        if (!configuration.archived) {
+            startTimer();
+        }
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        stopTimer();
+    }
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        fetchLogData();
+
+        if (menu.findItem(R.id.action_refresh_automatically).isChecked() && !configuration.archived)
+            startTimer();
+    }
+
+    private void fetchLogData() {
+        LogRequest.getLogs(configuration.brewpi.device_id, configuration.pk, limit, this);
+    }
+
+    public void onRequestSuccessful() {
+        // target temp change request successful;
+        Toast.makeText(getApplicationContext(), R.string.configuration_target_update_success, Toast.LENGTH_LONG).show();
+        requestErrorCount = 0;
+    }
+
+    public void onRequestSuccessful(Log item) {
+
+    }
+
+    public void onRequestFailure(int statusCode, String errorMessage) {
+        switch (statusCode) {
+            case 400:
+                Toast.makeText(getApplicationContext(), errorMessage, Toast.LENGTH_LONG).show();
+                requestErrorCount++;
+                if (requestErrorCount < 5) {
+                    ConfigurationRequest.update(configuration.clone(), this);
+                }
+            case 404:
+                Toast.makeText(getApplicationContext(), getString(R.string.error_log_empty), Toast.LENGTH_LONG).show();
+                break;
+            default:
+                Toast.makeText(getApplicationContext(), errorMessage, Toast.LENGTH_LONG).show();
+        }
     }
 
     private void onTimerClick() {
@@ -213,6 +281,28 @@ public class ConfigurationBrewOperationActivity extends AppCompatActivity {
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
+        }
+    }
+
+    private void startTimer() {
+        if (handler == null) {
+            handler = new Handler();
+        }
+        if (runnable == null) {
+            runnable = new Runnable() {
+                @Override
+                public void run() {
+                    fetchLogData();
+                    handler.postDelayed(this, TIMER_PERIOD);
+                }
+            };
+        }
+        handler.postDelayed(runnable, TIMER_PERIOD);
+    }
+
+    private void stopTimer() {
+        if (handler != null) {
+            handler.removeCallbacks(runnable);
         }
     }
 }
