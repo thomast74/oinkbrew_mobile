@@ -123,7 +123,7 @@ public class ConfigurationFermentationOperationActivity extends AppCompatActivit
         chart = configureChart();
         fetchLogData();
 
-        if (configuration.archived) {
+        if (!configuration.archived) {
             startTimer();
         }
     }
@@ -139,7 +139,7 @@ public class ConfigurationFermentationOperationActivity extends AppCompatActivit
         super.onRestart();
         fetchLogData();
 
-        if (menu.findItem(R.id.action_refresh_automatically).isChecked())
+        if (menu.findItem(R.id.action_refresh_automatically).isChecked() && !configuration.archived)
             startTimer();
     }
 
