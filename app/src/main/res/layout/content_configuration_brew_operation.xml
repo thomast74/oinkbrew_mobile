@@ -102,7 +102,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:paddingTop="8dp"
-                        android:paddingStart="4dp"
+                        android:paddingStart="8dp"
                         android:textSize="14sp"
                         android:text="In"
                         />
@@ -113,7 +113,7 @@
                         android:layout_below="@+id/lbl_configuration_hlt_in"
                         android:layout_alignStart="@id/lbl_configuration_hlt_in"
                         android:paddingTop="8dp"
-                        android:paddingStart="4dp"
+                        android:paddingStart="8dp"
                         android:textSize="14sp"
                         android:text="Out"
                         />
@@ -124,7 +124,7 @@
                         android:layout_below="@+id/lbl_configuration_hlt_out"
                         android:layout_alignStart="@id/lbl_configuration_hlt_in"
                         android:paddingTop="4dp"
-                        android:paddingStart="4dp"
+                        android:paddingStart="8dp"
                         android:paddingBottom="8dp"
                         android:textSize="14sp"
                         android:text="Target"
@@ -136,7 +136,7 @@
                         android:layout_height="wrap_content"
                         android:layout_alignParentRight="true"
                         android:paddingTop="8dp"
-                        android:paddingEnd="4dp"
+                        android:paddingEnd="8dp"
                         android:textSize="14sp"
                         android:text="64.4 C"
                         />
@@ -147,7 +147,7 @@
                         android:layout_below="@+id/configuration_hlt_in"
                         android:layout_alignParentRight="true"
                         android:paddingTop="8dp"
-                        android:paddingEnd="4dp"
+                        android:paddingEnd="8dp"
                         android:textSize="14sp"
                         android:text="64.4 C"
                         />
@@ -158,7 +158,7 @@
                         android:layout_below="@+id/configuration_hlt_out"
                         android:layout_alignParentRight="true"
                         android:paddingTop="4dp"
-                        android:paddingEnd="4dp"
+                        android:paddingEnd="8dp"
                         android:paddingBottom="8dp"
                         android:textSize="14sp"
                         android:text="64.4 C"
@@ -213,7 +213,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:paddingTop="8dp"
-                        android:paddingStart="4dp"
+                        android:paddingStart="8dp"
                         android:textSize="14sp"
                         android:text="In"
                         />
@@ -224,10 +224,10 @@
                         android:layout_below="@+id/lbl_configuration_mash_in"
                         android:layout_alignStart="@id/lbl_configuration_mash_in"
                         android:paddingTop="8dp"
-                        android:paddingStart="4dp"
+                        android:paddingStart="8dp"
                         android:textSize="14sp"
                         android:text="Out"
-                        />
+                        android:password="false" />
                     <TextView
                         android:id="@+id/lbl_configuration_mash_target"
                         android:layout_width="wrap_content"
@@ -235,7 +235,7 @@
                         android:layout_below="@+id/lbl_configuration_mash_out"
                         android:layout_alignStart="@id/lbl_configuration_mash_in"
                         android:paddingTop="4dp"
-                        android:paddingStart="4dp"
+                        android:paddingStart="8dp"
                         android:paddingBottom="8dp"
                         android:textSize="14sp"
                         android:text="Target"
@@ -246,7 +246,7 @@
                         android:layout_height="wrap_content"
                         android:layout_alignParentRight="true"
                         android:paddingTop="8dp"
-                        android:paddingEnd="4dp"
+                        android:paddingEnd="8dp"
                         android:textSize="14sp"
                         android:text="64.4 C"
                         />
@@ -257,7 +257,7 @@
                         android:layout_below="@+id/configuration_mash_in"
                         android:layout_alignParentRight="true"
                         android:paddingTop="8dp"
-                        android:paddingEnd="4dp"
+                        android:paddingEnd="8dp"
                         android:textSize="14sp"
                         android:text="64.4 C"
                         />
@@ -268,7 +268,7 @@
                         android:layout_below="@+id/configuration_mash_out"
                         android:layout_alignParentRight="true"
                         android:paddingTop="4dp"
-                        android:paddingEnd="4dp"
+                        android:paddingEnd="8dp"
                         android:paddingBottom="8dp"
                         android:textSize="14sp"
                         android:text="64.4 C"
@@ -322,7 +322,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:paddingTop="8dp"
-                        android:paddingStart="4dp"
+                        android:paddingStart="8dp"
                         android:textSize="14sp"
                         android:text="In"
                         />
@@ -333,7 +333,7 @@
                         android:layout_below="@+id/lbl_configuration_boil_in"
                         android:layout_alignStart="@id/lbl_configuration_boil_in"
                         android:paddingTop="8dp"
-                        android:paddingStart="4dp"
+                        android:paddingStart="8dp"
                         android:textSize="14sp"
                         android:text="Out"
                         />
@@ -344,7 +344,7 @@
                         android:layout_below="@+id/lbl_configuration_boil_out"
                         android:layout_alignStart="@id/lbl_configuration_boil_in"
                         android:paddingTop="4dp"
-                        android:paddingStart="4dp"
+                        android:paddingStart="8dp"
                         android:paddingBottom="8dp"
                         android:textSize="14sp"
                         android:text="Target"
@@ -355,7 +355,7 @@
                         android:layout_height="wrap_content"
                         android:layout_alignParentRight="true"
                         android:paddingTop="8dp"
-                        android:paddingEnd="4dp"
+                        android:paddingEnd="8dp"
                         android:textSize="14sp"
                         android:text="64.4 C"
                         />
@@ -366,7 +366,7 @@
                         android:layout_below="@+id/configuration_boil_in"
                         android:layout_alignParentRight="true"
                         android:paddingTop="8dp"
-                        android:paddingEnd="4dp"
+                        android:paddingEnd="8dp"
                         android:textSize="14sp"
                         android:text="64.4 C"
                         />
@@ -377,7 +377,7 @@
                         android:layout_below="@+id/configuration_boil_out"
                         android:layout_alignParentRight="true"
                         android:paddingTop="4dp"
-                        android:paddingEnd="4dp"
+                        android:paddingEnd="8dp"
                         android:paddingBottom="8dp"
                         android:textSize="14sp"
                         android:text="100%"
@@ -427,66 +427,46 @@
                 />
         </LinearLayout>
 
-        <android.support.v7.widget.CardView
+        <LinearLayout
             xmlns:android="http://schemas.android.com/apk/res/android"
-            xmlns:card_view="http://schemas.android.com/apk/res-auto"
-            android:id="@+id/configuration_card_mash_in"
             android:layout_weight="1"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="2dp"
-            android:layout_marginEnd="2dp"
-            android:layout_marginBottom="4dp"
-            card_view:cardCornerRadius="2dp"
-            card_view:cardElevation="2dp"
-            card_view:cardUseCompatPadding="true"
+            android:orientation="vertical"
+            android:layout_marginStart="4dp"
+            android:layout_marginRight="2dp"
             >
-            <LinearLayout
-                xmlns:android="http://schemas.android.com/apk/res/android"
+            <TextView
+                android:id="@+id/lbl_configuration_countdown"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="vertical"
-                >
-                <TextView
-                    android:id="@+id/lbl_configuration_countdown"
-                    android:layout_width="match_parent"
-                    android:layout_height="22dp"
-                    android:gravity="center_vertical|center_horizontal"
-                    android:textSize="16sp"
-                    android:textColor="@color/black"
-                    android:background="@color/md_grey_300"
-                    android:paddingLeft="12dp"
-                    android:paddingRight="12dp"
-                    android:text="@string/configuration_timer"
-                    />
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center_vertical"
-                    android:orientation="vertical"
-                    android:paddingBottom="8dp">
-                    <TextView
-                        android:id="@+id/configuration_timer"
-                        android:layout_width="match_parent"
-                        android:layout_height="48dp"
-                        android:textSize="32dp"
-                        android:textColor="@color/black"
-                        android:gravity="center_vertical|center_horizontal"
-                        android:text="00:00"
-                        />
-                    <ImageButton
-                        android:id="@+id/configuration_timer_button"
-                        android:layout_width="48dp"
-                        android:layout_height="48dp"
-                        android:src="@drawable/play_circle"
-                        android:layout_gravity="center"
-                        android:tint="@color/material_orange_500"
-                        android:scaleType="fitXY"
-                        android:background="@null"
-                        />
-                </LinearLayout>
-            </LinearLayout>
-        </android.support.v7.widget.CardView>
+                android:layout_height="22dp"
+                android:gravity="center_vertical|center_horizontal"
+                android:textSize="16sp"
+                android:textColor="@color/black"
+                android:paddingLeft="12dp"
+                android:paddingRight="12dp"
+                android:text="@string/configuration_timer"
+                />
+            <TextView
+                android:id="@+id/configuration_timer"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:textSize="32dp"
+                android:textColor="@color/black"
+                android:gravity="center_vertical|center_horizontal"
+                android:text="00:00"
+                />
+            <ImageButton
+                android:id="@+id/configuration_timer_button"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:src="@drawable/play_circle"
+                android:layout_gravity="center"
+                android:tint="@color/material_orange_500"
+                android:scaleType="fitXY"
+                android:background="@null"
+                android:layout_marginBottom="12dp" />
+        </LinearLayout>
 
         <LinearLayout
             xmlns:android="http://schemas.android.com/apk/res/android"
