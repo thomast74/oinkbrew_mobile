@@ -18,7 +18,7 @@
     <android.support.v7.widget.CardView
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:card_view="http://schemas.android.com/apk/res-auto"
-        android:id="@+id/configuration_card_chart"
+        android:id="@+id/configuration_chart_card"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_weight="12"
@@ -27,24 +27,18 @@
         card_view:cardElevation="2dp"
         card_view:cardUseCompatPadding="true"
         >
-        <RelativeLayout
+        <LinearLayout
             xmlns:android="http://schemas.android.com/apk/res/android"
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:padding="8dp"
             >
-            <TextView
-                android:id="@+id/lbl_configuration_chart"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textSize="16sp"
-                android:textColor="@color/black"
-                android:paddingTop="8dp"
-                android:paddingLeft="12dp"
-                android:paddingRight="12dp"
-                android:paddingBottom="8dp"
-                android:text="Chart"
+            <com.github.mikephil.charting.charts.LineChart
+                android:id="@+id/chart"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
                 />
-        </RelativeLayout>
+        </LinearLayout>
     </android.support.v7.widget.CardView>
 
     <LinearLayout
@@ -103,8 +97,8 @@
                         android:layout_height="wrap_content"
                         android:paddingTop="8dp"
                         android:paddingStart="8dp"
-                        android:textSize="14sp"
-                        android:text="In"
+                        android:textSize="16sp"
+                        android:text="@string/configuration_in"
                         />
                     <TextView
                         android:id="@+id/lbl_configuration_hlt_out"
@@ -114,22 +108,10 @@
                         android:layout_alignStart="@id/lbl_configuration_hlt_in"
                         android:paddingTop="8dp"
                         android:paddingStart="8dp"
-                        android:textSize="14sp"
-                        android:text="Out"
-                        />
-                    <TextView
-                        android:id="@+id/lbl_configuration_hlt_target"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_below="@+id/lbl_configuration_hlt_out"
-                        android:layout_alignStart="@id/lbl_configuration_hlt_in"
-                        android:paddingTop="4dp"
-                        android:paddingStart="8dp"
                         android:paddingBottom="8dp"
-                        android:textSize="14sp"
-                        android:text="Target"
+                        android:textSize="16sp"
+                        android:text="@string/configuration_out"
                         />
-
                     <TextView
                         android:id="@+id/configuration_hlt_in"
                         android:layout_width="wrap_content"
@@ -137,8 +119,8 @@
                         android:layout_alignParentRight="true"
                         android:paddingTop="8dp"
                         android:paddingEnd="8dp"
-                        android:textSize="14sp"
-                        android:text="64.4 C"
+                        android:textSize="16sp"
+                        android:text=""
                         />
                     <TextView
                         android:id="@+id/configuration_hlt_out"
@@ -148,22 +130,10 @@
                         android:layout_alignParentRight="true"
                         android:paddingTop="8dp"
                         android:paddingEnd="8dp"
-                        android:textSize="14sp"
-                        android:text="64.4 C"
-                        />
-                    <TextView
-                        android:id="@+id/configuration_hlt_target"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_below="@+id/configuration_hlt_out"
-                        android:layout_alignParentRight="true"
-                        android:paddingTop="4dp"
-                        android:paddingEnd="8dp"
                         android:paddingBottom="8dp"
-                        android:textSize="14sp"
-                        android:text="64.4 C"
+                        android:textSize="16sp"
+                        android:text="--.- ºC"
                         />
-
                 </RelativeLayout>
             </LinearLayout>
         </android.support.v7.widget.CardView>
@@ -214,8 +184,8 @@
                         android:layout_height="wrap_content"
                         android:paddingTop="8dp"
                         android:paddingStart="8dp"
-                        android:textSize="14sp"
-                        android:text="In"
+                        android:textSize="16sp"
+                        android:text="@string/configuration_in"
                         />
                     <TextView
                         android:id="@+id/lbl_configuration_mash_out"
@@ -225,20 +195,9 @@
                         android:layout_alignStart="@id/lbl_configuration_mash_in"
                         android:paddingTop="8dp"
                         android:paddingStart="8dp"
-                        android:textSize="14sp"
-                        android:text="Out"
-                        android:password="false" />
-                    <TextView
-                        android:id="@+id/lbl_configuration_mash_target"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_below="@+id/lbl_configuration_mash_out"
-                        android:layout_alignStart="@id/lbl_configuration_mash_in"
-                        android:paddingTop="4dp"
-                        android:paddingStart="8dp"
                         android:paddingBottom="8dp"
-                        android:textSize="14sp"
-                        android:text="Target"
+                        android:textSize="16sp"
+                        android:text="@string/configuration_out"
                         />
                     <TextView
                         android:id="@+id/configuration_mash_in"
@@ -247,8 +206,8 @@
                         android:layout_alignParentRight="true"
                         android:paddingTop="8dp"
                         android:paddingEnd="8dp"
-                        android:textSize="14sp"
-                        android:text="64.4 C"
+                        android:textSize="16sp"
+                        android:text="--.- ºC"
                         />
                     <TextView
                         android:id="@+id/configuration_mash_out"
@@ -258,20 +217,9 @@
                         android:layout_alignParentRight="true"
                         android:paddingTop="8dp"
                         android:paddingEnd="8dp"
-                        android:textSize="14sp"
-                        android:text="64.4 C"
-                        />
-                    <TextView
-                        android:id="@+id/configuration_mash_target"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_below="@+id/configuration_mash_out"
-                        android:layout_alignParentRight="true"
-                        android:paddingTop="4dp"
-                        android:paddingEnd="8dp"
                         android:paddingBottom="8dp"
-                        android:textSize="14sp"
-                        android:text="64.4 C"
+                        android:textSize="16sp"
+                        android:text="--.- ºC"
                         />
                 </RelativeLayout>
             </LinearLayout>
@@ -323,8 +271,8 @@
                         android:layout_height="wrap_content"
                         android:paddingTop="8dp"
                         android:paddingStart="8dp"
-                        android:textSize="14sp"
-                        android:text="In"
+                        android:textSize="16sp"
+                        android:text="@string/configuration_in"
                         />
                     <TextView
                         android:id="@+id/lbl_configuration_boil_out"
@@ -334,21 +282,11 @@
                         android:layout_alignStart="@id/lbl_configuration_boil_in"
                         android:paddingTop="8dp"
                         android:paddingStart="8dp"
-                        android:textSize="14sp"
-                        android:text="Out"
-                        />
-                    <TextView
-                        android:id="@+id/lbl_configuration_boil_target"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_below="@+id/lbl_configuration_boil_out"
-                        android:layout_alignStart="@id/lbl_configuration_boil_in"
-                        android:paddingTop="4dp"
-                        android:paddingStart="8dp"
                         android:paddingBottom="8dp"
-                        android:textSize="14sp"
-                        android:text="Target"
+                        android:textSize="16sp"
+                        android:text="@string/configuration_out"
                         />
+
                     <TextView
                         android:id="@+id/configuration_boil_in"
                         android:layout_width="wrap_content"
@@ -356,8 +294,8 @@
                         android:layout_alignParentRight="true"
                         android:paddingTop="8dp"
                         android:paddingEnd="8dp"
-                        android:textSize="14sp"
-                        android:text="64.4 C"
+                        android:textSize="16sp"
+                        android:text=""
                         />
                     <TextView
                         android:id="@+id/configuration_boil_out"
@@ -367,22 +305,10 @@
                         android:layout_alignParentRight="true"
                         android:paddingTop="8dp"
                         android:paddingEnd="8dp"
-                        android:textSize="14sp"
-                        android:text="64.4 C"
-                        />
-                    <TextView
-                        android:id="@+id/configuration_boil_target"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_below="@+id/configuration_boil_out"
-                        android:layout_alignParentRight="true"
-                        android:paddingTop="4dp"
-                        android:paddingEnd="8dp"
                         android:paddingBottom="8dp"
-                        android:textSize="14sp"
-                        android:text="100%"
+                        android:textSize="16sp"
+                        android:text="--.- ºC"
                         />
-
                 </RelativeLayout>
             </LinearLayout>
         </android.support.v7.widget.CardView>
@@ -398,6 +324,7 @@
         android:layout_weight="1"
         android:weightSum="3"
         android:orientation="horizontal"
+        android:baselineAligned="true"
         >
         <LinearLayout
             xmlns:android="http://schemas.android.com/apk/res/android"
@@ -409,21 +336,26 @@
             android:layout_marginRight="2dp"
             >
             <TextView
-                android:id="@+id/lbl_configuration_water_pump"
+                android:id="@+id/lbl_configuration_target"
                 android:layout_width="match_parent"
-                android:layout_height="32dp"
+                android:layout_height="22dp"
                 android:gravity="top|center_horizontal"
                 android:textSize="16sp"
                 android:textColor="@color/black"
                 android:paddingLeft="12dp"
                 android:paddingRight="12dp"
-                android:text="@string/configuration_water_pump"
+                android:text="@string/configuration_target"
                 />
-            <SeekBar
-                android:id="@+id/configuration_water_pump_seekbar"
+            <TextView
+                android:id="@+id/configuration_target"
                 android:layout_width="match_parent"
-                android:layout_height="32dp"
-                android:max="100"
+                android:layout_height="48dp"
+                android:gravity="center_horizontal"
+                android:textSize="32sp"
+                android:textColor="@color/black"
+                android:paddingLeft="12dp"
+                android:paddingRight="12dp"
+                android:text="--.- ºC"
                 />
         </LinearLayout>
 
@@ -451,7 +383,7 @@
                 android:id="@+id/configuration_timer"
                 android:layout_width="match_parent"
                 android:layout_height="48dp"
-                android:textSize="32dp"
+                android:textSize="32sp"
                 android:textColor="@color/black"
                 android:gravity="center_vertical|center_horizontal"
                 android:text="00:00"
@@ -465,7 +397,8 @@
                 android:tint="@color/material_orange_500"
                 android:scaleType="fitXY"
                 android:background="@null"
-                android:layout_marginBottom="12dp" />
+                android:layout_marginBottom="12dp"
+                />
         </LinearLayout>
 
         <LinearLayout
@@ -478,20 +411,37 @@
             android:layout_marginEnd="4dp"
             >
             <TextView
+                android:id="@+id/lbl_configuration_water_pump"
+                android:layout_width="match_parent"
+                android:layout_height="28dp"
+                android:gravity="top|center_horizontal"
+                android:textSize="16sp"
+                android:textColor="@color/black"
+                android:paddingLeft="12dp"
+                android:paddingRight="12dp"
+                android:text="@string/configuration_water_pump"
+                />
+            <SeekBar
+                android:id="@+id/configuration_water_pump_seekbar"
+                android:layout_width="match_parent"
+                android:layout_height="26dp"
+                android:max="100" />
+            <TextView
                 android:id="@+id/lbl_configuration_wort_pump"
                 android:layout_width="match_parent"
-                android:layout_height="32dp"
+                android:layout_height="28dp"
                 android:gravity="top|center_horizontal"
                 android:textSize="16sp"
                 android:textColor="@color/black"
                 android:paddingLeft="12dp"
                 android:paddingRight="12dp"
                 android:text="@string/configuration_wort_pump"
-                android:background="@color/white" />
+                android:background="@color/white"
+                android:layout_marginTop="8dp" />
             <SeekBar
                 android:id="@+id/configuration_wort_pump_seekbar"
                 android:layout_width="match_parent"
-                android:layout_height="32dp"
+                android:layout_height="26dp"
                 android:layout_gravity="top"
                 android:max="100" />
         </LinearLayout>

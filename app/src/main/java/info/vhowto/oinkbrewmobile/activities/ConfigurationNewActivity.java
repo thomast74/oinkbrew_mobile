@@ -393,8 +393,8 @@ public class ConfigurationNewActivity extends AppCompatActivity {
 
             configuration.phase = new Phase();
             configuration.phase.temperature = 1.0F;
-            configuration.phase.pump_1_pwm = 100.0F;
-            configuration.phase.pump_2_pwm = 100.0F;
+            configuration.phase.pump_1_pwm = 0.0F;
+            configuration.phase.pump_2_pwm = 0.0F;
             configuration.phase.heating_period = Long.parseLong(prefs.getString("pref_brew_heat_period", "2000"));
             configuration.phase.p = Float.parseFloat(prefs.getString("pref_brew_p", "90.0"));
             configuration.phase.i = Float.parseFloat(prefs.getString("pref_brew_i", "0.0001"));

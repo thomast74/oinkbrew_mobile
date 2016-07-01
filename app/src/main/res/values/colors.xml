@@ -4,9 +4,18 @@
     <color name="black">#263238</color>
     <color name="white">#eceff1</color>
 
+    <color name="chart_target">#44ff41</color>
+
     <color name="chart_cooling">#97a4ff</color>
     <color name="chart_heating">#ef767b</color>
-    <color name="chart_target">#44ff41</color>
     <color name="chart_fridge">#996633</color>
     <color name="chart_beer_1">#ffd249</color>
+
+    <color name="chart_hlt_element">#97a4ff</color>
+    <color name="chart_boil_element">#97a4ff</color>
+    <color name="chart_hlt_out">#996633</color>
+    <color name="chart_mash_in">#ffd249</color>
+    <color name="chart_mash_out">#ef767b</color>
+    <color name="chart_boil_out">#ffd249</color>
+
 </resources>

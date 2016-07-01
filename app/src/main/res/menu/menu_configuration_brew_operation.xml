@@ -5,8 +5,47 @@
     tools:context=".activities.ConfigurationBrewOperationActivity">
 
     <item android:id="@+id/action_device_configuration"
-          android:title="@string/action_device_configuration"
-          android:orderInCategory="100"
-          app:showAsAction="never" />
+        android:title="@string/action_device_configuration"
+        android:orderInCategory="100"
+        app:showAsAction="never"
+        />
+
+    <item android:id="@+id/action_refresh"
+        android:title="@string/action_refresh"
+        android:orderInCategory="101"
+        app:showAsAction="never"
+        />
+
+    <item android:id="@+id/action_refresh_automatically"
+        android:title="@string/action_auto_refresh"
+        android:orderInCategory="102"
+        app:showAsAction="never"
+        android:checkable="true"
+        android:checked="true"
+        />
+
+    <item android:id="@+id/action_last_15_minutes"
+        android:title="@string/action_last_15_minutes"
+        android:orderInCategory="103"
+        app:showAsAction="never"
+        />
+
+    <item android:id="@+id/action_last_30_minutes"
+        android:title="@string/action_last_30_minutes"
+        android:orderInCategory="104"
+        app:showAsAction="never"
+        />
+
+    <item android:id="@+id/action_last_1_hour"
+        android:title="@string/action_last_1_hour"
+        android:orderInCategory="105"
+        app:showAsAction="never"
+        />
+
+    <item android:id="@+id/action_last_2_hour"
+        android:title="@string/action_last_2_hour"
+        android:orderInCategory="106"
+        app:showAsAction="never"
+        />
 
 </menu>

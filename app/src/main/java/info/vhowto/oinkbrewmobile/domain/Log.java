@@ -12,7 +12,7 @@ public class Log {
     public String type;
     public String device_id;
 
-    public FermentationPoint[] points = new FermentationPoint[] {};
+    public LogPoint[] points = new LogPoint[] {};
 
 
     public Log() {

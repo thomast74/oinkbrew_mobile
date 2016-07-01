@@ -77,7 +77,7 @@
             />
     </PreferenceCategory>
     <PreferenceCategory
-        android:key="pref_key_fermentation_settings"
+        android:key="pref_key_brew_settings"
         android:title="@string/pref_key_brew_settings">
         <EditTextPreference
             android:key="pref_brew_heat_period"

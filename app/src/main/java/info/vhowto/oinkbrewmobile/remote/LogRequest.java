@@ -7,6 +7,7 @@ import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
+import com.google.gson.JsonSyntaxException;
 
 import org.json.JSONObject;
 
@@ -49,8 +50,12 @@ public class LogRequest {
                     @Override
                     public void onResponse(JSONObject response) {
                         android.util.Log.d(TAG, response.toString());
-                        Log log = Log.fromJson(response.toString());
-                        callback.onRequestSuccessful(log);
+                        try {
+                            Log log = Log.fromJson(response.toString());
+                            callback.onRequestSuccessful(log);
+                        } catch (JsonSyntaxException e) {
+                            callback.onRequestFailure(404, "No Log Data");
+                        }
                     }
                 },
 
