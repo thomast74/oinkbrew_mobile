@@ -42,6 +42,7 @@ public class LogRequest {
         }
 
         String url = String.format(logsDetail, apiUrl, device_id, configuration_id, limit);
+        android.util.Log.d(TAG, url);
 
         JsonObjectRequest req = new JsonObjectRequest(Request.Method.GET, url, null,
 
