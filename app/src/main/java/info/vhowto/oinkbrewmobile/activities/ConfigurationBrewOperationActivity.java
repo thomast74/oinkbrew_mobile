@@ -668,6 +668,11 @@ public class ConfigurationBrewOperationActivity extends AppCompatActivity implem
                 fetchLogData();
                 result = true;
                 break;
+            case R.id.action_last_9_hours:
+                limit = 540;
+                fetchLogData();
+                result = true;
+                break;
         }
 
         return result;
