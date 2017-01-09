@@ -376,29 +376,8 @@
                 android:textSize="16sp"
                 android:textColor="@color/black"
                 android:paddingLeft="12dp"
-                android:paddingRight="12dp"
-                android:text="@string/configuration_timer"
-                />
-            <TextView
-                android:id="@+id/configuration_timer"
-                android:layout_width="match_parent"
-                android:layout_height="48dp"
-                android:textSize="32sp"
-                android:textColor="@color/black"
-                android:gravity="center_vertical|center_horizontal"
-                android:text="00:00"
-                />
-            <ImageButton
-                android:id="@+id/configuration_timer_button"
-                android:layout_width="48dp"
-                android:layout_height="48dp"
-                android:src="@drawable/play_circle"
-                android:layout_gravity="center"
-                android:tint="@color/material_orange_500"
-                android:scaleType="fitXY"
-                android:background="@null"
-                android:layout_marginBottom="12dp"
-                />
+                android:paddingRight="12dp" />
+
         </LinearLayout>
 
         <LinearLayout
