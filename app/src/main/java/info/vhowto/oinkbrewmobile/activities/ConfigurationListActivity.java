@@ -79,50 +79,48 @@ public class ConfigurationListActivity extends AppCompatActivity implements Swip
 
         Boolean loadArchived = !(menu == null || !menu.findItem(R.id.action_archived).isChecked());
 
-        if (!loadArchived) {
-            ItemTouchHelper.SimpleCallback simpleItemTouchCallBack = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.RIGHT) {
-                @Override
-                public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
-                    return false;
-                }
+        ItemTouchHelper.SimpleCallback simpleItemTouchCallBack = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.RIGHT) {
+            @Override
+            public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
+                return false;
+            }
 
-                @Override
-                public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
+            @Override
+            public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
 
-                    // show alert to ask to really want to archive
-                    // if yes
-                    final Context context = getApplicationContext();
-                    final int position = viewHolder.getAdapterPosition();
-                    Configuration configuration = configurations.get(position);
+                // show alert to ask to really want to archive
+                // if yes
+                final Context context = getApplicationContext();
+                final int position = viewHolder.getAdapterPosition();
+                Configuration configuration = configurations.get(position);
 
-                    ConfigurationRequest.archive(configuration, new RequestObjectCallback<Configuration>() {
-                        @Override
-                        public void onRequestSuccessful() {
-                            Toast.makeText(context, R.string.configuration_archived, Toast.LENGTH_LONG).show();
-                            configurations.remove(position);
-                            adapter.notifyDataSetChanged();
-                        }
+                ConfigurationRequest.archive(configuration, new RequestObjectCallback<Configuration>() {
+                    @Override
+                    public void onRequestSuccessful() {
+                        Toast.makeText(context, R.string.configuration_archived, Toast.LENGTH_LONG).show();
+                        configurations.remove(position);
+                        adapter.notifyDataSetChanged();
+                    }
 
-                        @Override
-                        public void onRequestSuccessful(Configuration item) {
-                            // will not be called
-                        }
+                    @Override
+                    public void onRequestSuccessful(Configuration item) {
+                        // will not be called
+                    }
 
-                        @Override
-                        public void onRequestFailure(int statusCode, String errorMessage) {
-                            Toast.makeText(context, errorMessage, Toast.LENGTH_LONG).show();
-                        }
+                    @Override
+                    public void onRequestFailure(int statusCode, String errorMessage) {
+                        Toast.makeText(context, errorMessage, Toast.LENGTH_LONG).show();
+                    }
 
-                        @Override
-                        public Context getApplicationContext() {
-                            return context;
-                        }
-                    });
-                }
-            };
-            ItemTouchHelper itemTouchHelper = new ItemTouchHelper(simpleItemTouchCallBack);
-            itemTouchHelper.attachToRecyclerView(recyclerView);
-        }
+                    @Override
+                    public Context getApplicationContext() {
+                        return context;
+                    }
+                });
+            }
+        };
+        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(simpleItemTouchCallBack);
+        itemTouchHelper.attachToRecyclerView(recyclerView);
 
         swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.configuration_list_swipe_refresh_layout);
         swipeRefreshLayout.setOnRefreshListener(this);

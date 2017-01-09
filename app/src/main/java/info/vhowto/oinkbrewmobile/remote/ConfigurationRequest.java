@@ -241,7 +241,8 @@ public class ConfigurationRequest {
             return;
         }
 
-        String url = String.format(configsDedicated, apiUrl, configuration.brewpi.device_id, configuration.pk);
+        String url = String.format(configsDedicated + "?really=%s", apiUrl, configuration.brewpi.device_id, configuration.pk, configuration.archived ? "True" : "False");
+        Log.d(TAG, "Url: " + url);
         configuration.phases = null;
         Log.d(TAG, Configuration.toJson(configuration));
 
