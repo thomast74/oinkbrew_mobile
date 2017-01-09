@@ -113,72 +113,72 @@ public class ConfigurationBrewOperationActivity extends AppCompatActivity implem
 
         if (!configuration.archived) {
             startTimer();
+
+            viewHolder.target.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    adjustTarget();
+                }
+            });
+            viewHolder.water_pump.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+                @Override
+                public void onProgressChanged(SeekBar pump, int progress, boolean fromUser) {
+                    if (fromUser)
+                        adjustPumpSettings(pump);
+                }
+
+                @Override
+                public void onStartTrackingTouch(SeekBar seekBar) {
+
+                }
+
+                @Override
+                public void onStopTrackingTouch(SeekBar seekBar) {
+
+                }
+            });
+            viewHolder.wort_pump.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+                @Override
+                public void onProgressChanged(SeekBar pump, int progress, boolean fromUser) {
+                    if (fromUser)
+                        adjustPumpSettings(pump);
+                }
+
+                @Override
+                public void onStartTrackingTouch(SeekBar seekBar) {
+
+                }
+
+                @Override
+                public void onStopTrackingTouch(SeekBar seekBar) {
+
+                }
+            });
+            viewHolder.hlt.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (!configuration.temp_sensor.contains("HLT")) {
+                        adjustTempSensor(TempSensorSelection.HLT);
+                    }
+                }
+            });
+            viewHolder.mash.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (!configuration.temp_sensor.contains("Mash")) {
+                        adjustTempSensor(TempSensorSelection.MASH);
+                    }
+                }
+            });
+            viewHolder.boil.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (!configuration.temp_sensor.contains("Boil")) {
+                        adjustTempSensor(TempSensorSelection.BOIL);
+                    }
+                }
+            });
         }
-
-        viewHolder.target.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                adjustTarget();
-            }
-        });
-        viewHolder.water_pump.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-            @Override
-            public void onProgressChanged(SeekBar pump, int progress, boolean fromUser) {
-                if (fromUser)
-                    adjustPumpSettings(pump);
-            }
-
-            @Override
-            public void onStartTrackingTouch(SeekBar seekBar) {
-
-            }
-
-            @Override
-            public void onStopTrackingTouch(SeekBar seekBar) {
-
-            }
-        });
-        viewHolder.wort_pump.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-            @Override
-            public void onProgressChanged(SeekBar pump, int progress, boolean fromUser) {
-                if (fromUser)
-                    adjustPumpSettings(pump);
-            }
-
-            @Override
-            public void onStartTrackingTouch(SeekBar seekBar) {
-
-            }
-
-            @Override
-            public void onStopTrackingTouch(SeekBar seekBar) {
-
-            }
-        });
-        viewHolder.hlt.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (!configuration.temp_sensor.contains("HLT")) {
-                    adjustTempSensor(TempSensorSelection.HLT);
-                }
-            }
-        });
-        viewHolder.mash.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (!configuration.temp_sensor.contains("Mash")) {
-                    adjustTempSensor(TempSensorSelection.MASH);
-                }
-            }
-        });
-        viewHolder.boil.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (!configuration.temp_sensor.contains("Boil")) {
-                    adjustTempSensor(TempSensorSelection.BOIL);
-                }
-            }
-        });
     }
 
     @Override
