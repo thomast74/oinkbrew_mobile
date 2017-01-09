@@ -26,6 +26,20 @@ public class Phase implements Serializable {
     public Boolean done;
 
     public Phase() {
+        start_date = new Date();
+        temperature = 0.0F;
+        heat_pwm = 0.0F;
+        pump_1_pwm = 0.0F;
+        pump_2_pwm = 0.0F;
+        fan_pwm = 0.0F;
+        heating_period = 0L;
+        cooling_period = 0L;
+        cooling_on_time = 0L;
+        cooling_off_time = 0L;
+        p = 0.0F;
+        i = 0.0F;
+        d = 0.0F;
+        done = false;
     }
 
     public Phase clone() {
