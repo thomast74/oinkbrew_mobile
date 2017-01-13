@@ -68,6 +68,7 @@
     <string name="pref_title_brew_i">PID: integral value (I)</string>
     <string name="pref_title_brew_d">PID: derivative value (D)</string>
     <string name="configuration_archived">Configuration archived</string>
+    <string name="configuration_deleted">Configuration deleted</string>
     <string name="configuration_hlt">HLT</string>
     <string name="configuration_mash">Mash</string>
     <string name="configuration_boil">Boil</string>

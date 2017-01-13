@@ -92,12 +92,16 @@ public class ConfigurationListActivity extends AppCompatActivity implements Swip
                 // if yes
                 final Context context = getApplicationContext();
                 final int position = viewHolder.getAdapterPosition();
-                Configuration configuration = configurations.get(position);
+                final Configuration configuration = configurations.get(position);
 
                 ConfigurationRequest.archive(configuration, new RequestObjectCallback<Configuration>() {
                     @Override
                     public void onRequestSuccessful() {
-                        Toast.makeText(context, R.string.configuration_archived, Toast.LENGTH_LONG).show();
+                        if (configuration.archived)
+                            Toast.makeText(context, R.string.configuration_deleted, Toast.LENGTH_LONG).show();
+                        else
+                            Toast.makeText(context, R.string.configuration_archived, Toast.LENGTH_LONG).show();
+
                         configurations.remove(position);
                         adapter.notifyDataSetChanged();
                     }
