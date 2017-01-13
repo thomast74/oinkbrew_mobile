@@ -4,6 +4,7 @@ import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.util.Log;
 
+import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
@@ -27,6 +28,7 @@ public class BrewPiRequest {
     private static final String TAG = BrewPiRequest.class.getSimpleName();
     private static final String brewpisGeneral = "%s/brewpis/";
     private static final String brewpiDetail = "%s/brewpis/%s/%s/";
+    private static final int MY_SOCKET_TIMEOUT_MS = 60000;
 
     public static void getBrewPis(final RequestArrayCallback callback) {
 
@@ -76,11 +78,30 @@ public class BrewPiRequest {
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        callback.onRequestFailure(error.networkResponse == null ? 0 : error.networkResponse.statusCode,
-                                error.getMessage());
+                        Log.d(TAG, error.getMessage(), error);
+
+                        String errorMessage = error.getMessage();
+                        if (error.networkResponse != null && error.networkResponse.data.length > 0) {
+                            try {
+                                errorMessage = new String(error.networkResponse.data, "UTF-8");
+                                JSONObject jsonResonse = new JSONObject(errorMessage);
+                                errorMessage = jsonResonse.getString("Message");
+                            }
+                            catch (UnsupportedEncodingException e) {
+                                Log.d(TAG, e.getMessage(), e);
+                            }
+                            catch (JSONException e) {
+                                Log.e(TAG, "JSON Parsing error: " + e.getMessage());
+                            }
+                        }
+
+                        callback.onRequestFailure(
+                                error.networkResponse == null ? 0 : error.networkResponse.statusCode,
+                                errorMessage);
                     }
                 });
 
+        req.setRetryPolicy(new DefaultRetryPolicy(MY_SOCKET_TIMEOUT_MS, 0, 0));
         OinkbrewApplication.getInstance().addToRequestQueue(req);
     }
 
@@ -124,9 +145,14 @@ public class BrewPiRequest {
                             if (error.networkResponse != null && error.networkResponse.data.length > 0) {
                                 try {
                                     errorMessage = new String(error.networkResponse.data, "UTF-8");
+                                    JSONObject jsonResonse = new JSONObject(errorMessage);
+                                    errorMessage = jsonResonse.getString("Message");
                                 }
                                 catch (UnsupportedEncodingException e) {
                                     Log.d(TAG, e.getMessage(), e);
+                                }
+                                catch (JSONException e) {
+                                    Log.e(TAG, "JSON Parsing error: " + e.getMessage());
                                 }
                             }
 
@@ -136,11 +162,11 @@ public class BrewPiRequest {
                         }
                     });
 
+            req.setRetryPolicy(new DefaultRetryPolicy(MY_SOCKET_TIMEOUT_MS, 0, 0));
             OinkbrewApplication.getInstance().addToRequestQueue(req);
         } catch (JSONException error) {
             Log.d(TAG, error.getMessage(), error);
             callback.onRequestFailure(0, error.getMessage());
         }
     }
-
 }

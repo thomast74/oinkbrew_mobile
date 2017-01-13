@@ -4,6 +4,7 @@ import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.util.Log;
 
+import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
@@ -29,6 +30,7 @@ public class DeviceRequest {
     private static final String devicesGeneral = "%s/devices/";
     private static final String devicesBrewPi = "%s/devices/%s/";
     private static final String deviceUpdate = "%s/devices/%s/update/";
+    private static final int MY_SOCKET_TIMEOUT_MS = 60000;
 
     public static void getDevices(String device_id, final RequestArrayCallback callback) {
 
@@ -86,9 +88,14 @@ public class DeviceRequest {
                         if (error.networkResponse != null && error.networkResponse.data.length > 0) {
                             try {
                                 errorMessage = new String(error.networkResponse.data, "UTF-8");
+                                JSONObject jsonResonse = new JSONObject(errorMessage);
+                                errorMessage = jsonResonse.getString("Message");
                             }
                             catch (UnsupportedEncodingException e) {
                                 Log.d(TAG, e.getMessage(), e);
+                            }
+                            catch (JSONException e) {
+                                Log.e(TAG, "JSON Parsing error: " + e.getMessage());
                             }
                         }
 
@@ -98,6 +105,7 @@ public class DeviceRequest {
                     }
                 });
 
+        req.setRetryPolicy(new DefaultRetryPolicy(MY_SOCKET_TIMEOUT_MS, 0, 0));
         OinkbrewApplication.getInstance().addToRequestQueue(req);
     }
 
@@ -141,9 +149,14 @@ public class DeviceRequest {
                             if (error.networkResponse != null && error.networkResponse.data.length > 0) {
                                 try {
                                     errorMessage = new String(error.networkResponse.data, "UTF-8");
+                                    JSONObject jsonResonse = new JSONObject(errorMessage);
+                                    errorMessage = jsonResonse.getString("Message");
                                 }
                                 catch (UnsupportedEncodingException e) {
                                     Log.d(TAG, e.getMessage(), e);
+                                }
+                                catch (JSONException e) {
+                                    Log.e(TAG, "JSON Parsing error: " + e.getMessage());
                                 }
                             }
 
@@ -153,11 +166,11 @@ public class DeviceRequest {
                         }
                     });
 
+            req.setRetryPolicy(new DefaultRetryPolicy(MY_SOCKET_TIMEOUT_MS, 0, 0));
             OinkbrewApplication.getInstance().addToRequestQueue(req);
         } catch (JSONException error) {
             Log.d(TAG, error.getMessage(), error);
             callback.onRequestFailure(0, error.getMessage());
         }
-
     }
 }

@@ -3,12 +3,14 @@ package info.vhowto.oinkbrewmobile.remote;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 
+import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.google.gson.JsonSyntaxException;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.UnsupportedEncodingException;
@@ -23,6 +25,7 @@ public class LogRequest {
     private static final String TAG = LogRequest.class.getSimpleName();
     private static final String logsGeneral = "%s/logs/?limit=%s";
     private static final String logsDetail = "%s/logs/%s/%d/?limit=%s";
+    private static final int MY_SOCKET_TIMEOUT_MS = 60000;
 
     public static void getLogs(String device_id, int configuration_id, int limit, final RequestObjectCallback callback)  {
 
@@ -69,9 +72,14 @@ public class LogRequest {
                         if (error.networkResponse != null && error.networkResponse.data.length > 0) {
                             try {
                                 errorMessage = new String(error.networkResponse.data, "UTF-8");
+                                JSONObject jsonResonse = new JSONObject(errorMessage);
+                                errorMessage = jsonResonse.getString("Message");
                             }
                             catch (UnsupportedEncodingException e) {
                                 android.util.Log.d(TAG, e.getMessage(), e);
+                            }
+                            catch (JSONException e) {
+                                android.util.Log.e(TAG, "JSON Parsing error: " + e.getMessage());
                             }
                         }
 
@@ -81,6 +89,7 @@ public class LogRequest {
                     }
                 });
 
+        req.setRetryPolicy(new DefaultRetryPolicy(MY_SOCKET_TIMEOUT_MS, 0, 0));
         OinkbrewApplication.getInstance().addToRequestQueue(req);
     }
 }
