@@ -1,5 +1,6 @@
 package info.vhowto.oinkbrewmobile.activities;
 
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.graphics.Color;
@@ -53,8 +54,8 @@ public class ConfigurationBrewOperationActivity extends AppCompatActivity implem
     private int limit = 15;
     private Handler handler;
     private Runnable runnable;
-    private int requestErrorCount = 0;
     private ConfigurationOperationViewHolder viewHolder;
+    private ProgressDialog progress;
 
 
     private static class ConfigurationOperationViewHolder {
@@ -110,6 +111,11 @@ public class ConfigurationBrewOperationActivity extends AppCompatActivity implem
         updateActiveTempSensorCard();
         updatePumps();
         fetchLogData();
+
+        progress = new ProgressDialog(this);
+        progress.setTitle(getString(R.string.updating));
+        progress.setMessage(getString(R.string.updating_message));
+        progress.setCancelable(false);
 
         if (!configuration.archived) {
             startTimer();
@@ -259,12 +265,13 @@ public class ConfigurationBrewOperationActivity extends AppCompatActivity implem
     }
 
     public void onRequestSuccessful() {
-        // target temp change request successful;
+        progress.dismiss();
         Toast.makeText(getApplicationContext(), R.string.configuration_target_update_success, Toast.LENGTH_LONG).show();
-        requestErrorCount = 0;
     }
 
     public void onRequestSuccessful(Log item) {
+        progress.dismiss();
+
         SimpleDateFormat ft = new SimpleDateFormat ("HH:mm");
         ArrayList<String> xVals = new ArrayList<>();
         ArrayList<Entry> targetTempData = new ArrayList<>();
@@ -347,13 +354,27 @@ public class ConfigurationBrewOperationActivity extends AppCompatActivity implem
     }
 
     public void onRequestFailure(int statusCode, String errorMessage) {
+        progress.dismiss();
+        final ConfigurationBrewOperationActivity activity = this;
+
         switch (statusCode) {
             case 400:
-                Toast.makeText(getApplicationContext(), errorMessage, Toast.LENGTH_LONG).show();
-                requestErrorCount++;
-                if (requestErrorCount < 5) {
-                    ConfigurationRequest.update(configuration.clone(), this);
-                }
+                AlertDialog.Builder builder = new AlertDialog.Builder(activity);
+                builder.setTitle(getString(R.string.error));
+                builder.setMessage(errorMessage);
+                builder.setCancelable(false);
+
+                builder.setPositiveButton(getString(R.string.retry), new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                    progress.show();
+                    ConfigurationRequest.update(configuration.clone(), activity);
+                    }
+                })
+                .setNegativeButton(getString(R.string.cancel), new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                    }
+                });
+                builder.show();
             case 404:
                 Toast.makeText(getApplicationContext(), getString(R.string.error_log_empty), Toast.LENGTH_LONG).show();
                 break;
@@ -493,6 +514,7 @@ public class ConfigurationBrewOperationActivity extends AppCompatActivity implem
                 configuration.phase.i = Float.parseFloat(prefs.getString("pref_brew_i", "0.0001"));
                 configuration.phase.d = Float.parseFloat(prefs.getString("pref_brew_d", "-8.0"));
 
+                progress.show();
                 ConfigurationRequest.update(configuration.clone(), callback);
             }
         });
@@ -544,6 +566,7 @@ public class ConfigurationBrewOperationActivity extends AppCompatActivity implem
                 configuration.phase.i = Float.parseFloat(prefs.getString("pref_brew_i", "0.0001"));
                 configuration.phase.d = Float.parseFloat(prefs.getString("pref_brew_d", "-30.0"));
 
+                progress.show();
                 ConfigurationRequest.update(configuration.clone(), callback);
             }
         });
@@ -590,6 +613,7 @@ public class ConfigurationBrewOperationActivity extends AppCompatActivity implem
         }
 
         final ConfigurationBrewOperationActivity callback = this;
+        progress.show();
         ConfigurationRequest.update(configuration.clone(), callback);
 
         updateActiveTempSensorCard();
@@ -606,6 +630,7 @@ public class ConfigurationBrewOperationActivity extends AppCompatActivity implem
         }
 
         final ConfigurationBrewOperationActivity callback = this;
+        progress.show();
         ConfigurationRequest.update(configuration.clone(), callback);
     }
 
