@@ -1,5 +1,6 @@
 package info.vhowto.oinkbrewmobile.activities;
 
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.graphics.Color;
@@ -51,7 +52,7 @@ public class ConfigurationFermentationOperationActivity extends AppCompatActivit
     private Handler handler;
     private Runnable runnable;
     private ConfigurationOperationViewHolder viewHolder;
-    private int requestErrorCount = 0;
+    private ProgressDialog progress;
 
     private static class ConfigurationOperationViewHolder {
         TextView target;
@@ -123,6 +124,11 @@ public class ConfigurationFermentationOperationActivity extends AppCompatActivit
         chart = configureChart();
         fetchLogData();
 
+        progress = new ProgressDialog(this);
+        progress.setTitle(getString(R.string.updating));
+        progress.setMessage(getString(R.string.updating_message));
+        progress.setCancelable(false);
+
         if (!configuration.archived) {
             startTimer();
         }
@@ -178,12 +184,13 @@ public class ConfigurationFermentationOperationActivity extends AppCompatActivit
     }
 
     public void onRequestSuccessful() {
-        // target temp change request successful;
+        progress.dismiss();
         Toast.makeText(getApplicationContext(), R.string.configuration_target_update_success, Toast.LENGTH_LONG).show();
-        requestErrorCount = 0;
     }
 
     public void onRequestSuccessful(Log item) {
+        progress.dismiss();
+
         SimpleDateFormat ft = new SimpleDateFormat ("HH:mm");
         ArrayList<String> xVals = new ArrayList<>();
         ArrayList<Entry> targetTempData = new ArrayList<>();
@@ -274,13 +281,27 @@ public class ConfigurationFermentationOperationActivity extends AppCompatActivit
     }
 
     public void onRequestFailure(int statusCode, String errorMessage) {
+        progress.dismiss();
+        final ConfigurationFermentationOperationActivity activity = this;
+
         switch (statusCode) {
             case 400:
-                Toast.makeText(getApplicationContext(), errorMessage, Toast.LENGTH_LONG).show();
-                requestErrorCount++;
-                if (requestErrorCount < 5) {
-                    ConfigurationRequest.update(configuration.clone(), this);
-                }
+                AlertDialog.Builder builder = new AlertDialog.Builder(activity);
+                builder.setTitle(getString(R.string.error));
+                builder.setMessage(errorMessage);
+                builder.setCancelable(false);
+
+                builder.setPositiveButton(getString(R.string.retry), new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        ConfigurationRequest.update(configuration.clone(), activity);
+                    }
+                })
+                .setNegativeButton(getString(R.string.cancel), new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        finish();
+                    }
+                });
+                builder.show();
             case 404:
                 Toast.makeText(getApplicationContext(), getString(R.string.error_log_empty), Toast.LENGTH_LONG).show();
                 break;
@@ -409,6 +430,7 @@ public class ConfigurationFermentationOperationActivity extends AppCompatActivit
                 configuration.phase.i = Float.parseFloat(prefs.getString("pref_fermentation_i", "0.0001"));
                 configuration.phase.d = Float.parseFloat(prefs.getString("pref_fermentation_d", "-8.0"));
 
+                progress.show();
                 ConfigurationRequest.update(configuration.clone(), callback);
             }
         });

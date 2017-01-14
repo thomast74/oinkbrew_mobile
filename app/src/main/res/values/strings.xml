@@ -85,5 +85,7 @@
     <string name="saving">Saving</string>
     <string name="saving_message">Wait while saving...</string>
     <string name="alert">Alert</string>
+    <string name="updating">Updating</string>
+    <string name="updating_message">Wait while updating...</string>
 
 </resources>
