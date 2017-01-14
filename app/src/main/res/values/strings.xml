@@ -79,5 +79,11 @@
     <string name="action_last_2_hour">Last 2 hours</string>
     <string name="configuration_out">Out</string>
     <string name="configuration_in">In</string>
+    <string name="error">Error</string>
+    <string name="retry">Retry</string>
+    <string name="cancel">Cancel</string>
+    <string name="saving">Saving</string>
+    <string name="saving_message">Wait while saving...</string>
+    <string name="alert">Alert</string>
 
 </resources>

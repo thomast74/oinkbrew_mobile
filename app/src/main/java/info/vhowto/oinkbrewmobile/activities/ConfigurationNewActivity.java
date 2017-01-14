@@ -1,5 +1,6 @@
 package info.vhowto.oinkbrewmobile.activities;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -47,9 +48,9 @@ public class ConfigurationNewActivity extends AppCompatActivity {
 
         final ConfigurationNewActivity activity = this;
 
-        name = (TextView)findViewById(R.id.name);
-        type = (Spinner)findViewById(R.id.type);
-        brewpi = (Spinner)findViewById(R.id.brewpi);
+        name = (TextView) findViewById(R.id.name);
+        type = (Spinner) findViewById(R.id.type);
+        brewpi = (Spinner) findViewById(R.id.brewpi);
 
         actuatorsViewHolder = new ActuatorsViewHolder(this);
         actuatorsViewHolder.changeToNoSelect();
@@ -75,30 +76,27 @@ public class ConfigurationNewActivity extends AppCompatActivity {
     }
 
     private void prepareTypeSpinner() {
-        String[] typeValues = new String[] { "- Please Select -", ConfigurationType.BREW, ConfigurationType.FERMENTATION };
+        String[] typeValues = new String[]{"- Please Select -", ConfigurationType.BREW, ConfigurationType.FERMENTATION};
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this, R.layout.spinner_drop_down_item, typeValues);
         type.setAdapter(adapter);
 
         type.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                String typeSelected = (String)type.getSelectedItem();
+                String typeSelected = (String) type.getSelectedItem();
                 if (ConfigurationType.BREW.equals(typeSelected)) {
                     actuatorsViewHolder.changeToBrew();
                     sensorsViewHolder.changeToBrew();
-                }
-                else if (ConfigurationType.FERMENTATION.equals(typeSelected)) {
+                } else if (ConfigurationType.FERMENTATION.equals(typeSelected)) {
                     actuatorsViewHolder.changeToFermentation();
                     sensorsViewHolder.changeToFermentation();
-                }
-                else {
+                } else {
                     actuatorsViewHolder.changeToNoSelect();
                     sensorsViewHolder.changeToNoSelect();
                 }
             }
 
-            public void onNothingSelected(AdapterView<?> parent )
-            {
+            public void onNothingSelected(AdapterView<?> parent) {
                 actuatorsViewHolder.changeToNoSelect();
                 sensorsViewHolder.changeToNoSelect();
             }
@@ -143,14 +141,13 @@ public class ConfigurationNewActivity extends AppCompatActivity {
         brewpi.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                BrewPi item = (BrewPi)brewpi.getSelectedItem();
+                BrewPi item = (BrewPi) brewpi.getSelectedItem();
                 if (item != null && !item.device_id.equals("")) {
                     loadDevices(item);
                 }
             }
 
-            public void onNothingSelected(AdapterView<?> parent )
-            {
+            public void onNothingSelected(AdapterView<?> parent) {
             }
         });
         BrewPiRequest.getBrewPis(callback);
@@ -192,7 +189,7 @@ public class ConfigurationNewActivity extends AppCompatActivity {
     }
 
     private void prepareActuators(ArrayList<Device> items) {
-        String selectedType = (String)type.getSelectedItem();
+        String selectedType = (String) type.getSelectedItem();
 
         if (selectedType.equals("- Please Select -") || items == null || items.isEmpty())
             return;
@@ -208,7 +205,7 @@ public class ConfigurationNewActivity extends AppCompatActivity {
     }
 
     private void prepareSensors(ArrayList<Device> items) {
-        String selectedType = (String)type.getSelectedItem();
+        String selectedType = (String) type.getSelectedItem();
 
         if (selectedType.equals("- Please Select -") || items == null || items.isEmpty())
             return;
@@ -241,7 +238,7 @@ public class ConfigurationNewActivity extends AppCompatActivity {
         }
 
         Configuration configuration = null;
-        final String typeSelected = (String)type.getSelectedItem();
+        final String typeSelected = (String) type.getSelectedItem();
         final ConfigurationNewActivity activity = this;
         if (ConfigurationType.FERMENTATION.equals(typeSelected)) {
 
@@ -275,13 +272,13 @@ public class ConfigurationNewActivity extends AppCompatActivity {
                 return;
             }
             if (fridgeOutside.pk > 0 && (fridgeOutside.pk == fridgeInside.pk || fridgeOutside.pk == beer1.pk || fridgeOutside.pk == beer2.pk) ||
-                fridgeInside.pk == beer1.pk || fridgeInside.pk == beer2.pk || beer1.pk == beer2.pk) {
+                    fridgeInside.pk == beer1.pk || fridgeInside.pk == beer2.pk || beer1.pk == beer2.pk) {
                 showErrorMessage("All sensors must be different");
 
             }
             configuration = new Configuration();
             configuration.name = name.getText().toString();
-            configuration.type = (String)type.getSelectedItem();
+            configuration.type = (String) type.getSelectedItem();
             configuration.cool_actuator = "Fridge Cooling Actuator";
             configuration.heat_actuator = "Fridge Heating Actuator";
             if (fan.pk > 0)
@@ -312,8 +309,7 @@ public class ConfigurationNewActivity extends AppCompatActivity {
             configuration.phase.p = Float.parseFloat(prefs.getString("pref_fermentation_p", "18.0"));
             configuration.phase.i = Float.parseFloat(prefs.getString("pref_fermentation_i", "0.0001"));
             configuration.phase.d = Float.parseFloat(prefs.getString("pref_fermentation_d", "-8.0"));
-        }
-        else if (ConfigurationType.BREW.equals(typeSelected)) {
+        } else if (ConfigurationType.BREW.equals(typeSelected)) {
 
             Device hltHeating = actuatorsViewHolder.getHltHeating();
             Device boilHeating = actuatorsViewHolder.getBoilHeating();
@@ -343,8 +339,8 @@ public class ConfigurationNewActivity extends AppCompatActivity {
                 return;
             }
             if (hltHeating.pk == boilHeating.pk || hltHeating.pk == pump1.pk || hltHeating.pk == pump2.pk ||
-                boilHeating.pk == pump1.pk || boilHeating.pk == pump2.pk ||
-                pump1.pk == pump2.pk) {
+                    boilHeating.pk == pump1.pk || boilHeating.pk == pump2.pk ||
+                    pump1.pk == pump2.pk) {
                 showErrorMessage("All actuators must be different");
                 return;
             }
@@ -366,14 +362,14 @@ public class ConfigurationNewActivity extends AppCompatActivity {
                 return;
             }
             if (hltOut.pk == mashIn.pk || hltOut.pk == mashOut.pk || hltOut.pk == boilOut.pk ||
-                mashIn.pk == mashOut.pk || mashIn.pk == boilOut.pk ||
-                mashOut.pk == boilOut.pk) {
+                    mashIn.pk == mashOut.pk || mashIn.pk == boilOut.pk ||
+                    mashOut.pk == boilOut.pk) {
                 showErrorMessage("All sensors must be different");
 
             }
             configuration = new Configuration();
             configuration.name = name.getText().toString();
-            configuration.type = (String)type.getSelectedItem();
+            configuration.type = (String) type.getSelectedItem();
 
             configuration.heat_actuator = "HLT Heating Actuator";
             configuration.pump_1_actuator = "Pump 1 Actuator";
@@ -402,23 +398,30 @@ public class ConfigurationNewActivity extends AppCompatActivity {
         }
 
         if (configuration != null) {
-            BrewPi selectedBrewPi = (BrewPi)brewpi.getSelectedItem();
+            BrewPi selectedBrewPi = (BrewPi) brewpi.getSelectedItem();
             configuration.brewpi.device_id = selectedBrewPi.device_id;
+
+            final ProgressDialog progress = new ProgressDialog(this);
+            progress.setTitle(getString(R.string.saving));
+            progress.setMessage(getString(R.string.saving_message));
+            progress.setCancelable(false);
+            progress.show();
 
             ConfigurationRequest.create(configuration, new RequestObjectCallback<Configuration>() {
                 @Override
                 public void onRequestSuccessful() {
-                    // will not be called
+                    progress.dismiss();
                 }
 
                 @Override
                 public void onRequestSuccessful(Configuration item) {
+                    progress.dismiss();
+
                     Intent intent = null;
                     if (ConfigurationType.FERMENTATION.equals(typeSelected)) {
                         intent = new Intent(activity, ConfigurationFermentationOperationActivity.class);
 
-                    }
-                    else if (ConfigurationType.BREW.equals(typeSelected)) {
+                    } else if (ConfigurationType.BREW.equals(typeSelected)) {
                         intent = new Intent(activity, ConfigurationBrewOperationActivity.class);
                     }
                     if (intent != null) {
@@ -430,7 +433,23 @@ public class ConfigurationNewActivity extends AppCompatActivity {
 
                 @Override
                 public void onRequestFailure(int statusCode, String errorMessage) {
-                    Toast.makeText(getApplicationContext(), errorMessage, Toast.LENGTH_LONG).show();
+                    progress.dismiss();
+                    AlertDialog.Builder builder = new AlertDialog.Builder(activity);
+                    builder.setTitle(getString(R.string.error));
+                    builder.setMessage(errorMessage);
+                    builder.setCancelable(false);
+
+                    builder.setPositiveButton(getString(R.string.retry), new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                            saveConfiguration();
+                        }
+                    })
+                            .setNegativeButton(getString(R.string.cancel), new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int id) {
+                                    finish();
+                                }
+                            });
+                    builder.show();
                 }
 
                 @Override
@@ -443,9 +462,9 @@ public class ConfigurationNewActivity extends AppCompatActivity {
 
     private void showErrorMessage(String errorMessage) {
         AlertDialog alertDialog = new AlertDialog.Builder(this).create();
-        alertDialog.setTitle("Alert");
+        alertDialog.setTitle(getString(R.string.alert));
         alertDialog.setMessage(errorMessage);
-        alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
+        alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, getString(R.string.ok),
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.dismiss();
