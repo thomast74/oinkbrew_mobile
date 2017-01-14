@@ -293,12 +293,12 @@ public class ConfigurationFermentationOperationActivity extends AppCompatActivit
 
                 builder.setPositiveButton(getString(R.string.retry), new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
-                        ConfigurationRequest.update(configuration.clone(), activity);
+                    progress.show();
+                    ConfigurationRequest.update(configuration.clone(), activity);
                     }
                 })
                 .setNegativeButton(getString(R.string.cancel), new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
-                        finish();
                     }
                 });
                 builder.show();
