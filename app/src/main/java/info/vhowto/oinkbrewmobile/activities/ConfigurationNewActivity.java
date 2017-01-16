@@ -279,6 +279,8 @@ public class ConfigurationNewActivity extends AppCompatActivity {
             configuration = new Configuration();
             configuration.name = name.getText().toString();
             configuration.type = (String) type.getSelectedItem();
+            configuration.archived = false;
+
             configuration.cool_actuator = "Fridge Cooling Actuator";
             configuration.heat_actuator = "Fridge Heating Actuator";
             if (fan.pk > 0)
@@ -370,6 +372,7 @@ public class ConfigurationNewActivity extends AppCompatActivity {
             configuration = new Configuration();
             configuration.name = name.getText().toString();
             configuration.type = (String) type.getSelectedItem();
+            configuration.archived = false;
 
             configuration.heat_actuator = "HLT Heating Actuator";
             configuration.pump_1_actuator = "Pump 1 Actuator";
