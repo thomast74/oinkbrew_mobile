@@ -4,12 +4,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context=".activities.ConfigurationBrewOperationActivity">
 
-    <item android:id="@+id/action_device_configuration"
-        android:title="@string/action_device_configuration"
-        android:orderInCategory="100"
-        app:showAsAction="never"
-        />
-
     <item android:id="@+id/action_refresh"
         android:title="@string/action_refresh"
         android:orderInCategory="101"
@@ -24,33 +18,41 @@
         android:checked="true"
         />
 
+    <item android:id="@+id/action_always_on"
+        android:title="@string/action_always_on"
+        android:orderInCategory="103"
+        app:showAsAction="never"
+        android:checkable="true"
+        android:checked="false"
+        />
+
     <item android:id="@+id/action_last_15_minutes"
         android:title="@string/action_last_15_minutes"
-        android:orderInCategory="103"
+        android:orderInCategory="104"
         app:showAsAction="never"
         />
 
     <item android:id="@+id/action_last_30_minutes"
         android:title="@string/action_last_30_minutes"
-        android:orderInCategory="104"
+        android:orderInCategory="105"
         app:showAsAction="never"
         />
 
     <item android:id="@+id/action_last_1_hour"
         android:title="@string/action_last_1_hour"
-        android:orderInCategory="105"
+        android:orderInCategory="106"
         app:showAsAction="never"
         />
 
     <item android:id="@+id/action_last_2_hours"
         android:title="@string/action_last_2_hour"
-        android:orderInCategory="106"
+        android:orderInCategory="107"
         app:showAsAction="never"
         />
 
     <item android:id="@+id/action_last_6_hours"
         android:title="@string/action_last_6_hours"
-        android:orderInCategory="107"
+        android:orderInCategory="108"
         app:showAsAction="never"
         />
 

@@ -16,6 +16,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.NumberPicker;
 import android.widget.SeekBar;
 import android.widget.TextView;
@@ -638,6 +639,13 @@ public class ConfigurationBrewOperationActivity extends AppCompatActivity implem
     public boolean onCreateOptionsMenu(Menu menu) {
         this.menu = menu;
         getMenuInflater().inflate(R.menu.menu_configuration_brew_operation, menu);
+
+        if (configuration.archived) {
+            menu.findItem(R.id.action_refresh).setEnabled(false);
+            menu.findItem(R.id.action_refresh_automatically).setChecked(false).setEnabled(false);
+            menu.findItem(R.id.action_always_on).setEnabled(false);
+        }
+
         return true;
     }
 
@@ -665,6 +673,17 @@ public class ConfigurationBrewOperationActivity extends AppCompatActivity implem
                 else {
                     item.setChecked(true);
                     startTimer();
+                }
+                result = true;
+                break;
+            case R.id.action_always_on:
+                if (item.isChecked()) {
+                    item.setChecked(false);
+                    getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+                }
+                else {
+                    item.setChecked(true);
+                    getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
                 }
                 result = true;
                 break;

@@ -87,5 +87,6 @@
     <string name="alert">Alert</string>
     <string name="updating">Updating</string>
     <string name="updating_message">Wait while updating...</string>
+    <string name="action_always_on">Always on</string>
 
 </resources>
