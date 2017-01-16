@@ -315,10 +315,13 @@ public class ConfigurationFermentationOperationActivity extends AppCompatActivit
         this.menu = menu;
         getMenuInflater().inflate(R.menu.menu_configuration_fermentation_operation, menu);
 
-        if (configuration.archived)
-            menu.findItem(R.id.action_refresh_automatically).setEnabled(false);
-        else
+        if (configuration.archived) {
+            menu.findItem(R.id.action_refresh).setEnabled(false);
+            menu.findItem(R.id.action_refresh_automatically).setChecked(false).setEnabled(false);
+        } else {
+            menu.findItem(R.id.action_refresh).setEnabled(true);
             menu.findItem(R.id.action_refresh_automatically).setEnabled(true);
+        }
 
         return true;
     }

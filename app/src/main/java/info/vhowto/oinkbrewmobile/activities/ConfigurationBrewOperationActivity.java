@@ -644,6 +644,10 @@ public class ConfigurationBrewOperationActivity extends AppCompatActivity implem
             menu.findItem(R.id.action_refresh).setEnabled(false);
             menu.findItem(R.id.action_refresh_automatically).setChecked(false).setEnabled(false);
             menu.findItem(R.id.action_always_on).setEnabled(false);
+        } else {
+            menu.findItem(R.id.action_refresh).setEnabled(true);
+            menu.findItem(R.id.action_refresh_automatically).setChecked(true).setEnabled(true);
+            menu.findItem(R.id.action_always_on).setEnabled(true);
         }
 
         return true;
