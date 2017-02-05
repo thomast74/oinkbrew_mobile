@@ -102,7 +102,8 @@ public class ConfigurationListActivity extends AppCompatActivity implements Swip
                         else
                             Toast.makeText(context, R.string.configuration_archived, Toast.LENGTH_LONG).show();
 
-                        configurations.remove(position);
+                        if (configurations.size() > position)
+                                configurations.remove(position);
                         adapter.notifyDataSetChanged();
                     }
 
