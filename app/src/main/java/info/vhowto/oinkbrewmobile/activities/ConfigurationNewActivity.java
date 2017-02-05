@@ -17,6 +17,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 
 import info.vhowto.oinkbrewmobile.R;
 import info.vhowto.oinkbrewmobile.domain.BrewPi;
@@ -164,6 +166,13 @@ public class ConfigurationNewActivity extends AppCompatActivity {
 
             @Override
             public void onRequestSuccessful(ArrayList<Device> items) {
+                Collections.sort(items, new Comparator<Device>() {
+                    @Override
+                    public int compare(Device device1, Device device2)
+                    {
+                        return  device1.name.compareTo(device2.name);
+                    }
+                });
                 prepareActuators(items);
                 prepareSensors(items);
             }
